@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+</head>
+<body>
+
+<p th:unless="${owners} and ${owners.size()}">no owners!</p>
+
+<div class="container body-content">
+    <h2>Owners</h2>
+    <ul>
+        <li th:each="owner : ${owners}">
+            <a th:href="@{'/owners/view/' + ${owner.id}}" th:text="${owner.name}"></a>
+        </li>
+    </ul>
+    <a th:href="@{'/owners/add'}">Add Owners</a>
+
+</div>
+
+</body>
+</html>
