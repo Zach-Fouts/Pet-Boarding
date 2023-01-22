@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:fragment="main-fragment (title, otherStaticResources, header, nav, mainContent, footer)">
+      th:fragment="main-fragment (title, otherStaticResources, header, nav, mainContent)">
 <head>
     <meta charset="UTF-8" />
-    <title th:replace="${title}">Page 1 Title</title>
+    <title th:replace="${title}">PET BOARDING SERVICE</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../static/css/main.css"/>
     <!-- Other javascript, css source files -->
     <th:block th:replace="${otherStaticResources} ?: ~{}"></th:block>
@@ -24,8 +24,5 @@
         <p>Main content of Page 1</p>
     </article>
 </section>
-<footer th:insert="${footer} ?: ~{}">
-    <p>Footer</p>
-</footer>
 </body>
 </html>
