@@ -1,97 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html th:fragment="layout (otherResources, content)" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Pet Boarding Service</title>
   <!-- Bootstraps -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" href="../../static/css/main.css"/>
+  <!-- Bootstraps JS-->
   <script src="https://code.jquery.com/jquery-3.6.3.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
           crossorigin="anonymous"></script>
+  <!-- Other CSS/JS -->
+  <th:block th:replace="${otherResources}"></th:block>
   <script type="text/javascript">
     $(function () {
       $("[data-bs-toggle='tooltip']").tooltip();
     });
   </script>
-  <!-- ---------- -->
-  <style>
-    body {
-      overflow: hidden;
-    }
-
-    header {
-      padding: 4px 0 4px 0;
-      overflow-x: hidden;
-    }
-
-    .app-logo {
-      height: 48px;
-    }
-
-    .app-title {
-      font-size: 24px;
-      line-height: 48px;
-    }
-
-    .user-avatar {
-      font-size: 32px;
-    }
-
-    .navigation-sidebar {
-      height: calc(100vh - 57px);
-      max-height: calc(100vh - 57px);
-      background-color: #D3D3D3;
-      position: relative;
-    }
-
-    .navigation-sidebar a {
-      padding: 0rem;
-    }
-
-    .navigation-sidebar li {
-      transition: 300ms linear;
-    }
-
-    .navigation-sidebar li:hover {
-      background-color: #EEE;
-    }
-
-    .navigation-sidebar li:hover * {
-      color: var(--bs-blue);
-    }
-
-    .navigation-sidebar i,
-    .navigation-sidebar svg {
-      font-size: 34px;
-      color: #1E1E1E;
-    }
-
-    .navigation-sidebar li.active-module {
-      color: var(--bs-blue);
-      background: #FFFFFF;
-      box-shadow: inset 4px 4px 6px -6px rgba(0, 0, 0, 0.30);
-      position: relative;
-      border-left: 5px solid;
-      margin-right: -5px;
-    }
-
-    .navigation-sidebar li.active-module a {
-      border-bottom-color: transparent !important;
-    }
-
-    .navigation-sidebar li.active-module * {
-      color: var(--bs-blue) !important;
-    }
-
-
-    main {
-      height: 100vh;
-      overflow: auto;
-    }
-  </style>
 </head>
 
 <body>
@@ -104,10 +33,10 @@
 </svg>
 
 
-<header class="app-header  border-bottom shadow-sm ">
+<header class="app-header  border-bottom shadow-sm">
   <div class="container-fluid d-grid gap-3 align-items-center px-2 px-md-3" style="grid-template-columns: 1fr 1fr;">
     <div class="d-flex align-items-center app-header-title">
-      <img src="logo.svg" class="img-fluid app-logo" alt="Application Logo" />
+      <img src="img/logo.svg" class="img-fluid app-logo" alt="Application Logo" />
       <span class="px-4 app-title fw-bold d-none d-md-block">PET BOARDING SERVICE</span>
     </div>
 
@@ -116,106 +45,30 @@
       <span class="mx-2 d-none d-sm-inline-block">
           <i class="bi bi-person-circle user-avatar"></i>
         </span>
-      <button class="btn  btn-primary">Logout</button </div>
+      <button class="btn  btn-primary">Logout</button>
+    </div>
 </header>
 <div class="d-flex">
-
   <nav class="navigation-sidebar d-flex flex-column flex-shrink-0 shadow-sm">
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
-      <li class="nav-item active-module">
-        <!--a href="#" class="nav-link  py-1 px-3 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip"
-          data-bs-placement="right" aria-label="Home" data-bs-original-title="Home"-->
-        <i class="bi bi-house"></i>
-        <!--/a-->
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
-           data-bs-placement="right" aria-label="Pet Owners" data-bs-original-title="Pet Owners">
-          <i class="bi bi-person-vcard"></i>
+      <div class="navigation-spacer w-100"></div>
+      <li th:each="module: ${modules}" th:Object="${module}" th:class="|nav-item ${module == activeModule ? 'active-module' : ''}|">
+        <a th:unless="${module == activeModule}" th:href="*{path}" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
+           data-bs-placement="right" th:attr="aria-label=*{name}, data-bs-original-title=*{name}">
+          <i th:class="|bi *{icon}|"></i>
         </a>
-      </li>
-      <li class="nav-item active-module">
-        <a href="#" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
-           data-bs-placement="right" aria-label="Pets" data-bs-original-title="Pets">
-          <svg class="bi pe-none" width="34" height="46" role="img" aria-label="Pets">
-            <use xlink:href="#paw-icon"></use>
-          </svg>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
-           data-bs-placement="right" aria-label="Reservations" data-bs-original-title="Reservations">
-          <i class="bi bi-calendar-week"></i>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
-           data-bs-placement="right" aria-label="Kennels" data-bs-original-title="Kennels">
-          <i class="bi bi-grid-3x3-gap-fill"></i>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
-           data-bs-placement="right" aria-label="Employees" data-bs-original-title="Employees">
-          <i class="bi bi-person-rolodex"></i>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
-           data-bs-placement="right" aria-label="Users" data-bs-original-title="Users">
-          <i class="bi bi-people-fill"></i>
-        </a>
+        <i th:if="${module == activeModule}" i th:class="|bi *{icon}|"></i>
       </li>
     </ul>
-
   </nav>
+  <div class="d-flex flex-column">
+    <p th:text="${activeModule.name}" class="module-name py-0 px-4">
+      Active Module's Name
+    </p>
+    <main class="content py-1 px-4" th:insert="${content}">
 
-  <main class="content p-5">
-    <form class="row g-3">
-      <div class="col-md-6">
-        <label for="inputEmail4" class="form-label">Email</label>
-        <input type="email" class="form-control" id="inputEmail4">
-      </div>
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword4">
-      </div>
-      <div class="col-12">
-        <label for="inputAddress" class="form-label">Address</label>
-        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-      </div>
-      <div class="col-12">
-        <label for="inputAddress2" class="form-label">Address 2</label>
-        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-      </div>
-      <div class="col-md-6">
-        <label for="inputCity" class="form-label">City</label>
-        <input type="text" class="form-control" id="inputCity">
-      </div>
-      <div class="col-md-4">
-        <label for="inputState" class="form-label">State</label>
-        <select id="inputState" class="form-select">
-          <option selected>Choose...</option>
-          <option>...</option>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <label for="inputZip" class="form-label">Zip</label>
-        <input type="text" class="form-control" id="inputZip">
-      </div>
-      <div class="col-12">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="gridCheck">
-          <label class="form-check-label" for="gridCheck">
-            Check me out
-          </label>
-        </div>
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary">Sign in</button>
-      </div>
-    </form>
-  </main>
+    </main>
+  </div>
 </div>
 </body>
 

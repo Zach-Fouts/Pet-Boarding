@@ -5,16 +5,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class DashboardController {
+public class DashboardController extends AppBaseController {
 
     @GetMapping("/home")
     public String showDashboardHome(Model model) {
-        return "home";
+        this.setActiveModule("home", model);
+        return "index";
     }
 
-    @GetMapping("/products")
+    @GetMapping("/test")
     public String showProducts(Model model) {
-        return "products";
+        this.setActiveModule("owners", model);
+        return "content-example-page";
     }
 
 }
