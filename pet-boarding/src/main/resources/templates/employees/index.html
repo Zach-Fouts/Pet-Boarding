@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+    </th:block>
+</head>
+<body>
+    <th:block id="content">
+        <div id="toolbar" style="border-bottom: solid 1px #E1E1E1;">
+            <a class="btn btn-primary" href="employees/add">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline">Add Employee</span>
+            </a>
+        </div>
+        <table
+                id="employeesTable"
+                data-toggle="table"
+                data-search="true"
+                data-show-search-button="true"
+                data-pagination="true"
+                data-show-columns="true"
+                data-show-toggle="true"
+                data-toolbar="#toolbar">
+            <thead>
+            <tr>
+                <th data-halign="center" data-sortable="true">Position</th>
+                <th data-halign="center" data-sortable="true">Name</th>
+                <th data-halign="center">Address</th>
+                <th data-halign="center">Address 2</th>
+                <th data-halign="center">Phone number</th>
+                <th data-halign="center">Email</th>
+                <th data-halign="center" data-align="center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="employee: ${employees}" th:Object="${employee}">
+                <td th:text="*{position.name}"></td>
+                <td th:text="*{getFullName()}"></td>
+                <td th:text="*{address}"></td>
+                <td th:text="*{address2}"></td>
+                <td th:text="*{phoneNumber}"></td>
+                <td th:text="*{email}"></td>
+                <td>
+                    <button type="button" class="btn btn-primary"><i class="bi-pen"></i></button>
+                    <button type="button" class="btn btn-danger"><i class="bi-trash"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
+</body>
+</html>

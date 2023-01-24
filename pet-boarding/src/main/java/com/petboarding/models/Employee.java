@@ -61,6 +61,10 @@ public class Employee extends AbstractEntity{
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return this.lastName + ", " + this.firstName;
+    }
+
     public Position getPosition() {
         return position;
     }
