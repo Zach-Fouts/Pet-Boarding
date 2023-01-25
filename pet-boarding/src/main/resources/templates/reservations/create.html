@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="post">
+        <div class="form-group">
+            <label>Start Date
+                <input th:field="${reservation.startDateTime}" class="form-control">
+            </label>
+            <p class="error" th:errors="${reservation.startDateTime}"></p>
+        </div>
+        <div class="form-group">
+            <label>End Date
+                <input th:field="${reservation.endDateTime}" class="form-control">
+            </label>
+            <p class="error" th:errors="${reservation.endDateTime}"></p>
+        </div>
+        <div class="form-group">
+            <label>Comment
+                <input th:field="${reservation.comments}" class="form-control">
+            </label>
+            <p class="error" th:errors="${reservation.comments}"></p>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-success">
+        </div>
+    </form>
+
+</body>
+</html>
