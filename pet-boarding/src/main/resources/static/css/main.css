@@ -96,3 +96,8 @@
     .table > thead {
       border-bottom: 2px solid #3E3E3E;
     }
+
+    /* button hover decoration */
+    .btn:hover {
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+    }

@@ -26,13 +26,15 @@ public abstract class AppBaseController {
         return appModules;
     }
 
-    public void setActiveModule(String activeModule, Model model) {
-        model.addAttribute("activeModule",
-                appModules
-                        .stream()
-                        .filter(module -> activeModule.equalsIgnoreCase(module.getPath()))
-                        .findFirst()
-                        .orElse(Module.dummyFactory())
-        );
+    public void setActiveModule(String path, Model model) {
+        model.addAttribute("activeModule", getActiveModule(path));
+    }
+
+    public Module getActiveModule(String path) {
+        return appModules
+                .stream()
+                .filter(module -> path.equalsIgnoreCase(module.getPath()))
+                .findFirst()
+                .orElse(Module.dummyFactory());
     }
 }

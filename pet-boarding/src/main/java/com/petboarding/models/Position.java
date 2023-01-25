@@ -24,6 +24,9 @@ public class Position extends AbstractEntity{
 
     public Position() {}
 
+    public Position(@Size(max = 50, message = "Name cannot be longer than 100 characters.") String name) {
+        this.name = name;
+    }
     public String getName() {
         return name;
     }
@@ -40,5 +43,10 @@ public class Position extends AbstractEntity{
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

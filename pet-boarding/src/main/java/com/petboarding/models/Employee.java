@@ -113,4 +113,16 @@ public class Employee extends AbstractEntity{
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return String.join(System.lineSeparator(),
+                "Employee: ",
+                getFullName(),
+                address,
+                address2,
+                email,
+                phoneNumber,
+                "------------------");
+    }
 }
