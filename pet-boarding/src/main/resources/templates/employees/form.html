@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+    </th:block>
+</head>
+<body>
+    <th:block id="content">
+        <div class="d-flex col-12 border-bottom pb-2 mb-3">
+            <a class="btn btn-sm btn-primary" href="/employees">
+                <i class="bi bi-box-arrow-in-left"></i>
+                <span class="d-none d-sm-inline">Back</span>
+            </a>
+            <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Employee</span>
+            <button class="btn btn-sm btn-primary ms-auto">Job Positions</button>
+        </div>
+        <form class="row g-3" th:Object="${employee}">
+            <div class="col-md-12">
+                <div class="col-md-4">
+                    <label for="position" class="form-label">Position</label>
+                    <select id="position" class="form-select" required>
+                        <option disabled selected value="">Select one...</option>
+                        <option th:each="position: ${positions}" value="${position.id}" th:text="${position.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="firstName" class="form-label">First Name</label>
+                <input  class="form-control" id="firstName" required>
+            </div>
+            <div class="col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input  class="form-control" id="lastName" required>
+            </div>
+            <div class="col-12">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+            </div>
+            <div class="col-12">
+                <label for="address2" class="form-label">Address 2</label>
+                <input type="text" class="form-control" id="address2" placeholder="Apartment, studio, or floor">
+            </div>
+            <div class="col-8">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="@" required>
+            </div>
+            <div class="col-md-4">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="text" th:value="*{phoneNumber}" class="form-control" id="phoneNumber">
+            </div>
+            <div class="col-12 d-flex p-2">
+                <button class="me-auto btn btn-secondary o-1" title="Clear form" type="reset">
+                    <i class="bi bi-eraser"></i>
+                </button>
+                <button type="button" class="btn btn-secondary mx-1">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary mx-1">
+                    <i class="bi bi-save"></i>
+                    Save
+                </button>
+            </div>
+        </form>
+    </th:block>
+</body>
+</html>

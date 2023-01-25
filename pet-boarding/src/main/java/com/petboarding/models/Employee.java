@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -22,7 +23,7 @@ public class Employee extends AbstractEntity{
     private String lastName;
 
     @Valid
-    @OneToOne
+    @ManyToOne
     private Position position;
 
     @NotBlank(message = "Address cannot be empty.")

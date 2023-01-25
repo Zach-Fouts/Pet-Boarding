@@ -31,6 +31,8 @@ public class EmployeesController extends AppBaseController {
     public String displayAddEmployeeForm(Model model) {
         setActiveModule("employees", model);
         model.addAttribute("employee", new Employee());
-        return "employees/add";
+        model.addAttribute("positions", positionRepository.findAll());
+        model.addAttribute("formTitle", "New Employee");
+        return "employees/form";
     }
 }

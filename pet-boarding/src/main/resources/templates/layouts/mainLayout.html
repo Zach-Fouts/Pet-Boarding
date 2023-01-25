@@ -52,7 +52,7 @@
   <nav class="navigation-sidebar d-flex flex-column flex-shrink-0 shadow-sm">
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
       <div class="navigation-spacer w-100"></div>
-      <li th:each="module: ${modules}" th:Object="${module}" th:class="|nav-item ${module == activeModule ? 'active-module' : ''}|">
+      <li th:each="module: ${modules}" th:Object="${module}" th:class="|nav-item ${module == activeModule ? 'active-module py-1' : ''}|">
         <a th:unless="${module == activeModule}" th:href="|/*{path}|" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
            data-bs-placement="right" th:attr="aria-label=*{name}, data-bs-original-title=*{name}">
           <i th:class="|bi *{icon}|"></i>
