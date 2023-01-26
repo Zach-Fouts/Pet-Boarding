@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
 </head>
 <body>
-<div class="container body-content">
+<th:block id="content">
+    <!-- MY OWNER STUFF-->
+    <div class="container body-content">
 
-    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
-    <a th:href="@{'add/'}" class="btn btn-primary btn-lg active" role="button" aria-disabled="true">Add a New Owner</a>
-    <table class="table table-striped">
-        <thead>
+        <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+        <a th:href="@{'add/'}" class="btn btn-primary btn-lg active" role="button" aria-disabled="true">Add a New Owner</a>
+        <table class="table table-striped">
+            <thead>
             <tr>
                 <th scope="col">Owner Id</th>
                 <th scope = "col">Name</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr th:each="owner: ${owners}">
                 <td scope ="row">
-                 <p>
-                      <a th:href="@{'view/' + ${owner.id}}" th:text="${owner.id}"></a>
-                 </p>
+                    <p>
+                        <a th:href="@{'view/' + ${owner.id}}" th:text="${owner.id}"></a>
+                    </p>
                 </td>
                 <td>
                     <p th:text="${owner.name}"></p>
@@ -38,27 +42,10 @@
                     </form>
                 </td>
             </tr>
-        </tbody>
-    </table>
-<!--                <p>-->
-<!--                    Owner name:-->
-<!--                    <a th:href="@{'/employers/view/' + ${job.employer.id}}" th:text="${job.employer.name}"></a>-->
-<!--                </p>-->
-<!--                <p>-->
-<!--&lt;!&ndash;                    Skills:&ndash;&gt;-->
-<!--&lt;!&ndash;                <ul th:each="skill : ${job.skills}">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <li>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <a th:href="@{'/skills/view/' + ${skill.id}}" th:text="${skill.name}"></a>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </li>&ndash;&gt;-->
-<!--&lt;!&ndash;                </ul>&ndash;&gt;-->
-<!--                </p>-->
-
-
-</div>
-
-
-
-
-
+            </tbody>
+        </table>
+    </div>
+    <!--End My Owner Stuff-->
+</th:block>
 </body>
 </html>

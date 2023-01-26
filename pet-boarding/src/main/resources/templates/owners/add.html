@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<body class="container  body-content">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
+</head>
+<body>
+<th:block id="content">
 <h1>Add Owner</h1>
 
 <form method="post" style="max-width:600px;">
@@ -12,6 +20,7 @@
 
     <input type="submit" value="Add Owner" />
 </form>
-
+    <a th:href="@{../index}">Return</a>
+</th:block>
 </body>
 </html>

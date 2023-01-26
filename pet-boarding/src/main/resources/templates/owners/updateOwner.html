@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
 </head>
-<body class="container  body-content">
-<h1 th:text="${'Owner: ' + owner.name}">Default Title</h1>
+<body>
+<th:block id="content">
+    <h1 th:text="${'Owner: ' + owner.name}">Default Title</h1>
 
 
-<div class="job-listing">
-    <form method="post" style="max-width:600px;" th:object="${owner}">
-        <div class="form-group">
-            <label th:for="name">Owner Name</label>
-            <input class="form-control" th:field="*{name}" value="${owner.name}"/>
-            <span th:errors="${owner.name}" class="error"></span>
-        </div>
+    <div class="job-listing">
+        <form method="post" style="max-width:600px;" th:object="${owner}">
+           <div class="form-group">
+              <label th:for="name">Owner Name</label>
+             <input class="form-control" th:field="*{name}" value="${owner.name}"/>
+             <span th:errors="${owner.name}" class="error"></span>
+          </div>
 
-        <input type="submit" value="Change Name" />
-    </form>
-</div>
-
-
+         <input type="submit" value="Change Name" />
+     </form>
+    </div>
+    <a th:href="@{../index}">Return</a>
+</th:block>
 </body>
 </html>
