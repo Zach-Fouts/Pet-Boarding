@@ -14,19 +14,21 @@
             <a class="btn btn-secondary" href="/employees" title="Go back to Employees table">
                 <i class="bi bi-box-arrow-in-left"></i>
             </a>
-            <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Employee</span>
+           <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Employee</span>
             <a class="btn btn-primary ms-auto" title="Open job positions table">
                 <i class="bi bi-table"></i>
                 <span class="d-none d-sm-inline">Job Positions</span>
             </a>
+
         </div>
-        <form class="row g-3" th:Object="${employee}" method="post">
+        <form class="row g-3" th:Object="${employee}" th:method="${submitMethod}" th:action="@{${submitURL}}">
+            <input type="hidden" id="id" th:field="*{id}">
             <div class="col-md-12">
                 <div class="col-md-6">
                     <label for="position" class="form-label">Position</label>
-                    <div class="input-group">
-                        <select id="position" th:field="*{position}" class="form-select" required>
-                            <option disabled selected value="">Select one...</option>
+                    <div class="input-group has-validation">
+                        <select id="position" th:field="*{position}" class="form-select" th:errorclass="is-invalid" required>
+                            <option selected value="">Select one...</option>
                             <option th:each="position: ${positions}"
                                     th:value="${position.id}"
                                     th:text="${position.name}">
@@ -35,25 +37,31 @@
                         <a class="btn btn-primary" title="Add a new job position">
                             <i class="bi bi-plus"></i>
                         </a>
+                        <div id="validationServerPositionFeedback" class="invalid-feedback" th:errors="*{position}"></div>
                     </div>
-                    <p class="error" th:errors="*{position}"></p>
                 </div>
 
             </div>
             <div class="col-md-6">
                 <label for="firstName" class="form-label">First Name</label>
-                <input th:field="*{firstName}" class="form-control" id="firstName" required>
-                <p class="error" th:errors="*{firstName}"></p>
+                <div class="input-group has-validation">
+                    <input th:field="*{firstName}" class="form-control" th:errorclass="is-invalid" id="firstName" required>
+                    <div id="validationServerFirstNameFeedback" class="invalid-feedback" th:errors="*{firstName}"> </div>
+                </div>
             </div>
             <div class="col-md-6">
                 <label for="lastName" class="form-label">Last Name</label>
-                <input  th:field="*{lastName}" class="form-control" id="lastName" required>
-                <p class="error" th:errors="*{lastName}"></p>
+                <div class="input-group has-validation">
+                    <input th:field="*{lastName}" class="form-control" th:errorclass="is-invalid" id="lastName" required>
+                    <div id="validationServerLastNameFeedback" class="invalid-feedback" th:errors="*{lastName}"> </div>
+                </div>
             </div>
             <div class="col-12">
                 <label for="address" class="form-label">Address</label>
-                <input type="text" th:field="*{address}" class="form-control" id="address" placeholder="1234 Main St" required>
-                <p class="error" th:errors="*{address}"></p>
+                <div class="input-group has-validation">
+                    <input type="text" th:field="*{address}" class="form-control" th:errorclass="is-invalid" id="address" placeholder="1234 Main St" required>
+                    <div id="validationServerAddressFeedback" class="invalid-feedback" th:errors="*{address}"></div>
+                </div>
             </div>
             <div class="col-12">
                 <label for="address2" class="form-label">Address 2</label>
@@ -61,13 +69,17 @@
             </div>
             <div class="col-8">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" th:field="*{email}"  class="form-control" id="email" placeholder="@" required>
-                <p class="error" th:errors="*{email}"></p>
+                <div class="input-group has-validation">
+                    <input type="email" th:field="*{email}"  class="form-control" th:errorclass="is-invalid" id="email" placeholder="@" required>
+                    <div id="validationServerEmailFeedback" class="invalid-feedback" th:errors="*{email}"></div>
+                </div>
             </div>
             <div class="col-md-4">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
-                <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber">
-                <p class="error" th:errors="*{phoneNumber}"></p>
+                <div class="input-group has-validation">
+                    <input type="text" th:field="*{phoneNumber}" class="form-control" th:errorclass="is-invalid" id="phoneNumber">
+                    <div id="validationPhoneNumberFeedback" class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+                </div>
             </div>
             <div class="col-12 d-flex p-2">
                 <button class="me-auto btn btn-secondary o-1" title="Clear form" type="reset">
@@ -82,6 +94,8 @@
                 </button>
             </div>
         </form>
+
+
     </th:block>
 </body>
 </html>

@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("employees")
@@ -25,6 +24,8 @@ public class EmployeesController extends AppBaseController {
     @Autowired
     private PositionRepository positionRepository;
 
+    private final String FORM_NEW_TITLE = "New Employee";
+    private final String FORM_UPDATE_TITLE = "Update: ${employeeName}";
 
     @GetMapping
     public String displayEmployeesGrid(Model model) {
@@ -34,25 +35,72 @@ public class EmployeesController extends AppBaseController {
 
     @GetMapping("add")
     public String displayAddEmployeeForm(Model model) {
-        model.addAttribute("employee", new Employee());
-        model.addAttribute("positions", positionRepository.findAll());
-        model.addAttribute("formTitle", "New Employee");
+        prepareAddFormModel(model);
         return "employees/form";
     }
 
     @PostMapping("add")
     public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model) {
         if(errors.hasErrors()) {
+            model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
         }
-
         employeeRepository.save(newEmployee);
+        return "employees/index";
+    }
 
-        return "redirect:";
+    @GetMapping("update/{id}")
+    public String displayUpdateEmployeeForm(@PathVariable Integer id, Model model) {
+        Optional<Employee> optEmployee = employeeRepository.findById(id);
+        if(optEmployee.isEmpty()) {
+            model.addAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
+            return "redirect:";
+        }
+        prepareUpdateFormModel(optEmployee.get(), model);
+        return "employees/form";
+    }
+
+    @PostMapping("update/{id}")
+    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Employee employee, Errors errors, Model model) {
+        if(errors.hasErrors()) {
+            model.addAttribute("positions", positionRepository.findAll());
+            return "employees/form";
+        }
+        employeeRepository.save(employee);
+        return "redirect:" + id;
+    }
+
+    @PostMapping("delete/{id}")
+    public String processDeleteEmployeeRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        if(!employeeRepository.existsById(id)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
+        } else {
+            employeeRepository.deleteById(id);
+        }
+        return "redirect:/employees";
     }
 
     @ModelAttribute("activeModule")
     public Module addActiveModule() {
-        return getActiveModule("employees");
+        return getActiveModule(this.getClass().getAnnotation(RequestMapping.class).value()[0]);
+    }
+
+    private void prepareCommonFormModel(Model model) {
+        model.addAttribute("positions", positionRepository.findAll());
+    }
+    private void prepareAddFormModel(Model model) {
+        model.addAttribute("formTitle", FORM_NEW_TITLE);
+        model.addAttribute("employee", new Employee());
+        model.addAttribute("submitURL", "/employees/add");
+        model.addAttribute("submitMethod", "post");
+        prepareCommonFormModel(model);
+    }
+
+    private void prepareUpdateFormModel(Employee employee, Model model) {
+        model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${employeeName}", employee.getFullName()));
+        model.addAttribute("employee", employee);
+        model.addAttribute("submitURL", "/employees/update/" + employee.getId());
+        model.addAttribute("submitMethod", "post");
+        prepareCommonFormModel(model);
     }
 }

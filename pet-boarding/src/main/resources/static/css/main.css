@@ -86,6 +86,7 @@
     main {
       height: 100vh;
       overflow: auto;
+      padding-bottom: 7rem!important;
     }
 
     .fixed-table-toolbar {
