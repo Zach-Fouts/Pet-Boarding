@@ -2,7 +2,6 @@ package com.petboarding.controllers;
 
 import com.petboarding.models.Owner;
 import com.petboarding.models.data.OwnerRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +44,7 @@ public class OwnerController extends AppBaseController{
     }
 
     @PostMapping("add")
-    public String processAddOwnerForm(@ModelAttribute Owner newOwner, Error errors, @NotNull Model model){
+    public String processAddOwnerForm(@ModelAttribute Owner newOwner, Error errors, Model model){
         model.addAttribute("owners", ownerRepository.save(newOwner));
         return "redirect:../index";
     }
