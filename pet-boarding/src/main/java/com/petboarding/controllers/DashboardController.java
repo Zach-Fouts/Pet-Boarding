@@ -20,10 +20,10 @@ public class DashboardController extends AppBaseController {
         return "index";
     }
 
-    @GetMapping("/test")
+    @GetMapping("/owners")
     public String showProducts(Model model) {
         this.setActiveModule("owners", model);
-        return "content-example-page";
+        return "redirect:/owners/index";
     }
 
     @ModelAttribute("activeModule")
