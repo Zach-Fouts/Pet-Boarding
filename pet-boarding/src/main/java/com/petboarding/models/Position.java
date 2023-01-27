@@ -20,6 +20,8 @@ public class Position extends AbstractEntity{
     private List<Employee> employees = new ArrayList<>();
 
 
+
+
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
 
