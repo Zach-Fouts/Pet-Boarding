@@ -9,7 +9,6 @@ window.addEventListener('DOMContentLoaded', () => {
 // @param name  {string}
 // @param id    {number}
 function openDeleteDialog(name, id) {
-id=500;
     document.getElementById('deleteName').textContent = name;
     deleteForm.action = `/employees/delete/${id}`;
     deleteDialog.show();
