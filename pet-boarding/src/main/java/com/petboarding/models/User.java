@@ -1,13 +1,10 @@
 package com.petboarding.models;
 
-
-import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Entity
 public class User extends AbstractEntity{

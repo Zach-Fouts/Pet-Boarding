@@ -93,7 +93,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public String processLoginForm (@ModelAttribute @Valid LoginFormDTO loginFormDTO,BindingResult result, Model model, HttpServletRequest request, Errors errors) {
+    public String processLoginForm (@ModelAttribute @Valid LoginFormDTO loginFormDTO, BindingResult result, Model model, HttpServletRequest request, Errors errors) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Log In");
