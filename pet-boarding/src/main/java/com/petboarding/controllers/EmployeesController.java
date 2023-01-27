@@ -50,11 +50,11 @@ public class EmployeesController extends AppBaseController {
     }
 
     @GetMapping("update/{id}")
-    public String displayUpdateEmployeeForm(@PathVariable Integer id, Model model) {
+    public String displayUpdateEmployeeForm(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Employee> optEmployee = employeeRepository.findById(id);
         if(optEmployee.isEmpty()) {
-            model.addAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
-            return "redirect:";
+            redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
+            return "redirect:/employees";
         }
         prepareUpdateFormModel(optEmployee.get(), model);
         return "employees/form";
@@ -76,6 +76,7 @@ public class EmployeesController extends AppBaseController {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
         } else {
             employeeRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("messageDeleted", true);
         }
         return "redirect:/employees";
     }
