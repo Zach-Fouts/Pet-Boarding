@@ -76,7 +76,7 @@ public class EmployeesController extends AppBaseController {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
         } else {
             employeeRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("messageDeleted", true);
+            redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");
         }
         return "redirect:/employees";
     }
