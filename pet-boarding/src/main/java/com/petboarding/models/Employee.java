@@ -45,6 +45,11 @@ public class Employee extends AbstractEntity{
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
 
+
+    @OneToOne(mappedBy = "employee")
+    private User user;
+
+
     public Employee() {}
 
     public String getFirstName() {
