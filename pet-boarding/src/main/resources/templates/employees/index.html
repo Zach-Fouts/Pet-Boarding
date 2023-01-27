@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+        <script th:src="@{/js/employees.js}"></script>
+    </th:block>
+</head>
+<body>
+    <th:block id="content" class="position-relative">
+
+        <div id="errorAlert" th:if="${errorMessage}" class="alert shadow-sm alert-danger d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
+                    <i class="bi-exclamation-circle"></i>
+                    <span th:text="${errorMessage}" class="px-3">Error message</span>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div id="infoAlert" th:if="${infoMessage}" class="alert shadow-sm alert-info d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
+            <i class="bi-info-circle"></i>
+            <span th:text="${errorMessage}" class="px-3">Error message</span>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+
+        <div id="toolbar">
+            <a class="btn btn-primary" th:href="@{employees/add}" title="Open new employee form">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline">Add Employee</span>
+            </a>
+            <a class="btn btn-primary" th:href="@{employees/positions}" title="Open job positions table" >
+                <i class="bi bi-table"></i>
+                <span class="d-none d-sm-inline">Job Positions</span>
+            </a>
+        </div>
+        <table
+                id="employeesTable"
+                data-toggle="table"
+                data-search="true"
+                data-show-search-button="true"
+                data-pagination="true"
+                data-show-columns="true"
+                data-show-toggle="true"
+                data-toolbar="#toolbar">
+            <thead>
+            <tr>
+                <th data-halign="center" data-sortable="true">Position</th>
+                <th data-halign="center" data-sortable="true">Name</th>
+                <th data-halign="center">Address</th>
+                <th data-halign="center">Address 2</th>
+                <th data-halign="center">Phone number</th>
+                <th data-halign="center">Email</th>
+                <th data-halign="center" data-align="center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="employee: ${employees}" th:Object="${employee}">
+                <td th:text="*{position.name}"></td>
+                <td th:text="*{getFullName()}"></td>
+                <td th:text="*{address}"></td>
+                <td th:text="*{address2}"></td>
+                <td th:text="*{phoneNumber}"></td>
+                <td th:text="*{email}"></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{employees/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
+                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{getFullName()}', *{id});|"><i class="bi-trash"></i></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div id="deleteDialog" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Do you want to delete <span id="deleteName" class="fw-semibold"></span>'s entry?. To continue press delete.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form id="deleteForm" method="post" action="#">
+                            <button id="btnDeleteEmployee" type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

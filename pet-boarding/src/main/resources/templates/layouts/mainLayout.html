@@ -36,7 +36,7 @@
 <header class="app-header  border-bottom shadow-sm">
   <div class="container-fluid d-grid gap-3 align-items-center px-2 px-md-3" style="grid-template-columns: 1fr 1fr;">
     <div class="d-flex align-items-center app-header-title">
-      <img src="img/logo.svg" class="img-fluid app-logo" alt="Application Logo" />
+      <img src="/img/logo.svg" class="img-fluid app-logo" alt="Application Logo" />
       <span class="px-4 app-title fw-bold d-none d-md-block">PET BOARDING SERVICE</span>
     </div>
 
@@ -52,8 +52,8 @@
   <nav class="navigation-sidebar d-flex flex-column flex-shrink-0 shadow-sm">
     <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
       <div class="navigation-spacer w-100"></div>
-      <li th:each="module: ${modules}" th:Object="${module}" th:class="|nav-item ${module == activeModule ? 'active-module' : ''}|">
-        <a th:unless="${module == activeModule}" th:href="*{path}" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
+      <li th:each="module: ${modules}" th:Object="${module}" th:class="|nav-item ${module == activeModule ? 'active-module py-1' : ''}|">
+        <a th:unless="${module == activeModule}" th:href="|/*{path}|" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
            data-bs-placement="right" th:attr="aria-label=*{name}, data-bs-original-title=*{name}">
           <i th:class="|bi *{icon}|"></i>
         </a>
@@ -61,11 +61,11 @@
       </li>
     </ul>
   </nav>
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column w-100">
     <p th:text="${activeModule.name}" class="module-name py-0 px-4">
       Active Module's Name
     </p>
-    <main class="content py-1 px-4" th:insert="${content}">
+    <main class="content pt-1 px-4" th:insert="${content}">
 
     </main>
   </div>
