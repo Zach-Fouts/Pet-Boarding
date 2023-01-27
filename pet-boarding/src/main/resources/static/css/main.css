@@ -1,0 +1,109 @@
+    body {
+      overflow: hidden;
+    }
+
+    header {
+      padding: 4px 0 4px 0;
+      overflow-x: hidden;
+    }
+
+    .app-logo {
+      height: 48px;
+    }
+
+    .app-title {
+      font-size: 24px;
+      line-height: 48px;
+    }
+
+    .user-avatar {
+      font-size: 32px;
+    }
+
+    .navigation-sidebar {
+      height: calc(100vh - 57px);
+      max-height: calc(100vh - 57px);
+      background-color: #D3D3D3;
+      position: relative;
+      z-index: 100;
+    }
+
+    .navigation-sidebar a {
+      padding: 0rem;
+    }
+
+    .navigation-sidebar li {
+      transition: 300ms linear;
+    }
+
+    .navigation-sidebar li:hover {
+      background-color: #EEE;
+    }
+
+    .navigation-sidebar li:hover * {
+      color: var(--bs-blue);
+    }
+
+    .navigation-sidebar i,
+    .navigation-sidebar svg {
+      font-size: 34px;
+      color: #1E1E1E;
+    }
+
+    .navigation-sidebar li.active-module {
+      color: var(--bs-blue);
+      background: #FFFFFF;
+      box-shadow: inset 4px 4px 6px -6px rgba(0, 0, 0, 0.30);
+      position: relative;
+      border-left: 5px solid;
+      border-bottom: 1px solid transparent;
+      margin-right: -5px;
+    }
+
+    .navigation-sidebar li.active-module a {
+      border-bottom-color: transparent !important;
+    }
+
+    .navigation-sidebar li.active-module * {
+      color: var(--bs-blue) !important;
+    }
+
+    .navigation-spacer {
+      height: 32px;
+    }
+
+    .module-name {
+      height: 32px;
+      line-height: 32px;
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background-color: #EFEFEF;
+      z-index: -1;
+      border-bottom: 1px solid #EDEDED;
+    }
+
+    main {
+      height: 100vh;
+      overflow: auto;
+      padding-bottom: 7rem!important;
+    }
+
+    .fixed-table-toolbar {
+      border-bottom: 1px solid #C1C1C1;
+      margin-bottom: 10px;
+    }
+
+    .table > thead {
+      border-bottom: 2px solid #3E3E3E;
+    }
+
+    /* button hover decoration */
+    .btn:hover {
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+    }
+
+    .alert {
+      opacity: 0.95;
+      z-index: 100;
+    }

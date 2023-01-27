@@ -4,10 +4,12 @@ import org.springframework.stereotype.Controller;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -22,7 +24,8 @@ public class Employee extends AbstractEntity{
     private String lastName;
 
     @Valid
-    @OneToOne
+    @NotNull(message = "Select a valid job position.")
+    @ManyToOne
     private Position position;
 
     @NotBlank(message = "Address cannot be empty.")
@@ -32,7 +35,6 @@ public class Employee extends AbstractEntity{
     @Size(max = 100, message = "Address 2 cannot be longer than 100 characters.")
     private String address2;
 
-    @NotBlank(message = "Phone number cannot be empty.")
     @Size(min = 10, message = "Phone number cannot be shorter than 10 characters.")
     private String phoneNumber;
 
@@ -64,6 +66,10 @@ public class Employee extends AbstractEntity{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return this.lastName + ", " + this.firstName;
     }
 
     public Position getPosition() {
@@ -112,5 +118,17 @@ public class Employee extends AbstractEntity{
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return String.join(System.lineSeparator(),
+                "Employee: ",
+                getFullName(),
+                address,
+                address2,
+                email,
+                phoneNumber,
+                "------------------");
     }
 }

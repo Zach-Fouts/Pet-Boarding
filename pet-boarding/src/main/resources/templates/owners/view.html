@@ -8,8 +8,15 @@
     </th:block>
 </head>
 <body>
-    <th:block id="content">
-        Home WIP
-    </th:block>
+<th:block id="content">
+<h1 th:text="${'Owner: ' + owner.name}">Default Title</h1>
+
+
+<div class="job-listing">
+    <p th:text="${'Name: ' + owner.name}"></p>
+</div>
+
+    <a th:href="@{../index}">Return</a>
+</th:block>
 </body>
 </html>

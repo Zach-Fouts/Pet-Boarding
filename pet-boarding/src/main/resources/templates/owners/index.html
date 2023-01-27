@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <!-- MY OWNER STUFF-->
+    <div class="container body-content">
+
+        <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+        <a th:href="@{'add/'}" class="btn btn-primary btn-lg active" role="button" aria-disabled="true">Add a New Owner</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Owner Id</th>
+                <th scope = "col">Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="owner: ${owners}">
+                <td scope ="row">
+                    <p>
+                        <a th:href="@{'view/' + ${owner.id}}" th:text="${owner.id}"></a>
+                    </p>
+                </td>
+                <td>
+                    <p th:text="${owner.name}"></p>
+                </td>
+                <td>
+                    <form th:action = "@{${owner.id}}">
+                        <input type="submit" value="Delete"/>
+                    </form>
+                </td>
+                <td>
+                    <form th:action = "@{'updateOwner/' + ${owner.id}}">
+                        <input type="submit" value="Update"/>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--End My Owner Stuff-->
+</th:block>
+</body>
+</html>
