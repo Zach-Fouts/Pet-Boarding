@@ -35,6 +35,11 @@
             <tr>
                 <th data-halign="center" data-sortable="true">First Name</th>
                 <th data-halign="center" data-sortable="true">Last Name</th>
+                <th data-halign="center" data-sortable="true">Address</th>
+                <th data-halign="center" data-sortable="true">Address 2</th>
+                <th data-halign="center" data-sortable="true">Phone Number</th>
+                <th data-halign="center" data-sortable="true">Email</th>
+                <th data-halign="center" data-sortable="true">Notes</th>
 <!--                <th data-sortable="true">Parents Name</th>-->
 <!--                <th data-sortable="true">Breed</th>-->
 <!--                <th>Notes</th>-->
@@ -43,8 +48,13 @@
             </thead>
             <tbody>
                 <tr th:each="owner: ${owners}">
-                <td th:text="${owner.firstName}"></td>
+                    <td th:text="${owner.firstName}"></td>
                     <td th:text="${owner.lastName}"></td>
+                    <td th:text="${owner.address}"></td>
+                    <td th:text="${owner.address2}"></td>
+                    <td th:text="${owner.phoneNumber}"></td>
+                    <td th:text="${owner.email}"></td>
+                    <td th:text="${owner.notes}"></td>
                 <td>
                     <a th:href="@{'view/' + ${owner.id}}"  class="btn btn-primary">View</a>
                     <a th:href="@{'updateOwner/' + ${owner.id}}" class="btn btn-primary"/>Update</a>

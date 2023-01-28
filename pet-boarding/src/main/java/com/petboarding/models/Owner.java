@@ -18,15 +18,27 @@ public class Owner extends AbstractEntity{
     private String firstName;
     private String lastName;
 
+    private String address;
+    private String address2;
+    private String phoneNumber;
+    private String email;
+    private String notes;
+
+
     public Owner(){
         id = nextId;
         nextId++;
     }
 
-    public Owner(String aFirstName, String aLastName){
+    public Owner(String aFirstName, String aLastName, String aAddress, String aAdress2, String aPhoneNumber, String aEmail, String aNotes){
 
         firstName = aFirstName;
         lastName = aLastName;
+        address = aAddress;
+        address2 = aAdress2;
+        phoneNumber = aPhoneNumber;
+        email = aEmail;
+        notes = aNotes;
     }
 
     @Override
@@ -35,6 +47,11 @@ public class Owner extends AbstractEntity{
                 "id=" + id +
                 ", firstName=" + firstName +
                 ", lastName=" + lastName +
+                ", address=" + address +
+                ", address2=" + address2 +
+                ", phoneNumber=" + phoneNumber +
+                ", email=" + email +
+                ", notes=" + notes +
                 '\'' +
                 '}';
     }
@@ -53,6 +70,9 @@ public class Owner extends AbstractEntity{
 //        return Objects.hash(id, name);
 //    }
 
+    public int getId() {
+        return id;
+    }
     public String getName() {
         return "firstName" + " " + "lastName";
     }
@@ -72,7 +92,43 @@ public class Owner extends AbstractEntity{
         this.lastName = lastName;
     }
 
-    public int getId() {
-        return id;
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

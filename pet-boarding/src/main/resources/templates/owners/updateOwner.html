@@ -18,12 +18,33 @@
               <label th:for="firstName">First Name</label>
              <input class="form-control" th:field="*{firstName}" value="${owner.firstName}"/>
              <span th:errors="${owner.firstName}" class="error"></span>
+
                <label th:for="firstName">Last Name</label>
                <input class="form-control" th:field="*{lastName}" value="${owner.lastName}"/>
                <span th:errors="${owner.lastName}" class="error"></span>
+
+               <label th:for="address">Last Name</label>
+               <input class="form-control" th:field="*{address}" value="${owner.address}"/>
+               <span th:errors="${owner.address}" class="error"></span>
+
+               <label th:for="address2">Last Name</label>
+               <input class="form-control" th:field="*{address2}" value="${owner.address2}"/>
+               <span th:errors="${owner.address2}" class="error"></span>
+
+               <label th:for="phoneNumber">Phone Number</label>
+               <input class="form-control" th:field="*{phoneNumber}" value="${owner.phoneNumber}"/>
+               <span th:errors="${owner.firstName}" class="error"></span>
+
+               <label th:for="email">Email</label>
+               <input class="form-control" th:field="*{email}" value="${owner.email}"/>
+               <span th:errors="${owner.email}" class="error"></span>
+
+               <label th:for="notes">Notes</label>
+               <input class="form-control" th:field="*{notes}" value="${owner.notes}"/>
+               <span th:errors="${owner.notes}" class="error"></span>
           </div>
 
-         <input type="submit" value="Change Name" />
+         <input type="submit" value="Update Information" />
      </form>
     </div>
     <a th:href="@{../index}">Return</a>

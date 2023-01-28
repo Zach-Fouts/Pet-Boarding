@@ -82,6 +82,11 @@ public class OwnerController extends AppBaseController{
         Owner updatedOwner = ownerRepository.findById(ownerId).get();
         updatedOwner.setFirstName(owner.getFirstName());
         updatedOwner.setLastName(owner.getLastName());
+        updatedOwner.setAddress(owner.getAddress());
+        updatedOwner.setAddress2(owner.getAddress2());
+        updatedOwner.setPhoneNumber(owner.getPhoneNumber());
+        updatedOwner.setEmail(owner.getEmail());
+        updatedOwner.setNotes(owner.getNotes());
         ownerRepository.save(updatedOwner);
 
         return "redirect:../index";
