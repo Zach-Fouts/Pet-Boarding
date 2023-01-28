@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
+</head>
 <body>
-<form th:action="@{/users/save}" th:object="${user}"
+<th:block id="content">
+<form th:action="@{/users/saveUser}" th:object="${user}"
       method="post" style="max-width: 600px; margin: 0 auto;">
     <input type="hidden" th:field="${user}"/>
     <div class="m-3">
@@ -24,9 +31,10 @@
 
         <div>
             <button type="submit" class="btn btn-primary">Update</button>
-            <button type="button" class="btn btn-secondary" onclick="location.href='/users/userList'">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="location.href='/users'">Cancel</button>
         </div>
     </div>
 </form>
+</th:block>
 </body>
 </html>

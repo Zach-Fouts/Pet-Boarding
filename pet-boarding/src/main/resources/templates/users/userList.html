@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
+</head>
 <body>
+<th:block id="content">
 <table class="table table-striped table-bordered">
     <thead class="thead-dark">
     <tr>
@@ -9,22 +16,22 @@
         <th>Username</th>
         <th>Employee ID</th>
         <th>Role</th>
-        <th>Edit</th>
-        <th>Delete</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user: ${listUsers}">
         <td th:text="${user.id}">User ID</td>
-        <td th:text="${user.username}">E-mail</td>
-        <td th:text="${user.employee}">First Name</td>
-        <td th:text="${user.role.name}">Last Name</td>
-        <td><a th:href="@{'/users/editUserForm/' + ${user.id}}">Edit</a></td>
-        <td><a th:href="@{'/users/deleteUserForm/' + ${user.id}}">Delete</a>
+        <td th:text="${user.username}">Username</td>
+        <td th:text="${user.employee}">Employee ID</td>
+        <td th:text="${user.role.name}">Role ID</td>
+        <td style="text-align: center"center><a class="btn btn-primary" th:href="@{'/users/editUserForm/' + ${user.id}}">Edit</a>
+        <a class="btn btn-danger" th:href="@{'/users/deleteUserForm/' + ${user.id}}">Delete</a>
         </td>
     </tr>
     </tbody>
 </table>
-<button type="button" class="btn btn-primary" onclick="location.href='/users/addUserForm'">Add User</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='/users/addUserForm'">Add User</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='/users/roles/roleList'">Add Role</button>
+</th:block>
 </body>
 </html>
