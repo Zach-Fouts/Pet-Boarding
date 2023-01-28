@@ -11,7 +11,6 @@
 </head>
 <body>
     <th:block id="content" class="position-relative">
-
         <div id="errorAlert" th:if="${errorMessage}" class="alert shadow-sm alert-danger d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
                     <i class="bi-exclamation-circle"></i>
                     <span th:text="${errorMessage}" class="px-3">Error message</span>
@@ -24,20 +23,20 @@
         </div>
 
         <div id="toolbar" class="d-flex">
-            <a class="btn btn-primary" th:href="@{employees/add}" title="Open new employee form">
-                <i class="bi bi-plus-lg"></i>
-                <span class="d-none d-sm-inline">Add Employee</span>
+            <a class="btn btn-secondary" href="/employees" title="Go back to Employees">
+                <i class="bi bi-box-arrow-in-left"></i>
             </a>
             <div class="vr mx-2"></div>
-            <a class="btn btn-primary" th:href="@{employees/positions}" title="Open job positions table" >
-                <i class="bi bi-table"></i>
-                <span class="d-none d-sm-inline">Job Positions</span>
+            <a class="btn btn-primary" th:href="@{/employees/positions/add}" title="Open new job position form">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline">Add Job Position</span>
             </a>
         </div>
         <table
-                id="employeesTable"
+                id="positionsTable"
                 data-toggle="table"
                 data-search="true"
+                data-show-search-button="true"
                 data-pagination="true"
                 data-show-columns="true"
                 data-show-toggle="true"
@@ -46,30 +45,21 @@
             <thead>
             <tr>
                 <th data-halign="center" data-sortable="true">Position</th>
-                <th data-halign="center" data-sortable="true">Name</th>
-                <th data-halign="center">Address</th>
-                <th data-halign="center">Address 2</th>
-                <th data-halign="center">Phone number</th>
-                <th data-halign="center">Email</th>
+                <th data-halign="center" data-sortable="true" data-align="right">Number of employees</th>
                 <th data-halign="center" data-align="center">Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="employee: ${employees}" th:Object="${employee}">
-                <td th:text="*{position.name}"></td>
-                <td th:text="*{getFullName()}"></td>
-                <td th:text="*{address}"></td>
-                <td th:text="*{address2}"></td>
-                <td th:text="*{phoneNumber}"></td>
-                <td th:text="*{email}"></td>
+            <tr th:each="position: ${positions}" th:Object="${position}">
+                <td th:text="*{name}"></td>
+                <td th:text="*{employees.size()}"></td>
                 <td>
-                    <a class="btn btn-primary" th:href="@{employees/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{getFullName()}', *{id});|"><i class="bi-trash"></i></a>
+                    <a class="btn btn-primary" th:href="@{/employees/positions/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
+                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}', *{id}, '/employees/positions');|"><i class="bi-trash"></i></a>
                 </td>
             </tr>
             </tbody>
         </table>
-
     </th:block>
 </body>
 </html>
