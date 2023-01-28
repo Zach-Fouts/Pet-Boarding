@@ -2,10 +2,6 @@
       overflow: hidden;
     }
 
-    .btn-primary {
-    --bs-btn-bg: #655E96;
-    }
-
     header {
       padding: 4px 0 4px 0;
       overflow-x: hidden;

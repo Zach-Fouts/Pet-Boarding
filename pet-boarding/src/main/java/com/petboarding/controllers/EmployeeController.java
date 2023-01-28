@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("employees")
-public class EmployeesController extends AppBaseController {
+public class EmployeeController extends AppBaseController {
 
     @Autowired
     private EmployeeRepository employeeRepository;

@@ -11,15 +11,15 @@
 </head>
 <body>
     <th:block id="content" class="position-relative">
-        <div id="errorAlert" th:if="${errorMessage}" class="alert shadow-sm alert-danger d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
-                    <i class="bi-exclamation-circle"></i>
-                    <span th:text="${errorMessage}" class="px-3">Error message</span>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+
+        <div id="errorAlert" th:if="${errorMessage}" class="alert shadow alert-danger alert-dismissible fade show d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
+            <i class="bi-exclamation-circle"></i>
+            <span th:utext="${errorMessage}" class="px-3">Error message</span>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div id="infoAlert" th:if="${infoMessage}" class="alert shadow-sm alert-info d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">
-            <i class="bi-info-circle"></i>
-            <span th:text="${errorMessage}" class="px-3">Error message</span>
-            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <div id="infoAlert" th:if="${infoMessage}" class="alert shadow alert-primary alert-dismissible fade show  d-flex align-items-center position-absolute top-50 start-50 translate-middle" role="alert" aria-live="assertive" aria-atomic="true">            <i class="bi-info-circle"></i>
+            <span th:utext="${infoMessage}" class="px-3">Error message</span>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
         <div id="toolbar" class="d-flex">
@@ -55,7 +55,7 @@
                 <td th:text="*{employees.size()}"></td>
                 <td>
                     <a class="btn btn-primary" th:href="@{/employees/positions/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}', *{id}, '/employees/positions');|"><i class="bi-trash"></i></a>
+                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}', '/employees/positions', *{id});|"><i class="bi-trash"></i></a>
                 </td>
             </tr>
             </tbody>

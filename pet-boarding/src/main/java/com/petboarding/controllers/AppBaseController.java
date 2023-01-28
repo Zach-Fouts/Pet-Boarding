@@ -4,7 +4,6 @@ import com.petboarding.models.User;
 import com.petboarding.models.app.Module;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

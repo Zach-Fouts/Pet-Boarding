@@ -1,6 +1,5 @@
 package com.petboarding.controllers;
 
-import com.petboarding.models.Employee;
 import com.petboarding.models.Position;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.EmployeeRepository;
@@ -17,7 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("employees/positions")
-public class PositionsController extends AppBaseController {
+public class PositionController extends AppBaseController {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -73,11 +72,14 @@ public class PositionsController extends AppBaseController {
 
     @PostMapping("delete/{id}")
     public String processDeleteEmployeeRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+
         if(!positionRepository.existsById(id)) {
             redirectAttributes.addFlashAttribute("errorMessage", "The position ID:" + id + " couldn't be found.");
         } else {
+            // TODO: Verify that the position hasn't already been linked to an employee before deleting
+            String name = positionRepository.findById(id).get().getName();
             positionRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("infoMessage", "Position  was successfully deleted.");
+            redirectAttributes.addFlashAttribute("infoMessage", "Job Position: <strong>" + name + "</strong>  was successfully deleted.");
         }
         return "redirect:/employees/positions";
     }
