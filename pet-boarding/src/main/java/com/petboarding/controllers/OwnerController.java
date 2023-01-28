@@ -19,7 +19,7 @@ public class OwnerController extends AppBaseController{
 
 // Owner Home Page
     @RequestMapping(value = "index")
-    public String testPage(Model model) {
+    public String showMainOwnerPage(Model model) {
         Iterable<Owner> owners;
         owners = ownerRepository.findAll();
         model.addAttribute("title", "All Owners");
@@ -80,7 +80,8 @@ public class OwnerController extends AppBaseController{
     @PostMapping("updateOwner/{ownerId}")
     public String updateOwner(@ModelAttribute Owner owner, Model model, @PathVariable int ownerId){
         Owner updatedOwner = ownerRepository.findById(ownerId).get();
-        updatedOwner.setName(owner.getName());
+        updatedOwner.setFirstName(owner.getFirstName());
+        updatedOwner.setLastName(owner.getLastName());
         ownerRepository.save(updatedOwner);
 
         return "redirect:../index";
@@ -88,7 +89,7 @@ public class OwnerController extends AppBaseController{
 
 
 
-
+// Delete Owner
     @RequestMapping("/{ownerId}")
     public String deleteOwner(@PathVariable("ownerId") int ownerId){
         ownerRepository.deleteById(ownerId);

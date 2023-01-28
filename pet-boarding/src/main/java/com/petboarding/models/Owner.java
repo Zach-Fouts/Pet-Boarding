@@ -15,44 +15,61 @@ public class Owner extends AbstractEntity{
 
     private static int nextId = 1;
 
-    private String name;
+    private String firstName;
+    private String lastName;
 
     public Owner(){
         id = nextId;
         nextId++;
     }
 
-    public Owner(String aName){
-        name = aName;
+    public Owner(String aFirstName, String aLastName){
+
+        firstName = aFirstName;
+        lastName = aLastName;
     }
 
     @Override
     public String toString() {
         return "Owner{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                '\'' +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Owner owner = (Owner) o;
-        return id == owner.id && name.equals(owner.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
+    //Needed with Abstract Entitys?
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Owner owner = (Owner) o;
+//        return id == owner.id && name.equals(owner.name);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, name);
+//    }
 
     public String getName() {
-        return name;
+        return "firstName" + " " + "lastName";
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public int getId() {
