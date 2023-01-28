@@ -2,6 +2,7 @@ package com.petboarding.controllers;
 
 
 import com.petboarding.models.Reservation;
+import com.petboarding.models.app.Module;
 import com.petboarding.models.data.ReservationRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("reservations")
-public class ReservationController {
+public class ReservationController extends AppBaseController{
     @Autowired
     private ReservationRepository reservationRepository;
 
@@ -130,5 +131,8 @@ public class ReservationController {
         }
         return "redirect:";
     }
-
+    @ModelAttribute("activeModule")
+    public Module addActiveModule(){
+        return getActiveModule("reservations");
+    }
 }

@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <th:block id="otherResources">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+    </th:block>
+
 </head>
 <body>
+<th:block id="content">
     <table class="table table-striped">
         <tr>
             <th>ID</th>
@@ -26,6 +32,6 @@
     <form method="post">
         <input type="submit"  value="Delete" class="btn btn-danger">
     </form>
-
+</th:block>
 </body>
 </html>
