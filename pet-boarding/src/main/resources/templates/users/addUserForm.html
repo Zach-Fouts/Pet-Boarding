@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
-
-<body class="container">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+    </th:block>
+</head>
+<body>
+<th:block id="content">
 
 <div th:replace="fragments :: page-header"></div>
 <div class="container body-content">
@@ -36,9 +42,9 @@
             </div>
         </div>
         <input type="submit" class="btn btn-primary" value="Add User"/>
-        <button type="button" class="btn btn-secondary" onclick="location.href='/users/userList'">Cancel</button>
+        <button type="button" class="btn btn-secondary" onclick="location.href='/users'">Cancel</button>
     </form>
 </div>
-
+</th:block>
 </body>
 </html>
