@@ -1,33 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <th:block id="otherResources">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+    </th:block>
+
 </head>
-<body class="container">
-<ul class="nav">
-    <li class="nav-item"><a class="nav-link" href="/reservations/create">Create Reservation</a></li>
-</ul>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Comments</th>
-        <th>Details</th>
-    </tr>
-    </thead>
-    <tr th:each="reservation : ${reservations}">
-        <td th:text="${reservation.id}"></td>
-        <td th:text="${reservation.startDateTime}"></td>
-        <td th:text="${reservation.endDateTime}"></td>
-        <td th:text="${reservation.comments}"></td>
-        <td><a th:href="'/reservations/detail?reservationId=' + ${reservation.id}">Detail | </a>
-            <a th:href="'/reservations/update?reservationId=' + ${reservation.id}">Update | </a>
-            <a th:href="'/reservations/delete?reservationId=' + ${reservation.id}">Delete </a></td>
-    </tr>
-</table>
+<body>
+    <th:block id="content" class="position-relative">
+            <div id="toolbar">
+                <a class="btn btn-primary" th:href="@{/reservations/create}" title="create reservation">
+                    <i class="bi bi-plus-lg"></i>
+                    <span class="d-none d-sm-inline">Create Reservation</span>
+                </a>
+            </div>
+            <table
+                   id="reservationsTable"
+                   data-toggle="table"
+                   data-search="true"
+                   data-show-search-button="true"
+                   data-pagination="true"
+                   data-show-columns="true"
+                   data-show-toggle="true"
+                   data-toolbar="#toolbar">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th data-halign="center" data-sortable="true">Start Date</th>
+                    <th data-halign="center" data-sortable="true">End Date</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reservation : ${reservations}">
+                        <td th:text="${reservation.id}"></td>
+                        <td th:text="${reservation.startDateTime}"></td>
+                        <td th:text="${reservation.endDateTime}"></td>
+                        <td th:text="${reservation.comments}"></td>
+                        <td>
+                            <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
+                            <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>
+                            <a class="btn btn-danger" title="delete" th:href="@{'/reservations/delete?reservationId=' + ${reservation.id}}"><i class="bi bi-trash"></i></a>
+                            </td>
+                    </tr>
+                </tbody>
+            </table>
+    </th:block>
 </body>
 </html>

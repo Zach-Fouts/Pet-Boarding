@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+   <meta charset="UTF-8">
+   <title>Title</title>
+   <th:block id="otherResources">
+      <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+      <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+   </th:block>
+
 </head>
 <body>
+<th:block id="content">
 
    <table class="table table-striped">
       <tr>
@@ -24,29 +30,6 @@
          <td th:text="${reservation.comments}"></td>
       </tr>
    </table>
-<!--<form method="post">-->
-<!--   <div class="form-group">-->
-<!--      <label>Start Date-->
-<!--         <input th:field="${reservation.startDateTime}" class="form-control">-->
-<!--      </label>-->
-<!--      <p class="error" th:errors="${reservation.startDateTime}"></p>-->
-<!--   </div>-->
-<!--   <div class="form-group">-->
-<!--      <label>End Date-->
-<!--         <input th:field="${reservation.endDateTime}" class="form-control">-->
-<!--      </label>-->
-<!--      <p class="error" th:errors="${reservation.endDateTime}"></p>-->
-<!--   </div>-->
-<!--   <div class="form-group">-->
-<!--      <label>Comments-->
-<!--         <input th:field="${reservation.comments}" class="form-control">-->
-<!--      </label>-->
-<!--      <p class="error" th:errors="${reservation.comments}"></p>-->
-<!--   </div>-->
-<!--   <div class="form-group">-->
-<!--      <input type="submit" value="Save Changes" class="btn btn-success">-->
-<!--   </div>-->
-<!--</form>-->
-
+</th:block>
 </body>
 </html>
