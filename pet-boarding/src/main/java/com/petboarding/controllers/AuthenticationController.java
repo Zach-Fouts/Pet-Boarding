@@ -77,8 +77,8 @@ public class AuthenticationController {
             model.addAttribute("title", "Register");
             return "sign-in/register";
         }
-            User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
-            userRepository.save(newUser);
+        User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
+        userRepository.save(newUser);
         setUserInSession(request.getSession(), newUser);
 
 
@@ -116,7 +116,7 @@ public class AuthenticationController {
 
         setUserInSession(request.getSession(), theUser);
 
-        return "redirect:";
+        return "redirect:/";
 
 
     }
@@ -124,6 +124,6 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         request.getSession().invalidate();
-        return "redirect:/login";
+        return "redirect:/";
     }
 }

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <th:block id="otherResources">
+        <script src="https://cdn.jsdelivr.net/npm/datalist-css/dist/datalist-css.min.js"></script>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}"/>
         <!-- comment from test -->
     </th:block>
 </head>
@@ -30,16 +32,24 @@
                 <input class="form-control" th:field="${addNewUserDTO.verifyPassword}" type="password" />
             </label>
         </div>
-        <div class="form-group">
-            <div class="form-group row">
-                <label class="col-4 col-form-label">Roles: </label>
-                <div class="col-8">
-                    <th:block th:each="role: ${listRoles}">
-                        <input type="radio" th:field="${addNewUserDTO.role}"
-                               th:text="${role.name}" th:value="${role.id}" class="m-2" />
-                    </th:block>
-                </div>
-            </div>
+        <div class="col-md-2">
+            <label>Roles: </label>
+            <select class="form-control">
+                <option class="select-picker" data-search="true">Select one...</option>
+                        <option th:each="role: ${listRoles}"
+                                th:value="${role.id}"
+                                th:text="${role.name}">
+                        </option>
+            </select>
+            <label for="exampleDataList" class="form-label">Employee</label>
+            <input autocomplete="off" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Select an Employee">
+            <datalist id="datalistOptions">
+
+                <option th:each="employee: ${listEmployees}"
+                        th:value="${role.id}"
+                        th:text="${role.name}"></option>
+
+            </datalist>
         </div>
         <input type="submit" class="btn btn-primary" value="Add User"/>
         <button type="button" class="btn btn-secondary" onclick="location.href='/users'">Cancel</button>
