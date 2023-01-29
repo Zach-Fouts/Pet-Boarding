@@ -46,7 +46,7 @@ public class EmployeeController extends AppBaseController {
             return "employees/form";
         }
         employeeRepository.save(newEmployee);
-        return "employees/index";
+        return "redirect:";
     }
 
     @GetMapping("update/{id}")
@@ -61,12 +61,13 @@ public class EmployeeController extends AppBaseController {
     }
 
     @PostMapping("update/{id}")
-    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Employee employee, Errors errors, Model model) {
+    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Employee employee, Errors errors, Model model, RedirectAttributes redirectAttributes) {
         if(errors.hasErrors()) {
             model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
         }
         employeeRepository.save(employee);
+        redirectAttributes.addFlashAttribute("infoMessage", "The Job Position has been updated.");
         return "redirect:" + id;
     }
 

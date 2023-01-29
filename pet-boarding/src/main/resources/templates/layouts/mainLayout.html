@@ -48,6 +48,7 @@
         </span>
       <button class="btn  btn-primary">Logout</button>
     </div>
+  </div>
 </header>
 <div class="d-flex">
   <nav class="navigation-sidebar d-flex flex-column flex-shrink-0 shadow-sm">
@@ -66,8 +67,40 @@
     <p th:text="${activeModule.name}" class="module-name py-0 px-4">
       Active Module's Name
     </p>
+    <div th:if="${errorMessage} or ${infoMessage} or ${customMessage}" id="toastContainer" class="toast-container position-static">
+      <div th:if="${errorMessage}" id="errorAlert" class="toast fade position-absolute top-50 start-50 translate-middle border-danger fs-6"
+           role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header bg-danger bg-gradient">
+          <i class="bi bi-exclamation-circle text-white"></i>
+          <strong class="me-auto mx-2 text-white">Error</strong>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" th:utext="${errorMessage}">
+          errorMessage
+        </div>
+      </div>
+      <div th:if="${infoMessage}" id="infoAlert" class="toast fade position-absolute top-50 start-50 translate-middle fs-6"
+           role="status" aria-live="polite" aria-atomic="true" >
+        <div class="toast-header text-bg-primary bg-gradient">
+          <i class="bi bi-info-circle"></i>
+          <strong class="me-auto mx-2">Info</strong>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" th:utext="${infoMessage}">
+          infoMessage
+        </div>
+      </div>
+      <script>
+          // Trigger the alert messages to show and when they are close manually or automatically they get removed
+          $(function() {
+            $('.toast').toast('show');
+            $('.toast').on('hidden.bs.toast', ()=> {
+               $('.toast-container').remove();
+            });
+          });
+      </script>
+    </div>
     <main class="content pt-1 px-4" th:insert="${content}">
-
     </main>
   </div>
 </div>

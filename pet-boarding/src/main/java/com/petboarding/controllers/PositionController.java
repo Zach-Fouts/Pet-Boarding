@@ -62,11 +62,12 @@ public class PositionController extends AppBaseController {
     }
 
     @PostMapping("update/{id}")
-    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Position position, Errors errors, Model model) {
+    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Position position, Errors errors, Model model, RedirectAttributes redirectAttributes) {
         if(errors.hasErrors()) {
             return VIEW_BASE_PATH + "/form";
         }
         positionRepository.save(position);
+        redirectAttributes.addFlashAttribute("infoMessage", "The Job Position has been updated.");
         return "redirect:" + id;
     }
 
