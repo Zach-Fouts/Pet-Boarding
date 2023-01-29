@@ -40,7 +40,7 @@
                                     th:text="${position.name}">
                             </option>
                         </select>
-                        <a class="btn btn-primary" th:href="@{../positions/add}" title="Add a new job position">
+                        <a class="btn btn-primary" th:href="@{/employees/positions/add}" title="Add a new job position">
                             <i class="bi bi-plus"></i>
                         </a>
                         <div id="validationServerPositionFeedback" class="invalid-feedback" th:errors="*{position}"></div>

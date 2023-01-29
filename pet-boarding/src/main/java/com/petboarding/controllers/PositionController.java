@@ -73,14 +73,18 @@ public class PositionController extends AppBaseController {
 
     @PostMapping("delete/{id}")
     public String processDeleteEmployeeRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-
-        if(!positionRepository.existsById(id)) {
+        Optional<Position> optPosition = positionRepository.findById(id);
+        if(optPosition.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "The position ID:" + id + " couldn't be found.");
         } else {
-            // TODO: Verify that the position hasn't already been linked to an employee before deleting
-            String name = positionRepository.findById(id).get().getName();
-            positionRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("infoMessage", "Job Position: <strong>" + name + "</strong>  was successfully deleted.");
+            Position position = optPosition.get();
+            String name = position.getName();
+            if(position.getEmployees().size() > 0 ) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Jop Position <strong>" + name + "</strong> is linked to employees and can't be deleted.");
+            } else {
+                positionRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("infoMessage", "Job Position: <strong>" + name + "</strong>  was successfully deleted.");
+            }
         }
         return "redirect:/employees/positions";
     }

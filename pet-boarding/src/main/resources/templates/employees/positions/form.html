@@ -6,6 +6,34 @@
     <th:block id="otherResources">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+        <style>
+        *, *::before, *::after {
+  box-sizing: border-box;
+}
+            datalist {
+  position: absolute;
+  max-height: 20em;
+  border: 0 none;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+datalist option {
+  font-size: 0.8em;
+  padding: 0.3em 1em;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+datalist option:hover, datalist option:focus {
+  color: #fff;
+  background-color: #036;
+  outline: 0 none;
+}
+        </style>
+        <script>
+
+        </script>
     </th:block>
 </head>
 <body>
@@ -30,6 +58,17 @@
                     <input th:field="*{name}" class="form-control" th:errorclass="is-invalid" id="name" required>
                     <div id="validationServerNameFeedback" class="invalid-feedback" th:errors="*{name}"> </div>
                 </div>
+            </div>
+            <div class="col-md-8">
+                <label for="dl" class="form-label">Datalist</label>
+                <input id="dl" type="text" class="form-control" list="myDatalist" size="50" autocomplete="off">
+                <datalist id="myDatalist">
+                    <option >Cat</option>
+                    <option >Cat 2</option>
+                    <option >Cat 3</option>
+                    <option >Cat 4</option>
+
+                </datalist>
             </div>
             <div th:if="${position.employees.size() > 0}"  class="col-md-8 py-2">
                 <div class="accordion" id="employeesPerPosition">
