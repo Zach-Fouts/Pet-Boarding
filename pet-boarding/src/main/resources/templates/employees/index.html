@@ -10,30 +10,15 @@
     </th:block>
 </head>
 <body>
-    <th:block id="content" class="position-relative">
-
-        <div id="errorAlert" th:if="${errorMessage}"
-             class="alert shadow alert-danger alert-dismissible fade show d-flex align-items-center position-absolute top-50 start-50 translate-middle"
-             role="alert" aria-live="assertive" aria-atomic="true">
-                    <i class="bi-exclamation-circle"></i>
-                    <span th:utext="${errorMessage}" class="px-3">Error message</span>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <div id="infoAlert" th:if="${infoMessage}"
-             class="alert shadow alert-primary alert-dismissible fade show  d-flex align-items-center position-absolute top-50 start-50 translate-middle"
-             role="alert" aria-live="assertive" aria-atomic="true">
-            <i class="bi-info-circle"></i>
-            <span th:utext="${infoMessage}" class="px-3">Error message</span>
-            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <th:block id="content" >
 
         <div id="toolbar" class="d-flex">
-            <a class="btn btn-primary" th:href="@{employees/add}" title="Open new employee form">
+            <a class="btn btn-primary" th:href="@{/employees/add}" title="Open new employee form">
                 <i class="bi bi-plus-lg"></i>
                 <span class="d-none d-sm-inline">Add Employee</span>
             </a>
             <div class="vr mx-2"></div>
-            <a class="btn btn-primary" th:href="@{employees/positions}" title="Open job positions table" >
+            <a class="btn btn-primary" th:href="@{/employees/positions}" title="Open job positions table" >
                 <i class="bi bi-table"></i>
                 <span class="d-none d-sm-inline">Job Positions</span>
             </a>

@@ -20,10 +20,16 @@ public class DashboardController extends AppBaseController {
         return "index";
     }
 
-    @GetMapping("/owners")
-    public String showProducts(Model model) {
-        this.setActiveModule("owners", model);
-        return "redirect:/owners/index";
+    @GetMapping("/testError")
+    public String showError(Model model) {
+        model.addAttribute("errorMessage", "Something went wrong somewhere.");
+        return "index";
+    }
+
+    @GetMapping("/testInfo")
+    public String showInfo(Model model) {
+        model.addAttribute("infoMessage", "Something has information for you or something.");
+        return "index";
     }
 
     @ModelAttribute("activeModule")
