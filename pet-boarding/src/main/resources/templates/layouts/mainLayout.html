@@ -59,14 +59,23 @@
            data-bs-placement="right" th:attr="aria-label=*{name}, data-bs-original-title=*{name}">
           <i th:class="|bi *{icon}|"></i>
         </a>
-        <i th:if="${module == activeModule}" i th:class="|bi *{icon}|"></i>
+        <i th:if="${module == activeModule}" th:class="|bi *{icon}|"></i>
       </li>
     </ul>
   </nav>
   <div class="d-flex flex-column w-100">
-    <p th:text="${activeModule.name}" class="module-name py-0 px-4">
-      Active Module's Name
-    </p>
+    <div class="module-breadcrumbs py-0 px-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a th:text="${activeModule.name}" class="module-name">
+            Active Module's Name
+          </a>
+        </li>
+        <li class="breadcrumb-item active" >
+            Active Module's Name
+        </li>
+      </ol>
+    </div>
     <div th:if="${errorMessage} or ${infoMessage} or ${customMessage}" id="toastContainer" class="toast-container position-static">
       <div th:if="${errorMessage}" id="errorAlert" class="toast fade position-absolute top-50 start-50 translate-middle border-danger fs-6"
            role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">

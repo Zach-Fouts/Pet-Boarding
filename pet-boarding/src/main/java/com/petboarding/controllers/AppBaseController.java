@@ -16,7 +16,7 @@ public abstract class AppBaseController {
     public AppBaseController() {
         appModules.add(new Module("home", "Home", "bi-house", "employee"));
         appModules.add(new Module("owners", "Pet Owners", "bi-person-vcard", "employee"));
-        appModules.add(new Module("pets", "Pets", "bi-circle", "employee"));
+        appModules.add(new Module("pets", "Pets", "paw-icon", "employee"));
         appModules.add(new Module("reservations", "Reservations", "bi-calendar-week", "employee"));
         appModules.add(new Module("kennels", "Kennels", "bi-grid-3x3-gap-fill", "employee"));
         appModules.add(new Module("employees", "Employees", "bi-person-rolodex", "admin"));
