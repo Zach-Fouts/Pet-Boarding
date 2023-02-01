@@ -1,24 +1,20 @@
 package com.petboarding.controllers;
 
-import com.petboarding.exception.ResourceNotFoundException;
 import com.petboarding.models.Pet;
-import com.petboarding.models.data.PetRepository;
+import com.petboarding.models.app.Module;
 import com.petboarding.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
-//@RequestMapping("/api/v1")
+
 //@CrossOrigin(origins = "http://localhost:3000") for ReactJs
-public class PetController {
+public class PetController extends AppBaseController {
 
     @Autowired
     private PetService petService;
@@ -28,8 +24,8 @@ public class PetController {
     @GetMapping("/pets")
     public String viewPetPage(Model model) {
         model.addAttribute("listPets", petService.getAllPets());
-        return "petPage";
-        //return findPageNumber(1, "petName", "asc", model);
+        return "pets/petPage";
+
     }
 
     @GetMapping("/showNewPetForm")
@@ -37,7 +33,7 @@ public class PetController {
         // create model attribute to bind form data
         Pet pet = new Pet();
         model.addAttribute("pet", pet);
-        return "new_pet";
+        return "pets/new_pet";
     }
 
     @PostMapping("/savePet")
@@ -45,7 +41,7 @@ public class PetController {
         // save pet to database
         if (errors.hasErrors()) {
 
-            return "new_pet";
+            return "pets/new_pet";
         }
         petService.savePet(pet);
         return "redirect:/pets";
@@ -56,7 +52,7 @@ public class PetController {
         Pet pet = petService.getPetById(id);
         // set pet model to form
         model.addAttribute("pet", pet);
-        return "update_pet";
+        return "pets/update_pet";
     }
     @GetMapping("/deletePet/{id}")
     public String deletePet(@PathVariable (value = "id") long id) {
@@ -65,7 +61,10 @@ public class PetController {
         return "redirect:/pets";
     }
 
-
+    @ModelAttribute("activeModule")
+    public Module addActiveModule() {
+        return getActiveModule("pets");
+    }
     // create pet api
 //    @PostMapping("/pets")
 //    public Pet createPet(@RequestBody Pet pet) {
