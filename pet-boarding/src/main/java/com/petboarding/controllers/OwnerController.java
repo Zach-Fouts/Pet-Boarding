@@ -7,7 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.Errors;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -44,7 +47,11 @@ public class OwnerController extends AppBaseController{
     }
 
     @PostMapping("add")
-    public String processAddOwnerForm(@ModelAttribute Owner newOwner, Error errors, Model model){
+    public String processAddOwnerForm(@Valid @ModelAttribute Owner newOwner, Errors errors, Model model){
+        this.setActiveModule("owners", model);
+        if(errors.hasErrors()){
+            return "owners/add";
+        }
         model.addAttribute("owners", ownerRepository.save(newOwner));
         return "redirect:../index";
     }
@@ -78,7 +85,11 @@ public class OwnerController extends AppBaseController{
     }
 
     @PostMapping("updateOwner/{ownerId}")
-    public String updateOwner(@ModelAttribute Owner owner, Model model, @PathVariable int ownerId){
+    public String updateOwner(@Valid @ModelAttribute Owner owner, Errors errors, Model model, @PathVariable int ownerId){
+        this.setActiveModule("owners", model);
+        if(errors.hasErrors()){
+            return "owners/updateOwner";
+        }
         Owner updatedOwner = ownerRepository.findById(ownerId).get();
         updatedOwner.setFirstName(owner.getFirstName());
         updatedOwner.setLastName(owner.getLastName());

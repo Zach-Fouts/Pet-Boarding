@@ -1,8 +1,9 @@
 package com.petboarding.models;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,31 +12,34 @@ import java.util.Objects;
 @Entity
 public class Owner extends AbstractEntity{
 
-    private int id;
-
-    private static int nextId = 1;
-
+    @NotBlank(message = "First name cannot be empty.")
+    @Size(max = 50, message = "First name cannot be longer than 50 characters.")
     private String firstName;
+    @NotBlank(message = "Last name cannot be empty.")
+    @Size(max = 50, message = "Last name cannot be longer than 50 characters.")
     private String lastName;
-
+    @NotBlank(message = "Address cannot be empty.")
+    @Size(max = 100, message = "Address cannot be longer than 100 characters.")
     private String address;
+    @Size(max = 100, message = "Address 2 cannot be longer than 100 characters.")
     private String address2;
+    @Size(min = 10, message = "Phone number cannot be shorter than 10 characters.")
     private String phoneNumber;
+    @NotBlank(message = "Email cannot be empty.")
+    @Email
     private String email;
     private String notes;
 
 
     public Owner(){
-        id = nextId;
-        nextId++;
     }
 
-    public Owner(String aFirstName, String aLastName, String aAddress, String aAdress2, String aPhoneNumber, String aEmail, String aNotes){
+    public Owner(String aFirstName, String aLastName, String aAddress, String aAddress2, String aPhoneNumber, String aEmail, String aNotes){
 
         firstName = aFirstName;
         lastName = aLastName;
         address = aAddress;
-        address2 = aAdress2;
+        address2 = aAddress2;
         phoneNumber = aPhoneNumber;
         email = aEmail;
         notes = aNotes;
@@ -44,7 +48,7 @@ public class Owner extends AbstractEntity{
     @Override
     public String toString() {
         return "Owner{" +
-                "id=" + id +
+                "id=" + this.getId() +
                 ", firstName=" + firstName +
                 ", lastName=" + lastName +
                 ", address=" + address +
@@ -70,9 +74,9 @@ public class Owner extends AbstractEntity{
 //        return Objects.hash(id, name);
 //    }
 
-    public int getId() {
-        return id;
-    }
+//    public long getId() {
+//        return id;
+//    }
     public String getName() {
         return "firstName" + " " + "lastName";
     }
