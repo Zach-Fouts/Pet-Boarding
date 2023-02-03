@@ -38,7 +38,7 @@ public class Employee extends AbstractEntity{
     @Size(min = 10, message = "Phone number cannot be shorter than 10 characters.")
     private String phoneNumber;
 
-    @NotBlank(message = "Address cannot be empty.")
+    @NotBlank(message = "Email cannot be empty.")
     @Email
     private String email;
 

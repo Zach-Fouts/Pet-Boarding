@@ -9,19 +9,40 @@
 </head>
 <body>
 <th:block id="content">
-    <h1 th:text="${'Owner: ' + owner.name}">Default Title</h1>
-
+    <h1 th:text="${'Owner: ' + owner.firstName + ' ' + owner.lastName}">Default Title</h1>
 
     <div class="job-listing">
         <form method="post" style="max-width:600px;" th:object="${owner}">
            <div class="form-group">
-              <label th:for="name">Owner Name</label>
-             <input class="form-control" th:field="*{name}" value="${owner.name}"/>
-             <span th:errors="${owner.name}" class="error"></span>
-          </div>
+               <label th:for="firstName">First Name</label>
+               <input class="form-control" th:field="*{firstName}" value="${owner.firstName}"/>
+                <p th:errors="${owner.firstName}" class="error"></p>
 
-         <input type="submit" value="Change Name" />
-     </form>
+               <label th:for="firstName">Last Name</label>
+               <input class="form-control" th:field="*{lastName}" value="${owner.lastName}"/>
+               <p th:errors="${owner.lastName}" class="error"></p>
+
+               <label th:for="address">Address</label>
+               <input class="form-control" th:field="*{address}" value="${owner.address}"/>
+               <p th:errors="${owner.address}" class="error"></p>
+
+               <label th:for="address2">Address 2</label>
+               <input class="form-control" th:field="*{address2}" value="${owner.address2}"/>
+
+               <label th:for="phoneNumber">Phone Number</label>
+               <input class="form-control" th:field="*{phoneNumber}" value="${owner.phoneNumber}"/>
+               <p th:errors="${owner.phoneNumber}" class="error"></p>
+
+               <label th:for="email">Email</label>
+               <input class="form-control" th:field="*{email}" value="${owner.email}"/>
+               <p th:errors="${owner.email}" class="error"></p>
+
+               <label th:for="notes">Notes</label>
+               <input class="form-control" th:field="*{notes}" value="${owner.notes}"/>
+           </div>
+
+           <input type="submit" value="Update Information" />
+        </form>
     </div>
     <a th:href="@{../index}">Return</a>
 </th:block>
