@@ -89,9 +89,9 @@ public class PositionController extends AppBaseController {
         return "redirect:/employees/positions";
     }
 
-    @ModelAttribute("activeModule")
-    public Module addActiveModule() {
-        return getActiveModule("employees");
+    @ModelAttribute
+    public void addActiveModule(Model model) {
+        setActiveModule("employees/Job Positions", model);
     }
 
     private void prepareAddFormModel(Model model) {
@@ -99,6 +99,7 @@ public class PositionController extends AppBaseController {
         model.addAttribute("position", new Position());
         model.addAttribute("submitURL", "/employees/positions/add");
         model.addAttribute("submitMethod", "post");
+        addLocation("New", model);
     }
 
     private void prepareUpdateFormModel(Position position, Model model) {
@@ -106,5 +107,6 @@ public class PositionController extends AppBaseController {
         model.addAttribute("position", position);
         model.addAttribute("submitURL", "/employees/positions/update/" + position.getId());
         model.addAttribute("submitMethod", "post");
+        addLocation("Update", model);
     }
 }

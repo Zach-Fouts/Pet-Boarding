@@ -67,12 +67,12 @@
     <div class="module-breadcrumbs py-0 px-4">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a th:text="${activeModule.name}" class="module-name">
+          <a th:text="${activeModule.name}" th:href="${activeModule.path}" class="module-name" >
             Active Module's Name
           </a>
         </li>
-        <li class="breadcrumb-item active" >
-            Active Module's Name
+        <li th:each="location: ${moduleLocations}" th:text="${location}" class="breadcrumb-item active" >
+            Locations
         </li>
       </ol>
     </div>

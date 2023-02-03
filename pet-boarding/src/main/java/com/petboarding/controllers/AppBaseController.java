@@ -1,12 +1,14 @@
 package com.petboarding.controllers;
 
 import com.petboarding.models.User;
+import com.petboarding.models.app.Location;
 import com.petboarding.models.app.Module;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class AppBaseController {
@@ -34,10 +36,31 @@ public abstract class AppBaseController {
     }
 
     public void setActiveModule(String path, Model model) {
-        model.addAttribute("activeModule", getActiveModule(path));
+        List<String> locations = getPaths(path);
+        // get active main module
+        model.addAttribute("activeModule", getActiveModule(locations.get(0)));
+        // add locations
+        if(locations.size() > 0) locations.remove(0);
+        model.addAttribute("moduleLocations", locations);
+    }
+
+    public void addLocation(String newLocation, Model model) {
+        List<String> locations = (List<String>) model.getAttribute("moduleLocations");
+        locations.addAll(getPaths(newLocation));
+        model.addAttribute("moduleLocations", locations);
+    }
+
+    private List<String> getPaths(String path) {
+        String pathSeparator = "/";
+        String []paths = path.split(pathSeparator);
+        return new ArrayList<>(Arrays.asList(paths));
     }
 
     public Module getActiveModule(String path) {
+        return getModule(path);
+    }
+
+    public Module getModule(String path) {
         return appModules
                 .stream()
                 .filter(module -> path.equalsIgnoreCase(module.getPath()))

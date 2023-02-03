@@ -9,8 +9,8 @@ public class Module {
 
     public Module() {}
 
-    public Module(String key, String name, String icon, String role) {
-        this.path = key;
+    public Module(String path, String name, String icon, String role) {
+        this.path = path;
         this.name = name;
         this.icon = icon;
         this.role = role;
@@ -21,6 +21,12 @@ public class Module {
         dummy.path = "notFound";
         dummy.name = "Module was not found, assign the attribute 'activeModule'.";
         return dummy;
+    }
+
+    public static Module submoduleFactory(String name) {
+        Module sub = new Module();
+        sub.setName(name);
+        return sub;
     }
 
     public String getPath() {
