@@ -29,12 +29,13 @@ public class DashboardController extends AppBaseController {
     @GetMapping("/testInfo")
     public String showInfo(Model model) {
         model.addAttribute("infoMessage", "Something has information for you or something.");
+        addLocation("2nd level/3rd level", model);
         return "index";
     }
 
-    @ModelAttribute("activeModule")
-    public Module addActiveModule() {
-        return getActiveModule("home");
+    @ModelAttribute
+    public void addActiveModule(Model model) {
+        setActiveModule("home", model);
     }
 
 }

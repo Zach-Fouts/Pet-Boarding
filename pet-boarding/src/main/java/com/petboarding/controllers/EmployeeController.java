@@ -78,21 +78,19 @@ public class EmployeeController extends AppBaseController {
 
     @PostMapping("delete/{id}")
     public String processDeleteEmployeeRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        if(!employeeRepository.existsById(id)) {
+        Optional<Employee> optEmployee = employeeRepository.findById(id);
+        if(optEmployee.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
         } else {
-//            TODO: remove once active and inactive attributes are implemented ⇊
-            List<User> userList = userRepository.findAll();
-            for (User user: userList) {
-                if (user.getEmployee() != null) {
-                    if (user.getEmployee().getId() == id) {
-                        user.setEmployee(null);
-                    }
-                }
+
+            Employee employee = optEmployee.get();
+            if(employee.getUser() != null) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Employee <strong>" + employee.getFullName() + "</strong> is linked to an user account and cannot be deleted.");
+            } else {
+                employeeRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");
             }
-//            TODO: remove ⇈
-            employeeRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");
+
         }
         return "redirect:/employees";
     }
@@ -110,6 +108,7 @@ public class EmployeeController extends AppBaseController {
         model.addAttribute("employee", new Employee());
         model.addAttribute("submitURL", "/employees/add");
         model.addAttribute("submitMethod", "post");
+        addLocation("New", model);
         prepareCommonFormModel(model);
     }
 
@@ -118,6 +117,7 @@ public class EmployeeController extends AppBaseController {
         model.addAttribute("employee", employee);
         model.addAttribute("submitURL", "/employees/update/" + employee.getId());
         model.addAttribute("submitMethod", "post");
+        addLocation("Update", model);
         prepareCommonFormModel(model);
     }
 }
