@@ -1,6 +1,5 @@
 package com.petboarding.controllers;
 
-import com.petboarding.models.Role;
 import com.petboarding.models.User;
 import com.petboarding.models.data.RoleRepository;
 import com.petboarding.models.data.UserRepository;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -77,12 +75,12 @@ public class AuthenticationController {
             model.addAttribute("title", "Register");
             return "sign-in/register";
         }
-            User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
-            userRepository.save(newUser);
+        User newUser = new User(registerFormDTO.getUsername(), registerFormDTO.getPassword());
+        userRepository.save(newUser);
         setUserInSession(request.getSession(), newUser);
 
 
-        return "redirect:";
+        return "redirect:/home";
     }
 
     @GetMapping("/login")
@@ -116,7 +114,7 @@ public class AuthenticationController {
 
         setUserInSession(request.getSession(), theUser);
 
-        return "redirect:";
+        return "redirect:/";
 
 
     }
@@ -124,6 +122,6 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request){
         request.getSession().invalidate();
-        return "redirect:/login";
+        return "redirect:/sign-in/login";
     }
 }

@@ -14,10 +14,12 @@
 
         <div class="m-3">
             <td><input type="hidden" th:field="${role.id}" readonly="readonly" /></td>
-            <div class="form-group">
-                <label th:for="name">Name
-                    <input class="form-control" th:field="${role.name}"/>
-                </label>
+            <div class="col-md-2">
+                <label for="name" class="form-label">Name</label>
+                <div class="input-group has-validation">
+                    <input th:field="*{name}" class="form-control" th:errorclass="is-invalid" id="name" required>
+                    <div id="validationServerNameFeedback" class="invalid-feedback" th:errors="*{name}"> </div>
+                </div>
             </div>
             <div>
                 <button type="submit" class="btn btn-primary">Create</button>

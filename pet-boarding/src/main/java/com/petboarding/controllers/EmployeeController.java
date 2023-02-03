@@ -1,9 +1,11 @@
 package com.petboarding.controllers;
 
 import com.petboarding.models.Employee;
+import com.petboarding.models.User;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.PositionRepository;
+import com.petboarding.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,6 +29,8 @@ public class EmployeeController extends AppBaseController {
 
     private final String FORM_NEW_TITLE = "New Employee";
     private final String FORM_UPDATE_TITLE = "Update: ${employeeName}";
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public String displayEmployeesGrid(Model model) {
@@ -77,6 +82,7 @@ public class EmployeeController extends AppBaseController {
         if(optEmployee.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
         } else {
+
             Employee employee = optEmployee.get();
             if(employee.getUser() != null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Employee <strong>" + employee.getFullName() + "</strong> is linked to an user account and cannot be deleted.");
@@ -84,6 +90,7 @@ public class EmployeeController extends AppBaseController {
                 employeeRepository.deleteById(id);
                 redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");
             }
+
         }
         return "redirect:/employees";
     }
