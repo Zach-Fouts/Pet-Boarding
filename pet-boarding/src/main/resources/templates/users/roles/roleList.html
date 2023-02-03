@@ -4,26 +4,50 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <th:block id="otherResources">
-        <!-- comment from test -->
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+        <script th:src="@{/js/uiUtils.js}"></script>
     </th:block>
 </head>
 <body>
 <th:block id="content">
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
+    <div id="toolbar" class="d-flex">
+<!--        TODO: add back button with image (reference add employee page)-->
+        <div class="vr mx-2"></div>
+        <a class="btn btn-primary" th:href="@{/users/roles/addRoleForm}" title="Open add role form">
+            <i class="bi bi-plus-lg"></i>
+            <span class="d-none d-sm-inline">Add Role</span>
+        </a>
+    </div>
+    <table
+            id="rolesTable"
+            data-toggle="table"
+            data-search="true"
+            data-pagination="true"
+            data-show-columns="true"
+            data-show-toggle="true"
+            data-toolbar="#toolbar"
+            class="table-striped">
+        <thead>
         <tr>
-            <th>Role</th>
+            <th data-halign="center" data-sortable="true">Role</th>
+            <th data-halign="center" data-sortable="true">Number of Users</th>
+            <th data-halign="center" data-align="center">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="role: ${listRoles}">
-            <td th:text="${role.name}"></td>
-            <td  style="text-align: right"><a class="btn btn-danger" th:href="@{'/users/roles/deleteRoleForm/' + ${role.id}}">Delete</a></td>
+        <tr th:each="role: ${listRoles}" th:object="${role}">
+            <td th:text="*{name}"></td>
+            <td th:text="*{users.size()}"></td>
+            <td>
+<!--                TODO: add edit role form-->
+                <a class="btn btn-primary" th:href="@{editRoleForm/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
+                <!--                <a class="btn btn-danger" th:href="@{'/users/deleteUserForm/' + ${user.id}}">Delete</a>-->
+                <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}','/users/roles', *{id});|"><i class="bi-trash"></i></a>
+            </td>
         </tr>
         </tbody>
     </table>
-    <button type="button" class="btn btn-primary" onclick="location.href='/users/roles/addRoleForm'">Add Role</button>
-    <button type="button" class="btn btn-secondary" onclick="location.href='/users'">Back</button>
 </th:block>
 </body>
 </html>
