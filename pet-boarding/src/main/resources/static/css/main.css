@@ -101,6 +101,11 @@
     .table > thead {
       border-bottom: 2px solid #3E3E3E;
     }
+    /*calendar styling for reactive size*/
+    #calendar {
+      max-width: 1100px;
+      margin: 40px auto;
+    }
 
     /* button hover decoration */
     .btn:hover {

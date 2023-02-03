@@ -14,26 +14,31 @@
 <body>
 <th:block id="content">
     <form method="post">
-        <div class="form-group">
-            <label>Start Date
-                <input th:field="${reservation.startDateTime}" type="date" class="form-control" id="startDate" name="date" data-date-format="mm/dd/yyyy">
-            </label>
-            <p class="error" th:errors="${reservation.startDateTime}"></p>
-        </div>
-        <div class="form-group">
-            <label>End Date
-                <input th:field="${reservation.endDateTime}" type="date" class="form-control" id="endDate" name="date" data-date-format="mm/dd/yyyy">
-            </label>
-            <p class="error" th:errors="${reservation.endDateTime}"></p>
-        </div>
-        <div class="form-group">
-            <label>Comment
-                <input th:field="${reservation.comments}" class="form-control">
-            </label>
-            <p class="error" th:errors="${reservation.comments}"></p>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-success">
+        <div class="row-gy5">
+            <div class="form-group col-6 res">
+                <label>Start Date
+                    <input th:field="${reservation.startDateTime}" type="date" class="form-control" id="startDate" name="date" data-date-format="mm/dd/yyyy">
+                </label>
+                <p class="error" th:errors="${reservation.startDateTime}"></p>
+            </div>
+            <div  class="form-group col-6 res">
+                <label>End Date
+                    <input th:field="${reservation.endDateTime}" type="date" class="form-control" id="endDate" name="date" data-date-format="mm/dd/yyyy">
+                </label>
+                <p class="error" th:errors="${reservation.endDateTime}"></p>
+            </div>
+            <div class="form-group col-6 res">
+                <label>Comment
+                    <input th:field="${reservation.comments}" class="form-control">
+                </label>
+                <p class="error" th:errors="${reservation.comments}"></p>
+            </div>
+            <div class="form-group col-6 res">
+                <input type="submit" value="Create" class="btn btn-success" title="Add reservation">
+                <a type="button" class="btn btn-secondary" href="/reservations" title="Cancel reservation">
+                    Cancel
+                </a>
+            </div>
         </div>
     </form>
 </th:block>

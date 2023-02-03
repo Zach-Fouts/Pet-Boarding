@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <th:block id="otherResources">
+<!--        BOOTSTRAP FOR TABLE-->
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
     </th:block>
@@ -11,44 +12,47 @@
 </head>
 <body>
     <th:block id="content" class="position-relative">
-            <div id="toolbar">
-                <a class="btn btn-primary" th:href="@{/reservations/create}" title="create reservation">
-                    <i class="bi bi-plus-lg"></i>
-                    <span class="d-none d-sm-inline">Create Reservation</span>
-                </a>
-            </div>
-            <table
-                   id="reservationsTable"
-                   data-toggle="table"
-                   data-search="true"
-                   data-show-search-button="true"
-                   data-pagination="true"
-                   data-show-columns="true"
-                   data-show-toggle="true"
-                   data-toolbar="#toolbar">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th data-halign="center" data-sortable="true">Start Date</th>
-                    <th data-halign="center" data-sortable="true">End Date</th>
-                    <th>Comments</th>
-                    <th>Actions</th>
+        <div id="toolbar">
+            <a class="btn btn-primary" th:href="@{/reservations/create}" title="Create reservation">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline">Create reservation</span>
+            </a>
+            <a class="btn btn-primary" th:href="@{/reservations}" title="Calendar view">
+                <span class="d-none d-sm-inline">Calendar view</span>
+            </a>
+        </div>
+        <table
+               id="reservationsTable"
+               data-toggle="table"
+               data-search="true"
+               data-show-search-button="true"
+               data-pagination="true"
+               data-show-columns="true"
+               data-show-toggle="true"
+               data-toolbar="#toolbar">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th data-halign="center" data-sortable="true">Start Date</th>
+                <th data-halign="center" data-sortable="true">End Date</th>
+                <th>Comments</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reservation : ${reservations}">
+                    <td th:text="${reservation.id}"></td>
+                    <td th:text="${reservation.startDateTime}"></td>
+                    <td th:text="${reservation.endDateTime}"></td>
+                    <td th:text="${reservation.comments}"></td>
+                    <td>
+                        <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
+                        <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>
+                        <a class="btn btn-danger" title="delete" th:href="@{'/reservations/delete?reservationId=' + ${reservation.id}}"><i class="bi bi-trash"></i></a>
+                        </td>
                 </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="reservation : ${reservations}">
-                        <td th:text="${reservation.id}"></td>
-                        <td th:text="${reservation.startDateTime}"></td>
-                        <td th:text="${reservation.endDateTime}"></td>
-                        <td th:text="${reservation.comments}"></td>
-                        <td>
-                            <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
-                            <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>
-                            <a class="btn btn-danger" title="delete" th:href="@{'/reservations/delete?reservationId=' + ${reservation.id}}"><i class="bi bi-trash"></i></a>
-                            </td>
-                    </tr>
-                </tbody>
-            </table>
+            </tbody>
+        </table>
     </th:block>
 </body>
 </html>

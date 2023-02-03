@@ -12,6 +12,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -20,10 +21,15 @@ public class ReservationController extends AppBaseController{
     @Autowired
     private ReservationRepository reservationRepository;
 
-    @GetMapping
+    @GetMapping("grid")
     public String displayReservations(Model model) {
         model.addAttribute("reservations", reservationRepository.findAll());
         return "reservations/reservations";
+    }
+    @GetMapping
+    public String displayCalendar(Model model) {
+        model.addAttribute("reservations", reservationRepository.findAll());
+        return "reservations/calendarView";
     }
     @GetMapping("create")
     public String displayCreateReservationsForm(Model model) {
@@ -96,15 +102,6 @@ public class ReservationController extends AppBaseController{
             model.addAttribute("title", reservation.getId() + " Details");
             model.addAttribute("reservation", reservation);
         }
-//        if (errors.hasErrors()) {
-//            return "reservations/update";
-//        } else {
-//            reservation = result.get();
-//            model.addAttribute("title", reservation.getId() + " Update");
-//            model.addAttribute("reservation", reservation);
-//            reservationRepository.save(reservation);
-//
-//        }
         return "reservations/update";
     }
     @PostMapping("update")
