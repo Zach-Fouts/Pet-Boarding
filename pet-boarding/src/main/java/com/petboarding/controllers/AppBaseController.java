@@ -45,7 +45,8 @@ public abstract class AppBaseController {
     }
 
     public void addLocation(String newLocation, Model model) {
-        List<String> locations = (List<String>) model.getAttribute("moduleLocations");
+        List<String> locations;
+        locations = model.containsAttribute("moduleLocations") ? (List<String>) model.getAttribute("moduleLocations") : new ArrayList<>();
         locations.addAll(getPaths(newLocation));
         model.addAttribute("moduleLocations", locations);
     }
