@@ -2,6 +2,7 @@ package com.petboarding.controllers;
 
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
+import com.petboarding.models.data.OwnerRepository;     // Needed to Grab Owners
 import com.petboarding.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 
@@ -19,6 +21,9 @@ public class PetController extends AppBaseController {
     @Autowired
     private PetService petService;
     //private PetRepository petRepository;
+
+    @Autowired   // Needed to grab owners
+    private OwnerRepository ownerRepository;
 
     // display list of pets page
     @GetMapping("/pets")
@@ -33,19 +38,22 @@ public class PetController extends AppBaseController {
         // create model attribute to bind form data
         Pet pet = new Pet();
         model.addAttribute("pet", pet);
+        model.addAttribute("parents", ownerRepository.findAll());       // Grab all Owners
         return "pets/new_pet";
     }
 
     @PostMapping("/savePet")
-    public String savePet(@ModelAttribute("pet") @Valid Pet pet, Errors errors) {
+    public String savePet(@ModelAttribute("pet") @Valid Pet pet, Errors errors, Model model) {  // Added Model model for ownerRepository
         // save pet to database
         if (errors.hasErrors()) {
-
+            model.addAttribute("parents", ownerRepository.findAll());   //Keeps Owner data on page
             return "pets/new_pet";
         }
+
         petService.savePet(pet);
         return "redirect:/pets";
     }
+
     @GetMapping("/showFormForUpdate/{id}")
         // show update form for id chosen
     public String showFormForUpdate(@PathVariable(value = "id") long id, Model model) {

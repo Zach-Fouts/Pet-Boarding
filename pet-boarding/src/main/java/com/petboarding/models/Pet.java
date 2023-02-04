@@ -16,9 +16,10 @@ public class Pet {
     private String petName;
 
 
-    @NotBlank(message = "Enter parent name!")
-    @Column(name = "parents")
-    private String parents;
+//    @NotBlank(message = "Enter parent name!")     // Some Not Blank error?
+//      @Column(name = "parents")                   // @Column not an option
+    @ManyToOne                                      // Sets up relationship
+    private Owner owner;                            // Parents -> Owner
 
     @NotBlank(message = "Enter breed type!")
     @Column(name = "breed")
@@ -26,10 +27,10 @@ public class Pet {
     @Column(name = "notes")
     private String notes;
 
-    public Pet(String petName, String parents, String breed, String notes) {
+    public Pet(String petName, Owner owner, String breed, String notes) {
         super();
         this.petName = petName;
-        this.parents = parents;
+        this.owner = owner;                         // Parents -> Owner
         this.breed = breed;
         this.notes = notes;
     }
@@ -51,12 +52,12 @@ public class Pet {
         this.petName = petName;
     }
 
-    public String getParents() {
-        return parents;
-    }
+    public Owner getOwner() {
+        return this.owner;
+    }                   // Parents -> Owner
 
-    public void setParents(String parents) {
-        this.parents = parents;
+    public void setOwner(Owner owner) {                             // Parents -> Owner
+        this.owner = owner;
     }
 
     public String getBreed() {

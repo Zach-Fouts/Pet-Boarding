@@ -48,7 +48,7 @@
                   <tbody>
                   <tr th:each="pet: ${listPets}">
                      <td th:text="${pet.petName}"></td>
-                     <td th:text="${pet.parents}"></td>
+                     <td th:text="${pet.owner}"></td>          <!--- Going to eventually display only first + lastname --->
                      <td th:text="${pet.breed}"></td>
                      <td th:text="${pet.notes}"></td>
                      <td>
