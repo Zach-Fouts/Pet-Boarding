@@ -17,7 +17,7 @@
 <th:block id="content" class="position-relative">
     <!-- MY OWNER STUFF-->
         <div id="toolbar">
-            <a class="btn btn-primary" th:href="@{add/}">
+            <a class="btn btn-primary" th:href="@{owners/add}">
                 <i class="bi bi-plus-lg"></i>
                 <span class="d-none d-sm-inline">Add Owner</span>
             </a>
@@ -53,9 +53,9 @@
                     <td th:text="${owner.email}"></td>
                     <td th:text="${owner.notes}"></td>
                 <td>
-                    <a th:href="@{'view/' + ${owner.id}}"  class="btn btn-primary">View</a>
-                    <a th:href="@{'updateOwner/' + ${owner.id}}" class="btn btn-primary"/>Update</a>
-                    <a th:href="@{${owner.id}}" class="btn btn-danger"/>Delete</a>
+                    <a th:href="@{'owners/view/' + ${owner.id}}"  class="btn btn-primary">View</a>
+                    <a th:href="@{'owners/updateOwner/' + ${owner.id}}" class="btn btn-primary"/>Update</a>
+                    <a th:href="@{'owners/' + ${owner.id}}" class="btn btn-danger"/>Delete</a>
                 </td>
             </tr>
             </tbody>
