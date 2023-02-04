@@ -33,17 +33,6 @@ public class OwnerController extends AppBaseController{
         return "owners/index";
     }
 
-//    @RequestMapping("/index")
-//    public String showaMainOwnerPage(Model model) {
-//        Iterable<Owner> owners;
-//        owners = ownerRepository.findAll();
-//        model.addAttribute("title", "All Owners");
-//        model.addAttribute("owners", owners);
-//        this.setActiveModule("owners", model);
-//
-//        return "owners/index";
-//    }
-
 // Return to Pet Boarding Home page
     @GetMapping("/home")
     public String showDashboardHome(){
