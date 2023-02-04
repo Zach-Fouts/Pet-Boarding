@@ -21,7 +21,8 @@ public class OwnerController extends AppBaseController{
     private OwnerRepository ownerRepository;
 
 // Owner Home Page
-    @RequestMapping(value = "index")
+
+    @RequestMapping()
     public String showMainOwnerPage(Model model) {
         Iterable<Owner> owners;
         owners = ownerRepository.findAll();
@@ -39,11 +40,11 @@ public class OwnerController extends AppBaseController{
 }
 
 // Adding Owners
-    @GetMapping(value = "add")
+    @GetMapping("/add")
     public String displayAddOwnerForm(Model model){
         this.setActiveModule("owners", model);
         model.addAttribute(new Owner());
-        return "/owners/add";
+        return "owners/add";
     }
 
     @PostMapping("add")
@@ -53,7 +54,7 @@ public class OwnerController extends AppBaseController{
             return "owners/add";
         }
         model.addAttribute("owners", ownerRepository.save(newOwner));
-        return "redirect:../index";
+        return "redirect:../owners";
     }
 
 // View an individual Owner
@@ -66,7 +67,7 @@ public class OwnerController extends AppBaseController{
             model.addAttribute("owner", owner);
             return "owners/view";
         } else {
-            return "redirect:../";
+            return "redirect:../owners";
         }
     }
 
@@ -80,7 +81,7 @@ public class OwnerController extends AppBaseController{
             model.addAttribute("owner", owner);
             return "owners/updateOwner";
         } else {
-            return "redirect:../";
+            return "redirect:../owners";
         }
     }
 
@@ -100,7 +101,7 @@ public class OwnerController extends AppBaseController{
         updatedOwner.setNotes(owner.getNotes());
         ownerRepository.save(updatedOwner);
 
-        return "redirect:../index";
+        return "redirect:/owners";
     }
 
 
@@ -110,7 +111,7 @@ public class OwnerController extends AppBaseController{
     public String deleteOwner(@PathVariable("ownerId") int ownerId){
         ownerRepository.deleteById(ownerId);
 
-        return "redirect:../owners/index";
+        return "redirect:../owners";
     }
 
 
