@@ -38,7 +38,6 @@
                       data-toolbar="#toolbar">
                   <thead>
                   <tr>
-
                      <th data-halign="center" data-sortable="true">Pet Name</th>
                      <th data-halign="center" data-sortable="true">Parents Name</th>
                      <th data-halign="center" data-sortable="true">Breed</th>
@@ -47,10 +46,10 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="pet: ${listPets}" th:Object="${pet}">
-
+                  <tr th:each="pet: ${listPets}">
+                     <td th:text="${pet.petName}"></td>
                      <td><a th:href="@{pets/profile/{id} (id=*{id})}" th:text="${pet.petName}"></a></td>
-                     <td th:text="${pet.parents}"></td>
+                     <td th:text="${pet.owner}"></td>          <!--- Going to eventually display only first + lastname --->
                      <td th:text="${pet.breed}"></td>
                      <td th:text="${pet.notes}"></td>
                      <td>

@@ -59,7 +59,7 @@ public class OwnerController extends AppBaseController{
 
 // View an individual Owner
     @GetMapping("view/{ownerId}")
-    public String displayViewEmployer(Model model, @PathVariable int ownerId){
+    public String displayViewOwner(Model model, @PathVariable int ownerId){
         this.setActiveModule("owners", model);
         Optional optOwner = ownerRepository.findById(ownerId);
         if(optOwner.isPresent()){
@@ -73,7 +73,7 @@ public class OwnerController extends AppBaseController{
 
 // Updating Owners
     @GetMapping("updateOwner/{ownerId}")
-    public String displayUpdateEmployer(Model model, @PathVariable int ownerId){
+    public String displayUpdateOwner(Model model, @PathVariable int ownerId){
         this.setActiveModule("owners", model);
         Optional optOwner = ownerRepository.findById(ownerId);
         if(optOwner.isPresent()){
