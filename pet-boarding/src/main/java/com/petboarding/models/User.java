@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class User extends AbstractEntity{
-
+//<---------------------------------------------Fields--------------------------------------------->
     @NotNull
     @NotBlank
     @Size(min = 3, max = 20, message = "Invalid username. Must be between 3 and 20 characters")
@@ -27,21 +27,22 @@ public class User extends AbstractEntity{
     @OneToOne
     private Employee employee;
 
+
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
 
-    public Boolean isAdmin() {
-        return role.getName().toLowerCase().equals("admin");
-    };
-    public Boolean getActive() {
-        return active;
-    }
-    public void setActive(Boolean active) {
-        this.active = active;
+    //<---------------------------------------------Access Methods--------------------------------------------->
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
     }
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    public Boolean isAdmin() {
+        return role.getName().toLowerCase().equals("admin");
+    }
+
+    //<---------------------------------------------Constructors--------------------------------------------->
     public User() {}
     public User(String username, String password) {
         this.username = username;
@@ -53,6 +54,15 @@ public class User extends AbstractEntity{
         this.role = role;
         this.employee = employee;
     }
+
+    //<---------------------------------------------Getters and Setters--------------------------------------------->
+    public Boolean getActive() {
+        return active;
+    }
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -73,15 +83,9 @@ public class User extends AbstractEntity{
         this.username = username;
     }
 
-
-
-
     public String getUsername() {
         return username;
     }
 
-    public boolean isMatchingPassword(String password) {
-        return encoder.matches(password, pwHash);
-    }
 
 }

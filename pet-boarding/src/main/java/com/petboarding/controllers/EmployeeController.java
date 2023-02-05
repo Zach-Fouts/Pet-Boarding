@@ -6,14 +6,18 @@ import com.petboarding.models.app.Module;
 import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.PositionRepository;
 import com.petboarding.models.data.UserRepository;
+import com.petboarding.models.utilities.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,13 +48,22 @@ public class EmployeeController extends AppBaseController {
         return "employees/form";
     }
 
+//    TODO: add image upload
     @PostMapping("add")
-    public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model) {
+    public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         if(errors.hasErrors()) {
             model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
         }
         employeeRepository.save(newEmployee);
+        if (multipartFile != null){
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            if (!fileName.equals("")){
+                String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                newEmployee.setPhoto(fileName);
+            }
+        }
         return "redirect:";
     }
 
@@ -65,11 +78,20 @@ public class EmployeeController extends AppBaseController {
         return "employees/form";
     }
 
+//    TODO: add image upload
     @PostMapping("update/{id}")
-    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Employee employee, Errors errors, Model model, RedirectAttributes redirectAttributes) {
+    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Employee employee, Errors errors, Model model, RedirectAttributes redirectAttributes, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         if(errors.hasErrors()) {
             model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
+        }
+        if (multipartFile != null){
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            if (!fileName.equals("")){
+                String uploadDir = "uploads/employee-photos/" + employee.getId();
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                employee.setPhoto(fileName);
+            }
         }
         employeeRepository.save(employee);
         redirectAttributes.addFlashAttribute("infoMessage", "The Job Position has been updated.");

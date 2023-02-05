@@ -9,6 +9,7 @@
 </head>
 <body>
 <th:block id="content">
+<!--    -->
 <form th:action="@{/users/saveUser}" th:object="${user}"
       method="post" style="max-width: 600px; margin: 0 auto;">
     <input type="hidden" th:field="${user}"/>
@@ -16,18 +17,23 @@
         <td><input type="hidden" th:field="${user.id}" readonly="readonly" /></td>
         <div class="form-group">
             <label th:for="username">Username
-                <input class="form-control" th:field="${user.username}"/>
+                <input id="username" class="form-control" th:field="${user.username}"/>
             </label>
         </div>
-        <div class="form-group row">
-            <label class="col-4 col-form-label">Roles: </label>
+        <div class="form-group">
             <div class="col-8">
-                <th:block th:each="role: ${listRoles}">
-                    <input type="radio" th:field="${user.role}"
-                           th:text="${role.name}" th:value="${role.id}" class="m-2" />
-                </th:block>
+                <label for="role" class="form-label">Role</label>
+                <select id="role" th:field="*{role}" class="form-select" th:errorclass="is-invalid">
+                    <option selected hidden value="">Select a Role</option>
+                    <option th:each="role: ${listRoles}"
+                            th:text="${role.name}"
+                            th:value="${role.id}">
+                    </option>
+                </select>
+                <div id="validationServerRoleFeedback" class="invalid-feedback" th:errors="*{role}"></div>
             </div>
         </div>
+        <!--TODO: remove upload from user, add to employee-->
 
         <div>
             <button type="submit" class="btn btn-primary">Update</button>

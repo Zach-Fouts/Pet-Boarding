@@ -33,6 +33,7 @@
             class="table-striped">
         <thead>
         <tr>
+            <th data-halign="center">Photo</th>
             <th data-halign="center">User ID</th>
             <th data-halign="center" data-sortable="true">Username</th>
             <th data-halign="center" data-sortable="true">Name</th>
@@ -44,6 +45,9 @@
         </thead>
         <tbody>
         <tr th:each="user: ${listUsers}" th:object="${user}">
+            <!--TODO: resize photos-->
+
+            <td><img th:src="@{*{employee.getPhotoPath()}}"/></td>
             <td th:text="*{id}"></td>
             <td th:text="*{username}"></td>
             <td th:if="*{employee}" th:text="*{employee.getFullName()}"></td>
@@ -55,7 +59,6 @@
             <td th:unless="*{employee}" th:text="'No Employee Data'"></td>
             <td>
                 <a class="btn btn-primary" th:href="@{users/editUserForm/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-<!--                <a class="btn btn-danger" th:href="@{'/users/deleteUserForm/' + ${user.id}}">Delete</a>-->
                 <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{username}','/users', *{id});|"><i class="bi-trash"></i></a>
             </td>
         </tr>

@@ -2,10 +2,7 @@ package com.petboarding.models;
 
 import org.springframework.stereotype.Controller;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -49,6 +46,15 @@ public class Employee extends AbstractEntity{
     @OneToOne(mappedBy = "employee")
     private User user;
 
+    @Column(nullable = true, length = 64)
+    private String photo;
+
+    @Transient
+    public String getPhotoPath() {
+        int id = this.getId();
+        if (photo == null || id == 0) {return null;}
+        return "/uploads/employee-photos/" + id + "/" + photo;
+    }
 
     public Employee() {}
 
@@ -126,6 +132,14 @@ public class Employee extends AbstractEntity{
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override
