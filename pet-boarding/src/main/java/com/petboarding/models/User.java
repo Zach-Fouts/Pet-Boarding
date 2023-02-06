@@ -31,7 +31,7 @@ public class User extends AbstractEntity{
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
 
-    //<---------------------------------------------Access Methods--------------------------------------------->
+    //<---------------------------------------------Methods--------------------------------------------->
     public boolean isMatchingPassword(String password) {
         return encoder.matches(password, pwHash);
     }

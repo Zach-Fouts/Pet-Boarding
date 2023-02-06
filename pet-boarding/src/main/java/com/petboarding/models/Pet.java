@@ -4,6 +4,8 @@ package com.petboarding.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+
+//TODO: Discuss int or long, extend abstract
 @Entity
 @Table(name = "pets")
 public class Pet {
@@ -15,7 +17,7 @@ public class Pet {
     @Column(name = "pet_name")
     private String petName;
 
-
+// TODO: Discuss linking owners
     @NotBlank(message = "Enter parent name!")
     @Column(name = "parents")
     private String parents;
@@ -25,6 +27,15 @@ public class Pet {
     private String breed;
     @Column(name = "notes")
     private String notes;
+
+    @Column(nullable = true, length = 64)
+    private String photo;
+
+    @Transient
+    public String getPhotoPath() {
+        if (photo == null || id == 0) {return null;}
+        return "/uploads/pet-photos/" + id + "/" + photo;
+    }
 
     public Pet(String petName, String parents, String breed, String notes) {
         super();
@@ -74,4 +85,8 @@ public class Pet {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public String getPhoto() {return photo;}
+
+    public void setPhoto(String photo) {this.photo = photo;}
 }

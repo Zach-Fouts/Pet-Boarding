@@ -33,7 +33,7 @@
             class="table-striped">
         <thead>
         <tr>
-            <th data-halign="center">Photo</th>
+            <th data-halign="center" data-align="center">Photo</th>
             <th data-halign="center">User ID</th>
             <th data-halign="center" data-sortable="true">Username</th>
             <th data-halign="center" data-sortable="true">Name</th>
@@ -45,9 +45,8 @@
         </thead>
         <tbody>
         <tr th:each="user: ${listUsers}" th:object="${user}">
-            <!--TODO: resize photos-->
-
-            <td><img th:src="@{*{employee.getPhotoPath()}}"/></td>
+            <td th:if="*{employee.getPhoto()}"><img th:src="@{*{employee.getPhotoPath()}}" class="img-fluid rounded-circle" style="width: 80px; height: 80px;"/></td>
+            <td th:unless="*{employee.getPhoto()}"></td>
             <td th:text="*{id}"></td>
             <td th:text="*{username}"></td>
             <td th:if="*{employee}" th:text="*{employee.getFullName()}"></td>

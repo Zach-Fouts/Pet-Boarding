@@ -117,6 +117,17 @@ public class EmployeeController extends AppBaseController {
         return "redirect:/employees";
     }
 
+    @GetMapping("profile/{id}")
+    public String displayEmployeeProfile(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes){
+        Optional<Employee> optEmployee = employeeRepository.findById(id);
+        if(optEmployee.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
+            return "redirect:/employees";
+        }
+        model.addAttribute("employee", optEmployee.get());
+        return "employees/profile";
+    }
+
     @ModelAttribute("activeModule")
     public Module addActiveModule() {
         return getActiveModule(this.getClass().getAnnotation(RequestMapping.class).value()[0]);
@@ -133,6 +144,7 @@ public class EmployeeController extends AppBaseController {
         addLocation("New", model);
         prepareCommonFormModel(model);
     }
+
 
     private void prepareUpdateFormModel(Employee employee, Model model) {
         model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${employeeName}", employee.getFullName()));
