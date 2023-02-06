@@ -2,14 +2,18 @@ package com.petboarding.controllers;
 
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
+import com.petboarding.models.utilities.FileUploadUtil;
 import com.petboarding.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 
@@ -35,15 +39,24 @@ public class PetController extends AppBaseController {
         model.addAttribute("pet", pet);
         return "pets/new_pet";
     }
-
+// TODO: Discuss code uniformity
     @PostMapping("/savePet")
-    public String savePet(@ModelAttribute("pet") @Valid Pet pet, Errors errors) {
+    public String savePet(@ModelAttribute("pet") @Valid Pet pet, Errors errors, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         // save pet to database
         if (errors.hasErrors()) {
-
             return "pets/new_pet";
         }
         petService.savePet(pet);
+        if (multipartFile != null){
+            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            if (!fileName.equals("")){
+                String uploadDir = "uploads/pet-photos/" + pet.getId();
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                pet.setPhoto(fileName);
+                petService.savePet(pet);
+            }
+        }
+
         return "redirect:/pets";
     }
     @GetMapping("/showFormForUpdate/{id}")

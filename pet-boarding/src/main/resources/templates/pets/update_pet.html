@@ -24,7 +24,7 @@
             <h1>Update Pet</h1>
             <hr>
 
-            <form action="#" th:action="@{/savePet}" th:object="${pet}" method="POST">
+            <form action="#" th:action="@{/savePet}" th:object="${pet}" method="POST" enctype="multipart/form-data">
                <!-- Add hidden form field to handle update -->
                <input type="hidden" th:field="*{id}" />
                <input type="text" th:field="*{petName}" class="form-control mb-4 col-4">
@@ -32,6 +32,11 @@
                <select name="dogDropdown" id="dogDropList" th:field="*{breed}"
                        class="form-control mb-4 col-4"></select>
                <input type="text" th:field="*{notes}" class="form-control mb-4 col-4">
+               <!--                TODO: redo styling, place in empty white space with image preview-->
+               <div>
+                  <label>Photo </label>
+                  <input type="file" value="image" name="image" accept="image/png, image/jpeg" />
+               </div>
                <button type="submit" class="btn btn-info">Update Pet</button>
             </form>
                 <hr>

@@ -34,6 +34,7 @@
                 class="table-striped">
             <thead>
             <tr>
+                <th data-halign="center" data-align="center">Photo</th>
                 <th data-halign="center" data-sortable="true">Position</th>
                 <th data-halign="center" data-sortable="true">Name</th>
                 <th data-halign="center">Address</th>
@@ -45,6 +46,8 @@
             </thead>
             <tbody>
             <tr th:each="employee: ${employees}" th:Object="${employee}">
+                <td th:if="*{getPhoto()}"><img th:src="@{*{getPhotoPath()}}" class="img-fluid rounded-circle" style="width: 80px; height: 80px; display: flex;"/></td>
+                <td th:unless="*{getPhoto()}"></td>
                 <td th:text="*{position.name}"></td>
                 <td th:text="*{getFullName()}"></td>
                 <td th:text="*{address}"></td>

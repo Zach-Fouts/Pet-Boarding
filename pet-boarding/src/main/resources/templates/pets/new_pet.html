@@ -27,7 +27,7 @@
             <h1>New Pet Form</h1>
             <hr>
 
-            <form action="#" th:action="@{/savePet}" th:object="${pet}" method="POST">
+            <form action="#" th:action="@{/savePet}" th:object="${pet}" method="POST" enctype="multipart/form-data">
                 <input type="text" th:field="*{petName}" placeholder="Pet Name" class="form-control mb-4 col-4">
                 <p class="error text-danger" th:errors="${pet.petName}"></p>
                 <input type="text" th:field="*{parents}" placeholder="Parents Name" class="form-control mb-4 col-4">
@@ -37,6 +37,11 @@
                 <p class="error text-danger" th:errors="${pet.breed}"></p>
                 <input type="text" th:field="*{notes}" placeholder="Notes" class="form-control mb-4 col-4">
                 <button type="submit" class="btn btn-info">Save Pet</button>
+                <!--                TODO: redo styling, place in empty white space with image preview-->
+                <div>
+                    <label>Photo </label>
+                    <input type="file" value="image" name="image" accept="image/png, image/jpeg" />
+                </div>
             </form>
             <hr>
             <a th:href="@{/pets}">Back to Pet List</a>
