@@ -38,7 +38,7 @@
                       data-toolbar="#toolbar">
                   <thead>
                   <tr>
-                     <th data-align="center">Photo</th>
+
                      <th data-halign="center" data-sortable="true">Pet Name</th>
                      <th data-halign="center" data-sortable="true">Parents Name</th>
                      <th data-halign="center" data-sortable="true">Breed</th>
@@ -48,9 +48,8 @@
                   </thead>
                   <tbody>
                   <tr th:each="pet: ${listPets}" th:Object="${pet}">
-                     <td th:if="*{getPhoto()}"><img th:src="@{*{getPhotoPath()}}" class="img-fluid rounded-circle" style="width: 80px; height: 80px; display: flex;"/></td>
-                     <td th:unless="*{getPhoto()}"></td>
-                     <td th:text="${pet.petName}"></td>
+
+                     <td><a th:href="@{pets/profile/{id} (id=*{id})}" th:text="${pet.petName}"></a></td>
                      <td th:text="${pet.parents}"></td>
                      <td th:text="${pet.breed}"></td>
                      <td th:text="${pet.notes}"></td>

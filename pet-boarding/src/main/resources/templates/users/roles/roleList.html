@@ -12,7 +12,9 @@
 <body>
 <th:block id="content">
     <div id="toolbar" class="d-flex">
-<!--        TODO: add back button with image (reference add employee page)-->
+        <a class="btn btn-secondary" href="/users" title="Go back to Job Positions table">
+            <i class="bi bi-box-arrow-in-left"></i>
+        </a>
         <div class="vr mx-2"></div>
         <a class="btn btn-primary" th:href="@{/users/roles/addRoleForm}" title="Open add role form">
             <i class="bi bi-plus-lg"></i>
@@ -40,9 +42,7 @@
             <td th:text="*{name}"></td>
             <td th:text="*{users.size()}"></td>
             <td>
-<!--                TODO: add edit role form-->
-                <a class="btn btn-primary" th:href="@{editRoleForm/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-                <!--                <a class="btn btn-danger" th:href="@{'/users/deleteUserForm/' + ${user.id}}">Delete</a>-->
+                <a class="btn btn-primary" th:href="@{roles/editRoleForm/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
                 <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}','/users/roles', *{id});|"><i class="bi-trash"></i></a>
             </td>
         </tr>

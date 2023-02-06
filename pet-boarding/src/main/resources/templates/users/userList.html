@@ -17,7 +17,7 @@
             <span class="d-none d-sm-inline">Add User</span>
         </a>
         <div class="vr mx-2"></div>
-        <a class="btn btn-primary" th:href="@{/users/roles/roleList}" title="Open role table" >
+        <a class="btn btn-primary" th:href="@{/users/roles}" title="Open role table" >
             <i class="bi bi-table"></i>
             <span class="d-none d-sm-inline">Role</span>
         </a>
@@ -33,7 +33,6 @@
             class="table-striped">
         <thead>
         <tr>
-            <th data-halign="center" data-align="center">Photo</th>
             <th data-halign="center">User ID</th>
             <th data-halign="center" data-sortable="true">Username</th>
             <th data-halign="center" data-sortable="true">Name</th>
@@ -45,17 +44,13 @@
         </thead>
         <tbody>
         <tr th:each="user: ${listUsers}" th:object="${user}">
-            <td th:if="*{employee.getPhoto()}"><img th:src="@{*{employee.getPhotoPath()}}" class="img-fluid rounded-circle" style="width: 80px; height: 80px;"/></td>
-            <td th:unless="*{employee.getPhoto()}"></td>
             <td th:text="*{id}"></td>
             <td th:text="*{username}"></td>
-            <td th:if="*{employee}" th:text="*{employee.getFullName()}"></td>
-            <td th:unless="*{employee}" th:text="'No Assigned Employee'"></td>
-            <td th:if="*{employee}" th:text="*{employee.id}"></td>
-            <td th:unless="*{employee}" th:text="'No Assigned ID'"></td>
+            <td><a th:href="@{employees/profile/{id} (id=*{employee.id})}" th:text="*{employee.getFullName()}"></a></td>
+            <td th:text="*{employee.id}"></td>
             <td th:text="*{role.name}"></td>
-            <td th:if="*{employee}" th:text="*{employee.email}"></td>
-            <td th:unless="*{employee}" th:text="'No Employee Data'"></td>
+            <td th:text="*{employee.email}"></td>
+
             <td>
                 <a class="btn btn-primary" th:href="@{users/editUserForm/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
                 <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{username}','/users', *{id});|"><i class="bi-trash"></i></a>
