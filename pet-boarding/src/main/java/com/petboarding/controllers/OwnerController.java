@@ -1,7 +1,9 @@
 package com.petboarding.controllers;
 
 import com.petboarding.models.Owner;
+import com.petboarding.models.Pet;
 import com.petboarding.models.data.OwnerRepository;
+import com.petboarding.models.data.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +22,16 @@ public class OwnerController extends AppBaseController{
     @Autowired
     private OwnerRepository ownerRepository;
 
+    @Autowired
+    private PetRepository petRepository;
+
 // Owner Home Page
 
     @RequestMapping()
     public String showMainOwnerPage(Model model) {
         Iterable<Owner> owners;
         owners = ownerRepository.findAll();
+
         model.addAttribute("title", "All Owners");
         model.addAttribute("owners", owners);
         this.setActiveModule("owners", model);
@@ -43,7 +49,10 @@ public class OwnerController extends AppBaseController{
     @GetMapping("/add")
     public String displayAddOwnerForm(Model model){
         this.setActiveModule("owners", model);
+        Iterable<Pet> pets;
+        pets = petRepository.findAll();
         model.addAttribute(new Owner());
+        model.addAttribute("pets", pets);
         return "owners/add";
     }
 
@@ -59,7 +68,7 @@ public class OwnerController extends AppBaseController{
 
 // View an individual Owner
     @GetMapping("view/{ownerId}")
-    public String displayViewEmployer(Model model, @PathVariable int ownerId){
+    public String displayViewOwner(Model model, @PathVariable int ownerId){
         this.setActiveModule("owners", model);
         Optional optOwner = ownerRepository.findById(ownerId);
         if(optOwner.isPresent()){
@@ -73,7 +82,7 @@ public class OwnerController extends AppBaseController{
 
 // Updating Owners
     @GetMapping("updateOwner/{ownerId}")
-    public String displayUpdateEmployer(Model model, @PathVariable int ownerId){
+    public String displayUpdateOwner(Model model, @PathVariable int ownerId){
         this.setActiveModule("owners", model);
         Optional optOwner = ownerRepository.findById(ownerId);
         if(optOwner.isPresent()){

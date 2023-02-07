@@ -28,15 +28,26 @@
             <label th:for="address2">Address 2</label>
             <input class="form-control" th:field="${owner.address2}" />
 
-            <label th:for="firstName">Phone Number</label>
+            <label th:for="phoneNumber">Phone Number</label>
             <input class="form-control" th:field="${owner.phoneNumber}" />
             <p th:errors="${owner.phoneNumber}" class="error"></p>
 
-            <label th:for="firstName">Email</label>
+            <label th:for="email">Email</label>
             <input class="form-control" th:field="${owner.email}" />
             <p th:errors="${owner.email}" class="error"></p>
 
-            <label th:for="firstName">Notes</label>
+            <label th:for="petId"> Pet Name</label>
+            <select name="petId" id="petId" placeholder="Parents Name"
+                    class="form-control mb-4 col-4">
+                <option disabled selected value> -- select an option -- </option>
+                <option th:each="pet: ${pets}" th:value="${pet.id}" th:text="${pet.petName}"></option>
+            </select>
+
+
+
+
+
+            <label th:for="notes">Notes</label>
             <input class="form-control" th:field="${owner.notes}" />
         </div>
 
