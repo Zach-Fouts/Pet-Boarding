@@ -38,7 +38,7 @@
 
             <label th:for="petId"> Pet Name</label>
             <select name="petId" id="petId" placeholder="Parents Name"
-                    class="form-control mb-4 col-4">    <!--- th:field="${owner.pet}" --->
+                    class="form-control mb-4 col-4">
                 <option disabled selected value> -- select an option -- </option>
                 <option th:each="pet: ${pets}" th:value="${pet.id}" th:text="${pet.petName}"></option>
             </select>
