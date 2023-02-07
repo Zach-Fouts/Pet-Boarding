@@ -1,6 +1,7 @@
 package com.petboarding.controllers;
 
 import com.petboarding.models.Employee;
+import com.petboarding.models.Owner;
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.utilities.FileUploadUtil;
@@ -48,7 +49,21 @@ public class PetController extends AppBaseController {
         model.addAttribute("parents", ownerRepository.findAll());       // Grab all Owners
         return "pets/new_pet";
     }
-// TODO: Discuss code uniformity
+    @GetMapping("/showNewPetForm/{ownerId}")
+    public String showNewPetFormFromOwner(Model model, @PathVariable int ownerId) {
+        // create model attribute to bind form data
+        Pet pet = new Pet();
+        model.addAttribute("pet", pet);
+        Optional optOwner = ownerRepository.findById(ownerId);
+        if(optOwner.isPresent()) {
+            Owner owner = (Owner) optOwner.get();
+            model.addAttribute("parents", owner);       // Grab specific Owner
+            return "pets/new_pet";
+        } else {
+            return"redirect:../owners";
+        }
+    }
+
     @PostMapping("/savePet")
     public String savePet(@ModelAttribute("pet") @Valid Pet pet, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         // save pet to database

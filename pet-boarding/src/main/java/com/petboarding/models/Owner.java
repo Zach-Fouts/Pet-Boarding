@@ -1,5 +1,5 @@
 package com.petboarding.models;
-
+import com.petboarding.models.Pet;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -28,13 +28,17 @@ public class Owner extends AbstractEntity{
     @NotBlank(message = "Email cannot be empty.")
     @Email
     private String email;
-    private String notes;
 
+    @OneToMany
+    @JoinColumn(name = "owner_id")
+    private List<Pet> pets = new ArrayList<>();
+
+    private String notes;
 
     public Owner(){
     }
 
-    public Owner(String aFirstName, String aLastName, String aAddress, String aAddress2, String aPhoneNumber, String aEmail, String aNotes){
+    public Owner(String aFirstName, String aLastName, String aAddress, String aAddress2, String aPhoneNumber, String aEmail, List<Pet> apets, String aNotes){
 
         firstName = aFirstName;
         lastName = aLastName;
@@ -42,6 +46,7 @@ public class Owner extends AbstractEntity{
         address2 = aAddress2;
         phoneNumber = aPhoneNumber;
         email = aEmail;
+        pets = apets;
         notes = aNotes;
     }
 
@@ -55,30 +60,14 @@ public class Owner extends AbstractEntity{
                 ", address2=" + address2 +
                 ", phoneNumber=" + phoneNumber +
                 ", email=" + email +
+                ", pets=" + pets +
                 ", notes=" + notes +
                 '\'' +
                 '}';
     }
 
-    //Needed with Abstract Entitys?
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Owner owner = (Owner) o;
-//        return id == owner.id && name.equals(owner.name);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(id, name);
-//    }
-
-//    public long getId() {
-//        return id;
-//    }
-    public String getName() {
-        return "firstName" + " " + "lastName";
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
     }
 
     public String getFirstName() {
@@ -126,6 +115,14 @@ public class Owner extends AbstractEntity{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Pet> getPets() {
+        return pets;
+    }
+
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 
     public String getNotes() {

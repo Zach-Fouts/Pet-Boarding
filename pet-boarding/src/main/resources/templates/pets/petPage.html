@@ -49,7 +49,7 @@
                   <tr th:each="pet: ${listPets}">
                      <td th:text="${pet.petName}"></td>
                      <td><a th:href="@{pets/profile/{id} (id=*{id})}" th:text="${pet.petName}"></a></td>
-                     <td th:text="${pet.owner}"></td>          <!--- Going to eventually display only first + lastname --->
+                     <td th:text="${pet.owner?.getFullName()}"></td>          <!--- ? acts as if owner then owner.firstName --->
                      <td th:text="${pet.breed}"></td>
                      <td th:text="${pet.notes}"></td>
                      <td>

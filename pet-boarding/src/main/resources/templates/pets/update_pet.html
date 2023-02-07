@@ -28,7 +28,7 @@
                <!-- Add hidden form field to handle update -->
                <input type="hidden" th:field="*{id}" />
                <input type="text" th:field="*{petName}" class="form-control mb-4 col-4">
-               <input type="text" th:field="*{parents}" class="form-control mb-4 col-4">
+               <input type="hidden" th:field="*{owner}" class="form-control mb-4 col-4">  <!--- Hidden because pet owners shouldn't change" --->
                <select name="dogDropdown" id="dogDropList" th:field="*{breed}"
                        class="form-control mb-4 col-4"></select>
                <input type="text" th:field="*{notes}" class="form-control mb-4 col-4">

@@ -19,7 +19,6 @@ public class Pet {
 
 
 //    @NotBlank(message = "Enter parent name!")     // Some Not Blank error?
-//      @Column(name = "parents")                   // @Column not an option
     @ManyToOne                                      // Sets up relationship
     private Owner owner;                            // Parents -> Owner
 
