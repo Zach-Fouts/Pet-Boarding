@@ -30,6 +30,14 @@ public class Reservation extends AbstractEntity {
     @Size(max = 250, message = "A comment cannot be longer than 250 characters.")
     private String comments;
 
+    public Pet getPet() {
+        return pet;
+    }
+
+    public void setPet(Pet pet) {
+        this.pet = pet;
+    }
+
     public Reservation() {
     }
     public Reservation(Date aStartDateTime, Date anEndDateTime, String aComment) {
