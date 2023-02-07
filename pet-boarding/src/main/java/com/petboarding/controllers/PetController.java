@@ -1,5 +1,6 @@
 package com.petboarding.controllers;
 
+import com.petboarding.models.Owner;
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.OwnerRepository;     // Needed to Grab Owners
@@ -40,6 +41,20 @@ public class PetController extends AppBaseController {
         model.addAttribute("pet", pet);
         model.addAttribute("parents", ownerRepository.findAll());       // Grab all Owners
         return "pets/new_pet";
+    }
+    @GetMapping("/showNewPetForm/{ownerId}")
+    public String showNewPetFormFromOwner(Model model, @PathVariable int ownerId) {
+        // create model attribute to bind form data
+        Pet pet = new Pet();
+        model.addAttribute("pet", pet);
+        Optional optOwner = ownerRepository.findById(ownerId);
+        if(optOwner.isPresent()) {
+            Owner owner = (Owner) optOwner.get();
+            model.addAttribute("parents", owner);       // Grab specific Owner
+            return "pets/new_pet";
+        } else {
+            return"redirect:../owners";
+        }
     }
 
     @PostMapping("/savePet")
