@@ -3,6 +3,7 @@ package com.petboarding.controllers;
 
 import com.petboarding.models.Reservation;
 import com.petboarding.models.app.Module;
+import com.petboarding.models.data.PetRepository;
 import com.petboarding.models.data.ReservationRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class ReservationController extends AppBaseController{
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private PetRepository petRepository;
 
     @GetMapping("grid")
     public String displayReservations(Model model) {

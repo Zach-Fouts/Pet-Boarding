@@ -28,6 +28,28 @@
                 <p class="error" th:errors="${reservation.endDateTime}"></p>
             </div>
             <div class="form-group col-6 res">
+                <label>Owner
+                    <select id="ownerId" name="ownerId" class="form-control">
+                        <option value="">Choose a pet</option>
+                        <th:forEach items="${owners}" var="owner">
+                            <option value="${owner.id}">${owner.getName()}</option>
+                        </th:forEach>
+                    </select>
+                </label>
+                <p class="error" th:errors="${reservation.comments}"></p>
+            </div>
+            <div class="form-group col-6 res">
+                <label>Pet
+                    <select id="petId" name="petId" class="form-control">
+                        <option value="">Choose a pet</option>
+                        <th:forEach items="${pets}" var="pet">
+                            <option value="${pet.id}">${pet.petName}</option>
+                        </th:forEach>
+                    </select>
+                </label>
+                <p class="error" th:errors="${reservation.comments}"></p>
+            </div>
+            <div class="form-group col-6 res">
                 <label>Comment
                     <input th:field="${reservation.comments}" class="form-control">
                 </label>
