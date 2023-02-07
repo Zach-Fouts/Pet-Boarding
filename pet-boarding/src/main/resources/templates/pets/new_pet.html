@@ -30,9 +30,6 @@
             <form action="#" th:action="@{/savePet}" th:object="${pet}" method="POST" enctype="multipart/form-data">
                 <input type="text" th:field="*{petName}" placeholder="Pet Name" class="form-control mb-4 col-4">
                 <p class="error text-danger" th:errors="${pet.petName}"></p>
-
-<!--                <input type="text" th:field="*{parents}" placeholder="Parents Name" class="form-control mb-4 col-4">-->
-
                 <!--- Changed to dropdown selection of existing owners -->
                 <select name="ownerId" id="ownerId" placeholder="Parents Name"th:field="*{owner}"
                         class="form-control mb-4 col-4">
