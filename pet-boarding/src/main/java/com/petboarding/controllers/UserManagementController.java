@@ -38,8 +38,6 @@ public class UserManagementController extends AppBaseController{
     @Autowired
     private OwnerRepository ownerRepository;
 
-
-    // -----------------------------User Management------------------------------
         public List<User> listUsers() {
             return userRepository.findAll();
         }
@@ -68,6 +66,7 @@ public class UserManagementController extends AppBaseController{
         model.addAttribute("listRoles", listRoles());
         model.addAttribute("listEmployees", filteredEmployeeList());
         model.addAttribute("addNewUserDTO", new AddNewUserDTO());
+        addLocation("Add", model);
         return "/users/addUserForm";
     }
 
@@ -110,6 +109,7 @@ public class UserManagementController extends AppBaseController{
         if (user.isPresent()) {
         model.addAttribute("user", user.get());
         model.addAttribute("listRoles", listRoles());
+        addLocation("Update", model);
         }
         return "/users/editUserForm";
     }
@@ -124,7 +124,6 @@ public class UserManagementController extends AppBaseController{
     }
 
     //Saves user profile changes in editUserForm
-    //    TODO: remove image upload from user, implement in employee
     @Transactional
     @PostMapping("/saveUser")
     public String submitSaveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role,
@@ -148,46 +147,6 @@ public class UserManagementController extends AppBaseController{
         userRepository.delete(user.get());
         }
         return "redirect:/users";
-    }
-
-
-    // -----------------------------Role Management------------------------------
-
-    @GetMapping("roles/roleList")
-    public String roleList(Model model){
-        model.addAttribute("listRoles", listRoles());
-        return "/users/roles/roleList";
-    }
-
-    @GetMapping("/roles/addRoleForm")
-    public String addRoleForm(Model model) {
-        model.addAttribute("role", new Role());
-        return "/users/roles/addRoleForm";
-    }
-
-    //Saves role in addRoleForm
-    @PostMapping("roles/saveRole")
-    public String createRole(@RequestParam String name)  {
-        Role newRole = new Role(name);
-        roleRepository.save(newRole);
-        return "redirect:/users/roles/roleList";
-    }
-
-    @PostMapping("/roles/delete/{id}")
-    public String deleteRole(@PathVariable int id, Model model, RedirectAttributes redirectAttributes) {
-        Role role = roleRepository.findById(id).get();
-        List<User> users = role.getUsers();
-            if (!users.isEmpty()) {
-            model.addAttribute("errorMessage", "This role is currently assigned to one or more users and cannot be deleted.");
-            model.addAttribute("role", role);
-            return "/users/roles/deleteRoleForm";
-        }
-            else {
-                String name = role.getName();
-                redirectAttributes.addFlashAttribute("infoMessage", "User: <strong>" + name + "</strong>  was successfully deleted.");
-            roleRepository.deleteById(role.getId());
-            return "redirect:/users/roles/roleList";
-        }
     }
 
     @ModelAttribute("activeModule")

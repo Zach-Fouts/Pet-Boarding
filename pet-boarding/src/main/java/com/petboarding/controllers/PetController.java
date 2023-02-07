@@ -1,5 +1,6 @@
 package com.petboarding.controllers;
 
+import com.petboarding.models.Employee;
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.utilities.FileUploadUtil;
@@ -11,9 +12,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 
@@ -72,6 +75,17 @@ public class PetController extends AppBaseController {
         // call delete method
         this.petService.deletePetById(id);
         return "redirect:/pets";
+    }
+
+    @GetMapping("pets/profile/{id}")
+    public String displayEmployeeProfile(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes){
+        Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(id));
+        if(optPet.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The Pet ID:" + id + " couldn't be found.");
+            return "redirect:/pets";
+        }
+        model.addAttribute("pet", optPet.get());
+        return "pets/profile";
     }
 
     @ModelAttribute("activeModule")
