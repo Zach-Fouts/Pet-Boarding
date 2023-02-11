@@ -49,13 +49,6 @@ public class Employee extends AbstractEntity{
     @Column(nullable = true, length = 64)
     private String photo;
 
-    @Transient
-    public String getPhotoPath() {
-        int id = this.getId();
-        if (photo == null || id == 0) {return null;}
-        return "/uploads/employee-photos/" + id + "/" + photo;
-    }
-
     public Employee() {}
 
     public String getFirstName() {
@@ -140,6 +133,13 @@ public class Employee extends AbstractEntity{
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    @Transient
+    public String getPhotoPath() {
+        int id = this.getId();
+        if (photo == null || id == 0) {return null;}
+        return "/uploads/employee-photos/" + id + "/" + photo;
     }
 
     @Override
