@@ -31,8 +31,9 @@ public class CalendarEventUtils {
         return eventsList;
     }
 
-    static public List<CalendarEvent> parseEventsFromReservations(List<Reservation> reservations) {
-        Function<Reservation, String> getTitle = reservation -> reservation.getComments();
+    static public List<CalendarEvent> parseEventsFromReservations(
+            List<Reservation> reservations,
+            Function<Reservation, String> getTitle) {
         return parseEventsList(
                 reservations,
                 reservation -> reservation,

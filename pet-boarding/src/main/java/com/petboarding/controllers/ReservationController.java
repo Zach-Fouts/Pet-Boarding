@@ -1,6 +1,8 @@
 package com.petboarding.controllers;
 
 
+import com.petboarding.controllers.utils.CalendarEvent;
+import com.petboarding.controllers.utils.CalendarEventUtils;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Controller
 @RequestMapping("reservations")
@@ -33,12 +36,13 @@ public class ReservationController extends AppBaseController{
     }
     @GetMapping
     public String displayCalendar(Model model) {
-        List<Reservation> events = reservationRepository.findAll();
-        for(Reservation event : events){
-            if(event.getPet() != null){
-                event.getPet().setOwner(null);
-            }
-        }
+        Function<Reservation, String> getTitle = reservation ->
+                "#" + reservation.getConfirmation() + " | " +
+                        reservation.getPet().getOwner().getFullName() + " | " +
+                        reservation.getPet().getPetName();
+        List<CalendarEvent> events = CalendarEventUtils.parseEventsFromReservations(
+                reservationRepository.findAll(),
+                getTitle);
         model.addAttribute("reservations", events);
         return "reservations/calendarView";
     }

@@ -1,16 +1,16 @@
 
 
-function uiCalendar(reservations){
-    var events = [];
-       for(var i=0;i<reservations.length;i++){
-           var reservation = reservations[i];
-           events.push({
-               title:reservation.comments,
-               start:reservation.startDateTime,
-               end:reservation.endDateTime,
-               url:'/reservations/detail?reservationId='+ reservation.id
-           });
-       }
+function uiCalendar(events){
+//    var events = [];
+//       for(var i=0;i<reservations.length;i++){
+//           var reservation = reservations[i];
+//           events.push({
+//               title:reservation.comments,
+//               start:reservation.startDateTime,
+//               end:reservation.endDateTime,
+//               url:'/reservations/detail?reservationId='+ reservation.id
+//           });
+//       }
 
     var calendarEl=document.getElementById('calendar');
     var calendar=new FullCalendar.Calendar(calendarEl,{
@@ -35,7 +35,8 @@ function uiCalendar(reservations){
             center:'title',
             right:'dayGridMonth,timeGridWeek,timeGridDay prev,next today'},
         events:events,
-        dayMaxEvents:true//allow"more"link when too many events,
+        dayMaxEvents:true,//allow"more"link when too many events,
+        allDay: false
     });
     calendar.render();
 }

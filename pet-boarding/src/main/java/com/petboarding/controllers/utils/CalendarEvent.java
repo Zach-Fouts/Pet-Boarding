@@ -10,11 +10,21 @@ public class CalendarEvent {
     private String url;
     private String color;
 
+    private boolean allDay = false;
+
     public CalendarEvent(long id, Date start, Date end, String title) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.title = title;
+    }
+
+    public boolean isAllDay() {
+        return allDay;
+    }
+
+    public void setAllDay(boolean allDay) {
+        this.allDay = allDay;
     }
 
     public long getId() {
