@@ -1,7 +1,6 @@
 package com.petboarding.controllers;
 
 import com.petboarding.models.User;
-import com.petboarding.models.app.Location;
 import com.petboarding.models.app.Module;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
