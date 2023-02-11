@@ -32,18 +32,22 @@
                data-toolbar="#toolbar">
             <thead>
             <tr>
-                <th>ID</th>
-                <th data-halign="center" data-sortable="true">Start Date</th>
-                <th data-halign="center" data-sortable="true">End Date</th>
+                <th>Confirmation code</th>
+                <th>Owner</th>
+                <th>Pet</th>
+                <th data-halign="center" data-align="center" data-sortable="true">Start Date</th>
+                <th data-halign="center" data-align="center" data-sortable="true">End Date</th>
                 <th>Comments</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
                 <tr th:each="reservation : ${reservations}">
-                    <td th:text="${reservation.id}"></td>
-                    <td th:text="${reservation.startDateTime}"></td>
-                    <td th:text="${reservation.endDateTime}"></td>
+                    <td class="fw-bold" th:text="${reservation.confirmation}"></td>
+                    <td th:text="${reservation.getPet().getOwner().getFullName()}"></td>
+                    <td th:text="${reservation.getPet().petName}"></td>
+                    <td th:text="${#dates.format(reservation.startDateTime, 'MM-dd-yyyy')}"></td>
+                    <td th:text="${#dates.format(reservation.endDateTime, 'MM-dd-yyyy')}"></td>
                     <td th:text="${reservation.comments}"></td>
                     <td>
                         <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
