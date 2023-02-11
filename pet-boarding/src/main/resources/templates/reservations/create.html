@@ -25,23 +25,22 @@
                     <select onchange="filterPets(this)" required id="ownerId" name="ownerId" class="form-control">
                         <option value="">select a value</option>
                         <option th:selected="${ownerId == owner.id}" th:each=" owner : ${owners}"
-                                th:value="${owner.id}" th:text="${owner.name}">
+                                th:value="${owner.id}" th:text="${owner.getFullName()}">
                         </option>
                     </select>
                 </label>
-                <p class="error" th:errors="${reservation.comments}"></p>
+<!--                <p class="error" th:if="${#ownerId('owner.getFullName()')}" th:errors="*{owner.getFullName()}"></p>-->
             </div>
             <div class="form-group col-6 res">
                 <label>Pet
-                    <!-- th:field="${reservation.employee}" add later with pets  -->
-                    <select  required id="petId" name="petId" class="form-control">
+                    <select th:field="${reservation.pet}" required id="petId" name="petId" class="form-control">
                         <option value="">select a value</option>
                         <option th:each=" pet : ${pets}"
-                                th:value="${pet.id}" th:text="${pet.getFullName()}">
+                                th:value="${pet.id}" th:text="${pet.petName}">
                         </option>
                     </select>
                 </label>
-                <p class="error" th:errors="${reservation.comments}"></p>
+<!--                <p class="error" th:errors="${reservation.pet}"></p>-->
             </div>
             <div class="form-group col-6 res">
                 <label>Start Date

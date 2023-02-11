@@ -14,8 +14,16 @@
 
    <table class="table table-striped">
       <tr>
-         <th>ID</th>
-         <td th:text="${reservation.id}"></td>
+         <th>Confirmation Code</th>
+         <td th:text="${reservation.confirmation}"></td>
+      </tr>
+      <tr>
+         <th>Owner</th>
+         <td th:text="${reservation.getPet().getOwner().getFullName()}"></td>
+      </tr>
+      <tr>
+         <th>Pet</th>
+         <td th:text="${reservation.getPet().petName}"></td>
       </tr>
       <tr>
          <th>Start Date</th>

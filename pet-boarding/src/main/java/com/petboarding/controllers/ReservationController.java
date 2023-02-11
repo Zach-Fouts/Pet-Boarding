@@ -1,14 +1,9 @@
 package com.petboarding.controllers;
 
 
-import com.petboarding.models.Employee;
-import com.petboarding.models.Position;
-import com.petboarding.models.Reservation;
+import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
-import com.petboarding.models.data.EmployeeRepository;
-import com.petboarding.models.data.PetRepository;
-import com.petboarding.models.data.PositionRepository;
-import com.petboarding.models.data.ReservationRepository;
+import com.petboarding.models.data.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,9 +24,7 @@ public class ReservationController extends AppBaseController{
     @Autowired
     private PetRepository petRepository;
     @Autowired
-    private PositionRepository positionRepository;
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private OwnerRepository ownerRepository;
 
     @GetMapping("grid")
     public String displayReservations(Model model) {
@@ -40,7 +33,13 @@ public class ReservationController extends AppBaseController{
     }
     @GetMapping
     public String displayCalendar(Model model) {
-        model.addAttribute("reservations", reservationRepository.findAll());
+        List<Reservation> events = reservationRepository.findAll();
+        for(Reservation event : events){
+            if(event.getPet() != null){
+                event.getPet().setOwner(null);
+            }
+        }
+        model.addAttribute("reservations", events);
         return "reservations/calendarView";
     }
     @GetMapping("create")
@@ -49,17 +48,17 @@ public class ReservationController extends AppBaseController{
         model.addAttribute(new Reservation());
 
         if(ownerId == null){
-            model.addAttribute("pets", new ArrayList <Employee>());
+            model.addAttribute("pets", new ArrayList <Pet>());
         }else{
-            Optional<Position> result = positionRepository.findById(ownerId);
+            Optional<Owner> result = ownerRepository.findById(ownerId);
             if(result.isEmpty()){
-                model.addAttribute("pets", new ArrayList <Employee>());
+                model.addAttribute("pets", new ArrayList <Pet>());
             }else{
-                model.addAttribute("pets", result.get().getEmployees());
+                model.addAttribute("pets", result.get().getPets());
                 model.addAttribute("ownerId", ownerId );
             }
         }
-        model.addAttribute("owners", positionRepository.findAll());
+        model.addAttribute("owners", ownerRepository.findAll());
         model.addAttribute("categories", reservationRepository.findAll());
         return "reservations/create";
     }
@@ -71,7 +70,7 @@ public class ReservationController extends AppBaseController{
             model.addAttribute("title", "Create Event");
             return "reservations/create";
         }
-
+        newReservation.assignConfirmationCode();
         reservationRepository.save(newReservation);
         return "redirect:";
     }

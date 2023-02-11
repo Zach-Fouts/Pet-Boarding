@@ -19,6 +19,8 @@ public class Reservation extends AbstractEntity {
 //    private Kennel kennel;
     //**************************
 
+    private String confirmation;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Start date is required")
     private Date startDateTime;
@@ -68,4 +70,36 @@ public class Reservation extends AbstractEntity {
     public void setComments(String comments) {
         this.comments = comments;
     }
+
+    public String getConfirmation() {
+        return confirmation;
+    }
+
+    public void setConfirmation(String confirmation) {
+        this.confirmation = confirmation;
+    }
+
+    public void assignConfirmationCode(){
+        confirmation = generateConfirmationCode();
+    }
+    private String generateConfirmationCode() {
+        // get code based on current milliseconds
+        String code = getCodeFromLong(System.currentTimeMillis());
+        try {
+            while(true) {
+                // test if the code is decimal number
+                long longCode = Long.parseLong(code);
+                // turn new number into Hexadecimal
+                code = getCodeFromLong(longCode);
+            }
+        } catch(Exception e) {}
+        return code;
+    }
+
+    private String getCodeFromLong(long number) {
+        if(number < 4096) number += 4096; //force 4 digit hexadecimal
+        String code = Long.toHexString(number);
+        return code.substring( code.length() - 4 ).toUpperCase();
+    }
+
 }

@@ -11,6 +11,21 @@
 </head>
 <body>
 <th:block id="content">
+   <div class="form-group res">
+      <label>Confirmation Code
+         <strong><p th:text="${reservation.confirmation}"></p></strong>
+      </label>
+   </div>
+   <div class="form-group res">
+      <label>Owner
+         <strong><p th:text="${reservation.getPet().getOwner().getFullName()}"></p></strong>
+      </label>
+   </div>
+   <div class="form-group res">
+      <label>Pet
+         <strong><p th:text="${reservation.getPet().petName}"></p></strong>
+      </label>
+   </div>
     <form method="post">
        <div class="form-group res">
           <label>Start Date

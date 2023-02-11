@@ -32,7 +32,9 @@
                data-toolbar="#toolbar">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>Confirmation code</th>
+                <th>Owner</th>
+                <th>Pet</th>
                 <th data-halign="center" data-align="center" data-sortable="true">Start Date</th>
                 <th data-halign="center" data-align="center" data-sortable="true">End Date</th>
                 <th>Comments</th>
@@ -41,7 +43,9 @@
             </thead>
             <tbody>
                 <tr th:each="reservation : ${reservations}">
-                    <td th:text="${reservation.id}"></td>
+                    <td class="fw-bold" th:text="${reservation.confirmation}"></td>
+                    <td th:text="${reservation.getPet().getOwner().getFullName()}"></td>
+                    <td th:text="${reservation.getPet().petName}"></td>
                     <td th:text="${#dates.format(reservation.startDateTime, 'MM-dd-yyyy')}"></td>
                     <td th:text="${#dates.format(reservation.endDateTime, 'MM-dd-yyyy')}"></td>
                     <td th:text="${reservation.comments}"></td>
