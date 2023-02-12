@@ -129,8 +129,10 @@ public class UserManagementController extends AppBaseController{
     public String submitSaveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role,
                                  @RequestParam(required = false) String password)  {
 
-        User user = userRepository.findById(id).orElse(null);
-            if (user != null) {
+        Optional<User> optUser = userRepository.findById(id);
+            if (optUser.isPresent()) {
+                User user = optUser.get();
+
                 user.setUsername(username);
                 user.setRole(role);
             }
