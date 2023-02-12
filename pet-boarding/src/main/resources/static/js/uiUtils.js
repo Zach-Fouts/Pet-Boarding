@@ -52,3 +52,10 @@ function addDeleteDialogElement( ) {
     }
     deleteDialog = new bootstrap.Modal('#deleteDialog', {});
 }
+
+function displayPhotoPreview(input, imgId) {
+    if(input.files.length <= 0) return; // no photo
+    let image = document.getElementById(imgId);
+    image.src = URL.createObjectURL(input.files[0]);
+    image.classList.add('d-block');
+}
