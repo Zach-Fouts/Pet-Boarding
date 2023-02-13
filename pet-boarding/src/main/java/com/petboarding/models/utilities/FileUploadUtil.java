@@ -2,6 +2,8 @@ package com.petboarding.models.utilities;
 
 import java.io.*;
 import java.nio.file.*;
+
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
@@ -20,4 +22,19 @@ public class FileUploadUtil {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
     }
+
+    public static boolean deletePhoto(String uploadDirectory, String photo){
+     Path root = Paths.get(uploadDirectory);
+        try {
+            Path file = root.resolve(photo);
+            return Files.deleteIfExists(file);
+        } catch (IOException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
+
+
+//    public static void deleteAll() {
+//        FileSystemUtils.deleteRecursively(root.toFile());
+//    }
 }
