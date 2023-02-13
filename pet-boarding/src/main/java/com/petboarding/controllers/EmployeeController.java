@@ -58,14 +58,12 @@ public class EmployeeController extends AppBaseController {
             return "employees/form";
         }
         employeeRepository.save(newEmployee);
-        if (multipartFile != null){
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             if (!fileName.equals("")){
                 String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 newEmployee.setPhoto(fileName);
             }
-        }
         return "redirect:/employees";
     }
 
@@ -90,19 +88,22 @@ public class EmployeeController extends AppBaseController {
             model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
         }
-            employeeRepository.save(employee);
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
                 String uploadDir = "uploads/employee-photos/" + employee.getId();
-                Optional<String> photo = Optional.ofNullable(employee.getPhoto());
-                if (photo.isPresent()){
-                FileUploadUtil.delete(photo.get());
+                Optional<Employee> existingEmployee = employeeRepository.findById(id);
+                if (existingEmployee.isPresent()){
+                Optional<String> photo = Optional.ofNullable(existingEmployee.get().getPhoto());
+                    if (photo.isPresent()){
+                        FileUploadUtil.deletePhoto(uploadDir, photo.get());
+                    }
                 }
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 employee.setPhoto(fileName);
         }
+        employeeRepository.save(employee);
         redirectAttributes.addFlashAttribute("infoMessage", "The Job Position has been updated.");
-        return "redirect:/employees";
+        return "redirect:" + id;
     }
 
     @PostMapping("delete/{id}")

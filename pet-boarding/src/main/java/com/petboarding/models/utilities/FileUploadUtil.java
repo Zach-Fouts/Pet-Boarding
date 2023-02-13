@@ -22,10 +22,11 @@ public class FileUploadUtil {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
     }
-    public static Path root = Paths.get("uploads");
-    public static boolean delete(String filename) {
+
+    public static boolean deletePhoto(String uploadDirectory, String photo){
+     Path root = Paths.get(uploadDirectory);
         try {
-            Path file = root.resolve(filename);
+            Path file = root.resolve(photo);
             return Files.deleteIfExists(file);
         } catch (IOException e) {
             throw new RuntimeException("Error: " + e.getMessage());
@@ -33,7 +34,7 @@ public class FileUploadUtil {
     }
 
 
-    public static void deleteAll() {
-        FileSystemUtils.deleteRecursively(root.toFile());
-    }
+//    public static void deleteAll() {
+//        FileSystemUtils.deleteRecursively(root.toFile());
+//    }
 }
