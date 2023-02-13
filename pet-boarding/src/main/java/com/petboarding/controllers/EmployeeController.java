@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -49,6 +50,7 @@ public class EmployeeController extends AppBaseController {
     }
 
 //    TODO: add image upload
+    @Transactional
     @PostMapping("add")
     public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         if(errors.hasErrors()) {
@@ -64,7 +66,7 @@ public class EmployeeController extends AppBaseController {
                 newEmployee.setPhoto(fileName);
             }
         }
-        return "redirect:";
+        return "redirect:/";
     }
 
     @GetMapping("update/{id}")
