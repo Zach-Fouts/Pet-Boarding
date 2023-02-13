@@ -91,13 +91,10 @@ public class EmployeeController extends AppBaseController {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
                 String uploadDir = "uploads/employee-photos/" + employee.getId();
-                Optional<Employee> existingEmployee = employeeRepository.findById(id);
-                if (existingEmployee.isPresent()){
-                Optional<String> photo = Optional.ofNullable(existingEmployee.get().getPhoto());
+                Optional<String> photo = Optional.ofNullable(employee.getPhoto());
                     if (photo.isPresent()){
                         FileUploadUtil.deletePhoto(uploadDir, photo.get());
                     }
-                }
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 employee.setPhoto(fileName);
         }
