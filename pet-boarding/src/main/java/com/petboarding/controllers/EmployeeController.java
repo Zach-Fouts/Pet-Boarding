@@ -50,6 +50,7 @@ public class EmployeeController extends AppBaseController {
         return "employees/form";
     }
 
+
     @Transactional
     @PostMapping("add")
     public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
@@ -64,7 +65,9 @@ public class EmployeeController extends AppBaseController {
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 newEmployee.setPhoto(fileName);
             }
+
         return "redirect:/employees";
+
     }
 
     @GetMapping("update/{id}")
