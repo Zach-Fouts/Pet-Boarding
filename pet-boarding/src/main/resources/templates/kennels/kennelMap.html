@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <!-- comment from test -->
+        <style>
+        /* Makes kennels change color on hover */
+        .icon:hover {
+            fill: #DA4567;
+            fill-opacity: 0.5;
+        }
+
+        /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+
+    <!-- The Modal, only appears when a kenel is clicked -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1 id="kennelNum"></h1>
+            <p th:each="pet: ${pets}"th:text="${pet.petName}"></p>
+        </div>
+    </div>
+
+
+    <svg width="1110" height="706.5" version="1.1" viewBox="0 0 740 471" xmlns="http://www.w3.org/2000/svg" >   <!--- Sets size for this Scalable Vector Graphic --->
+        <!--- make a container for the image --->
+        <g id="a" transform="translate(370,235.5)">                                                                <!---- Location in project directory --->
+            <image x="-370" y="-235.5" width="740" height="471" fill="#000000" vector-effect="non-scaling-stroke" xlink:href="/img/kennelMap.svg"/>
+        </g>
+
+        <!--- container for a kennel, basically a rectangle. Coordinates scale with image --->
+        <!--- Kennel 1 --->
+        <g class="icon" fill-opacity="0" >                                              <!--- Opens Modal --->
+            <rect id="Kennel 1"  x="128.44" y="91.246" width="75.246" height="155.25" onclick="modalClick(this.id)"></rect>
+        </g>
+        <!--- Kennel 2 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 2" x="208.01" y="90.381" width="75.678" height="156.11" onclick="modalClick(this.id)"/>
+        </g>
+        <!--- Kennel 3 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 3" x="286.28" y="91.246" width="64.867" height="156.55" onclick="modalClick(this.id)"/>
+        </g>
+        <!--- Kennel 4 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 4" x="127.57" y="250.82" width="115.46" height="129.3" onclick="modalClick(this.id)"/>
+        </g>
+        <!--- Kennel 5 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 5" x="247.79" y="250.82" width="75.246" height="128.87" onclick="modalClick(this.id)"/>
+        </g>
+        <!--- Kennel 6 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 6"  x="326.5" y="250.39" width="74.381" height="128" onclick="modalClick(this.id)"/>
+        </g>
+        <!--- Kennel 7 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 7" x="406.93" y="250.82" width="74.381" height="127.57" onclick="modalClick(this.id)"/>
+        </g>
+        <!--- Kennel 8 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 8" x="485.64" y="250.39" width="62.272" height="128.87"onclick="modalClick(this.id)" />
+        </g>
+        <!--- Kennel 9 --->
+        <g class="icon" fill-opacity="0">
+            <rect id="Kennel 9" x="553.96" y="250.82" width="60.542" height="101.62"onclick="modalClick(this.id)" />
+        </g>
+    </svg>
+
+    <script>
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the kennel, open the modal
+function modalClick(id) {
+  modal.style.display = "block";
+  document.getElementById("kennelNum").innerHTML = id;  //Updates kennel id in modal
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+    </script>
+
+
+</th:block>
+</body>
+</html>
