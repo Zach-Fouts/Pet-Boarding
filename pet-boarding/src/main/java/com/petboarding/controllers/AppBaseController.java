@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +27,17 @@ public abstract class AppBaseController {
     }
 
     @ModelAttribute("modules")
-    public List<Module> addAppModules() {
+    public List<Module> addAppModules(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        //TODO: Allow pass if not user is present only for testing, !IMPORTANT [REMOVE CONDITION]
+        if(true) {
+            List<Module> allowedModules = new ArrayList<>();
+            for (Module module : appModules) {
+                if (/*user.isAdmin() || */module.getRole().equalsIgnoreCase("admin"))
+                    allowedModules.add(module);
+            }
+            return allowedModules;
+        }
         return appModules;
     }
 
