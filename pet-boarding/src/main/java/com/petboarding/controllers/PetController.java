@@ -1,10 +1,9 @@
 package com.petboarding.controllers;
 
-import com.petboarding.models.Employee;
 import com.petboarding.models.Owner;
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
-import com.petboarding.models.utilities.FileUploadUtil;
+import com.petboarding.controllers.utils.FileUploadUtil;
 import com.petboarding.models.data.OwnerRepository;     // Needed to Grab Owners
 import com.petboarding.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.Optional;
 
 @Controller

@@ -5,7 +5,7 @@ import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.OwnerRepository;
 import com.petboarding.models.data.PetRepository;
-import com.petboarding.models.utilities.FileUploadUtil;
+import com.petboarding.controllers.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
