@@ -49,7 +49,6 @@ public class UserManagementController extends AppBaseController{
         }
 
         public List<Employee> filteredEmployeeList() {
-//        TODO: use repository filter to find employees not already associated with a user, -> change in /addUserForm PostMapping as well
 //       filters employees that are not already associated with a user
             Map<Integer, Integer> employeeIds = listUsers().stream().filter(user -> user.getEmployee() != null).collect(Collectors.toMap(user -> user.getEmployee().getId(), user -> user.getId()));
             List<Employee> filteredEmployees = new ArrayList<>();

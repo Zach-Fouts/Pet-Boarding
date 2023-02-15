@@ -47,7 +47,6 @@
                   </thead>
                   <tbody>
                   <tr th:each="pet: ${listPets}" th:object="${pet}">
-                     <td th:text="${pet.petName}"></td>
                      <td><a th:href="@{pets/profile/{id} (id=*{id})}" th:text="${pet.petName}"></a></td>
                      <td th:text="${pet.owner?.getFullName()}"></td>          <!--- ? acts as if owner then owner.firstName --->
                      <td th:text="${pet.breed}"></td>
