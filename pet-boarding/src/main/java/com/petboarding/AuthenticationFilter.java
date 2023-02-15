@@ -22,7 +22,24 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     AuthenticationController authenticationController;
 
 
-    private static final List<String> whitelist = Arrays.asList("/");
+
+//TODO: uncomment to re-enable security
+    private static final List<String> whitelist = Arrays.asList("/sign-in/login");
+    private static final List<String> ADMIN_WHITELIST = Arrays.asList("/users", "/employees");
+    private static final List<String> EMPLOYEE_WHITELIST = Arrays.asList("/users", "/employees");
+
+    //TODO: uncomment to re-enable security
+    private static boolean isWhitelisted(String path, User user) {
+//        if (user != null) {
+//            if (user.isAdmin()) {
+//                return ADMIN_WHITELIST.contains(path);
+//            } else {
+//                return !EMPLOYEE_WHITELIST.contains(path);
+//            }
+//        }
+//        return whitelist.contains(path);
+        return true;
+    }
 
     private static boolean isWhitelisted(String path) {
         for (String pathRoot : whitelist) {
@@ -32,27 +49,39 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
         }
         return false;
     }
+@Override
+public boolean preHandle(HttpServletRequest request,
+                         HttpServletResponse response,
+                         Object handler) throws IOException {
 
-    @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) throws IOException {
+    String path = request.getRequestURI();
+    HttpSession session = request.getSession();
+    User user = authenticationController.getUserFromSession(session);
 
-        if (isWhitelisted(request.getRequestURI())) {
-            return true;
-        }
-
-        HttpSession session = request.getSession();
-        User user = authenticationController.getUserFromSession(session);
-
-        // The user is logged in
-        if (user != null) {
-            return true;
-        }
-
-        // The user is NOT logged in
-        response.sendRedirect("/sign-in/login");
-        return false;
+    if (isWhitelisted(path, user)) {
+        return true;
     }
+
+    // Check if user is logged
+    if (user != null) {
+        if (user.isAdmin()) {
+            // allows admins to access any non-whitelisted path
+            return true;
+        } else {
+            // allows employees to only access other paths
+            if (!path.startsWith("/users")  && !path.startsWith("/employees")) {
+                return true;
+            } else {
+                //redirects to home page if trying to access different paths
+                response.sendRedirect("/");
+                return false;
+            }
+        }
+    }
+
+    // Redirect to login page
+    response.sendRedirect("/sign-in/login");
+    return false;
+}
 
 }
