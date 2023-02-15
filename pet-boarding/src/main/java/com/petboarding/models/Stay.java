@@ -1,9 +1,6 @@
 package com.petboarding.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.Valid;
 
 @Entity
@@ -11,6 +8,7 @@ public class Stay extends AbstractEntity{
 
     @Valid
     @OneToOne
+    @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
     //TODO: Add support for Kennel model
@@ -20,7 +18,12 @@ public class Stay extends AbstractEntity{
 
     @Valid
     @ManyToOne
-    private Employee caretaker;
+    @JoinColumn(name = "employee_id", insertable = false, updatable = false)
+    private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private StayStatus status;
 
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
@@ -36,12 +39,20 @@ public class Stay extends AbstractEntity{
         this.reservation = reservation;
     }
 
-    public Employee getCaretaker() {
-        return caretaker;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setCaretaker(Employee caretaker) {
-        this.caretaker = caretaker;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public StayStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(StayStatus status) {
+        this.status = status;
     }
 
     public Boolean getActive() {
