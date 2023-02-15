@@ -72,16 +72,20 @@ public class PetController extends AppBaseController {
             return "pets/new_pet";
         }
 
-        petService.savePet(pet);
-        if (multipartFile != null){
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             if (!fileName.equals("")){
                 String uploadDir = "uploads/pet-photos/" + pet.getId();
+                Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(pet.getId()));
+                if (optPet.isPresent()) {
+                    Optional<String> photo = Optional.ofNullable(optPet.get().getPhoto());
+                    if (photo.isPresent()){
+                        FileUploadUtil.deletePhoto(uploadDir, photo.get());
+                    }
+                }
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 pet.setPhoto(fileName);
                 petService.savePet(pet);
             }
-        }
 
         return "redirect:/pets";
     }

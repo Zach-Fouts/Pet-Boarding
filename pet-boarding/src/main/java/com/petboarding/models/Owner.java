@@ -33,6 +33,9 @@ public class Owner extends AbstractEntity{
     @JoinColumn(name = "owner_id")
     private List<Pet> pets = new ArrayList<>();
 
+    @Column(nullable = true, length = 64)
+    private String photo;
+
     private String notes;
 
     public Owner(){
@@ -48,6 +51,13 @@ public class Owner extends AbstractEntity{
         email = aEmail;
         pets = apets;
         notes = aNotes;
+    }
+
+    @Transient
+    public String getPhotoPath() {
+        int id = this.getId();
+        if (photo == null || id == 0) {return null;}
+        return "/uploads/owner-photos/" + id + "/" + photo;
     }
 
     @Override
@@ -67,7 +77,7 @@ public class Owner extends AbstractEntity{
     }
 
     public String getFullName() {
-        return this.firstName + " " + this.lastName;
+        return this.lastName + ", " + this.firstName;
     }
 
     public String getFirstName() {
@@ -131,5 +141,13 @@ public class Owner extends AbstractEntity{
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

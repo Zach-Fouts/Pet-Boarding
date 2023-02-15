@@ -81,7 +81,6 @@ public class EmployeeController extends AppBaseController {
         return "employees/form";
     }
 
-//    TODO: add image upload
     @PostMapping("update/{id}")
     public String processUpdateEmployeeRequest(
             @PathVariable Integer id, @Valid @ModelAttribute Employee employee,

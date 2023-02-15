@@ -33,8 +33,7 @@
                data-show-toggle="true">
             <thead>
             <tr>
-                <th data-halign="center" data-sortable="true">First Name</th>
-                <th data-halign="center" data-sortable="true">Last Name</th>
+                <th data-halign="center" data-sortable="true">Name</th>
                 <th data-halign="center" data-sortable="true">Address</th>
                 <th data-halign="center" data-sortable="true">Address 2</th>
                 <th data-halign="center" data-sortable="true">Phone Number</th>
@@ -45,8 +44,9 @@
             </tr>
             </thead>
             <tbody>
-                <tr th:each="owner: ${owners}">
-                    <td th:text="${owner.firstName}"></td>
+                <tr th:each="owner: ${owners}" th:object="${owner}">
+                    <td><a th:href="@{/owners/profile/{id} (id=*{id})}"
+                           th:text="*{getFullName()}"></a></td>
                     <td th:text="${owner.lastName}"></td>
                     <td th:text="${owner.address}"></td>
                     <td th:text="${owner.address2}"></td>

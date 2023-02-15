@@ -31,15 +31,15 @@ public class AuthenticationController {
     private RoleRepository roleRepository;
 
     public User getUserFromSession(HttpSession session) {
-        Integer userId = (Integer) session.getAttribute(userSessionKey);
-        if (userId == null) {
+        User user = (User) session.getAttribute(userSessionKey);
+        if (user == null) {
             return null;
         }
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
+        Optional<User> optUser = userRepository.findById(user.getId());
+        if (optUser.isEmpty()) {
             return null;
         }
-        return user.get();
+        return optUser.get();
     }
 
     private static void setUserInSession(HttpSession session, User user) {
