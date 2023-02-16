@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="otherResources">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+        <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+        <script src="/js/uiUtils.js"></script>
+    </th:block>
+</head>
+<body>
+<div id="content" class="col-md-12 col-lg-10 col-xl-8  col-xxl-6">
+    <div class="d-flex align-items-center col-12 border-bottom pb-2 mb-3">
+        <a class="btn btn-secondary" href="/stays" title="Go back to Employees table">
+            <i class="bi bi-box-arrow-in-left"></i>
+        </a>
+        <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Stay</span>
+        <div th:if="${stay.id}" class="form-toolbar d-flex ms-auto">
+            <a class="btn btn-danger" title="Cancel this stay">
+                <i class="bi-x-circle"></i>
+                <span class="d-none d-sm-inline">Cancel</span>
+            </a>
+        </div>
+    </div>
+    <form id="mainForm" class="row g-3" th:Object="${stay}" method="POST" th:action="@{${submitURL}}">
+        <input type="hidden" id="id" th:field="*{id}">
+        <!--v Reservation v-->
+        <input type="hidden" id="reservationId" th:field="*{reservation.id}">
+        <div class="col-auto">
+            <label for="confirmationCode" class="form-label">Confirmation #</label>
+            <input type="text" class="form-control fw-semibold" id="confirmationCode" th:value="*{reservation.confirmation}" disabled>
+        </div>
+        <div class="col-12">
+            <label for="petOwner" class="form-label">Parent</label>
+            <input type="text" class="form-control" id="petOwner" th:value="*{reservation.pet.owner.getFullName()}" disabled>
+        </div>
+        <div class="col-12">
+            <label for="pet" class="form-label">Pet</label>
+            <input type="text" class="form-control" id="pet" th:value="*{reservation.pet.petName}" disabled>
+        </div>
+        <div class="col-auto">
+            <label for="startDate" class="form-label">From</label>
+            <input type="date" class="form-control" id="startDate" data-date-format="mm/dd/yyyy" th:value="*{#dates.format(reservation.startDateTime, 'yyyy-MM-dd')}" disabled>
+        </div>
+        <div class="col-auto">
+            <label for="endDate" class="form-label">To</label>
+            <input type="date" class="form-control" id="endDate" data-date-format="mm/dd/yyyy" th:value="*{#dates.format(reservation.endDateTime, 'yyyy-MM-dd')}" disabled>
+        </div>
+        <div class="col-12">
+            <label for="reservationComments" class="form-label">Comments</label>
+            <textarea class="form-control" id="reservationComments" th:text="*{reservation.comments}" rows="2" disabled></textarea>
+        </div>
+        <!--^ Reservation ^-->
+
+        <div class="col-12 d-flex p-2">
+            <button class="me-auto btn btn-secondary o-1" title="Clear form" type="reset">
+                <i class="bi bi-eraser"></i>
+            </button>
+            <a type="button" class="btn btn-secondary mx-1" href="/employees" title="Cancel register and go back">
+                Cancel
+            </a>
+            <button type="submit" class="btn btn-primary mx-1" title="Save changes">
+                <i class="bi bi-save"></i>
+                Save
+            </button>
+        </div>
+    </form>
+
+
+</div>
+</body>
+</html>
