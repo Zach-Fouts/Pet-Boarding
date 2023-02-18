@@ -21,6 +21,10 @@
             <td th:text="${reservation.getPet().getOwner().getFullName()}"></td>
         </tr>
         <tr>
+            <th>Contact</th>
+            <td th:text="${reservation.getPet().getOwner().getEmail()}"></td>
+        </tr>
+        <tr>
             <th>Pet</th>
             <td th:text="${reservation.getPet().petName}"></td>
         </tr>
