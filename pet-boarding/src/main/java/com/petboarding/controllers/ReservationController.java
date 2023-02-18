@@ -6,8 +6,9 @@ import com.petboarding.controllers.utils.CalendarEventUtils;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
-import org.springframework.beans.BeanUtils;
+import com.petboarding.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -28,6 +29,8 @@ public class ReservationController extends AppBaseController{
     private PetRepository petRepository;
     @Autowired
     private OwnerRepository ownerRepository;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("grid")
     public String displayReservations(Model model) {
@@ -76,6 +79,17 @@ public class ReservationController extends AppBaseController{
         }
         newReservation.assignConfirmationCode();
         reservationRepository.save(newReservation);
+        SimpleMailMessage message=new SimpleMailMessage();
+        String body="Confirmation code:"+ newReservation.getConfirmation()+
+                "\nGuest:"+ newReservation.getPet().getPetName()+
+                "\nStart Date:"+ newReservation.getStartDateTime()+
+                "\nEnd Date:"+ newReservation.getEndDateTime();
+        System.out.println(body);
+        message.setFrom("petboardingservicelc@gmail.com");
+        message.setTo(newReservation.getPet().getOwner().getEmail());
+        message.setSubject("ReservationConfirmation");
+        message.setText(body);
+        emailService.send(message);
         return "redirect:";
     }
 
