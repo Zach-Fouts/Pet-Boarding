@@ -9,6 +9,7 @@ import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.ReservationRepository;
 import com.petboarding.models.data.StayRepository;
 import com.petboarding.models.data.StayStatusRepository;
+import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 @Controller
@@ -39,8 +44,18 @@ public class StayController extends AppBaseController {
     @Autowired
     private StayStatusRepository stayStatusRepository;
 
+    SimpleDateFormat parseFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    SimpleDateFormat showFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+
     @GetMapping
+    public String displayStaysCalenar(Model model) {
+        model.addAttribute("stays", stayRepository.findAll());
+        return "stays/indexCalendar";
+    }
+
+    @GetMapping("grid")
     public String displayStaysGrid(Model model) {
+        model.addAttribute("stays", stayRepository.findAll());
         return "stays/indexGrid";
     }
 
@@ -58,9 +73,32 @@ public class StayController extends AppBaseController {
     }
 
     @PostMapping("add")
-    public String proccessAddStayForm(@RequestParam(required = false) String endDate, Model model) {
-        System.out.println(endDate);
-        return "redirect:/add";
+    public String processAddStayForm(@Valid Stay newStay, @RequestParam(required = false) String endDateValue, Errors validation, Model model) {
+        boolean hasErrors = validation.hasErrors();
+        if(endDateValue != null) {
+            try {
+                Date newEndDate = parseFormatter.parse(endDateValue);
+                if(newStay.getReservation().getStartDateTime().after(newEndDate)) {
+                    hasErrors = true;
+                    model.addAttribute("errorMessage",
+                            "The new end date '" + showFormatter.format(newEndDate) + "' has to be equal or after '" + showFormatter.format(newStay.getReservation().getStartDateTime()) + "'");
+                } else {
+                    newStay.getReservation().setEndDateTime(newEndDate);
+                }
+            } catch(ParseException exception) {
+                hasErrors = true;
+                model.addAttribute("errorMessage",
+                        "There was an unexpected error trying to assign the new end date.");
+            }
+        }
+        if(hasErrors) {
+            prepareCommonFormModel(model);
+            return "stays/form";
+        }
+        //TODO Revise to add Kennel and Service provided
+        reservationRepository.save(newStay.getReservation());
+        stayRepository.save(newStay);
+        return "redirect:/stays";
     }
 
     private void prepareCommonFormModel(Model model) {
