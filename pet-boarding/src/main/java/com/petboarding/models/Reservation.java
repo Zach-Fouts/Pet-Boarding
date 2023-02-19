@@ -15,8 +15,8 @@ public class Reservation extends AbstractEntity {
     @ManyToOne
     private Pet pet;
 //    ******FUTURE REFERENCES TO BE ADDED AT A LATER DATE********
-//    @ManyToOne
-//    private Kennel kennel;
+    @ManyToOne
+    private Kennel kennel;
     //**************************
 
     private String confirmation;
