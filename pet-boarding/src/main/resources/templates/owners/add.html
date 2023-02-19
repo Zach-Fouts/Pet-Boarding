@@ -39,13 +39,6 @@
             <input class="form-control" th:field="${owner.email}" />
             <p th:errors="${owner.email}" class="error"></p>
 
-            <label th:for="petId"> Pet Name</label>
-            <select name="petId" id="petId" placeholder="Parents Name"
-                    class="form-control mb-4 col-4">
-                <option disabled selected value> -- select an option -- </option>
-                <option th:each="pet: ${pets}" th:value="${pet.id}" th:text="${pet.petName}"></option>
-            </select>
-
             <div class="col-12 mb-3">
                 <label for="photo" class="form-label">Photo</label>
                 <input type="file" name="image" value="image" class="form-control" id="photo" onchange="displayPhotoPreview(event.target, 'photoPreview')" accept="image/png, image/jpeg">
