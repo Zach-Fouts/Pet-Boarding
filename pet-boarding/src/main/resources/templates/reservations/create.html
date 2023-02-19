@@ -31,40 +31,40 @@
             </div>
             <div class="form-group col-6 res">
                 <label class="form-label">Pet</label>
-                <select th:field="${reservation.pet}" required id="petId" name="petId" class="form-control">
+                <select th:field="${reservation.pet}" th:errorclass="is-invalid" required id="petId" name="petId" class="form-control">
                     <option value="">Select a pet...</option>
                     <option th:each=" pet : ${pets}"
                             th:value="${pet.id}" th:text="${pet.petName}">
                     </option>
                 </select>
-                <p class="error" th:errors="${reservation.pet}"></p>
+                <p class="text-danger" th:errors="${reservation.pet}"></p>
             </div>
             <div class="form-group col-12 res">
                 <label class="form-label">Stay service</label>
-                <select  required id="serviceId" name="service" class="form-control">
+                <select id="serviceId" name="service" class="form-control">
                     <option value="">Select a service...</option>
                     <option th:each="service :${services}"
                             th:value="${service.id}" th:text="${service.name}">
                     </option>
                 </select>
-                <p class="error d-none"></p>
+                <p class="text-danger d-none"></p>
             </div>
             <div class="form-group col-sm-3 res">
                 <label class="form-label">Start Date</label>
-                <input th:field="${reservation.startDateTime}" type="date" class="form-control" id="startDate" name="date" data-date-format="mm/dd/yyyy">
-                <p class="error" th:errors="${reservation.startDateTime}"></p>
+                <input th:field="${reservation.startDateTime}" th:errorclass="is-invalid" type="date" class="form-control" id="startDate" name="date" data-date-format="mm/dd/yyyy">
+                <p class="text-danger" th:errors="${reservation.startDateTime}"></p>
             </div>
             <div  class="form-group col-sm-3 res">
                 <label class="form-label">End Date</label>
-                <input th:field="${reservation.endDateTime}" type="date" class="form-control" id="endDate" name="date" data-date-format="mm/dd/yyyy">
-                <p class="error" th:errors="${reservation.endDateTime}"></p>
+                <input th:field="${reservation.endDateTime}" th:errorclass="is-invalid" type="date" class="form-control" id="endDate" name="date" data-date-format="mm/dd/yyyy">
+                <p class="text-danger" th:errors="${reservation.endDateTime}"></p>
             </div>
             <div class="form-group col-12 res">
                 <label class="form-label">Comment</label>
                 <textarea th:field="${reservation.comments}" class="form-control"></textarea>
-                <p class="error" th:errors="${reservation.comments}"></p>
+                <p class="text-danger" th:errors="${reservation.comments}"></p>
             </div>
-
+            <input type="hidden" name="ownerId" th:if="${ownerId}" th:value="${ownerId}">
             <input type="hidden" name="checkInOnSave" th:if="${checkInOnSave}" th:value="${checkInOnSave}">
             <div class="form-group col-10 res">
                 <a type="button" class="btn btn-secondary" href="/reservations" title="Cancel reservation">

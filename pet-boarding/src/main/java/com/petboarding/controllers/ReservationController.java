@@ -49,12 +49,8 @@ public class ReservationController extends AppBaseController{
         model.addAttribute("reservations", events);
         return "reservations/calendarView";
     }
-    @GetMapping("create")
-    public String displayCreateReservationsForm(Model model, @RequestParam(required = false) Integer ownerId, @RequestParam(required = false) Boolean checkInOnSave) {
-        model.addAttribute("title", "Create Reservation");
-        model.addAttribute(new Reservation());
-        model.addAttribute("checkInOnSave", checkInOnSave);
-        addLocation("New", model);
+
+    private void addCommonAttributes(Integer ownerId, Model model) {
         if(ownerId == null){
             model.addAttribute("pets", new ArrayList <Pet>());
         }else{
@@ -67,16 +63,32 @@ public class ReservationController extends AppBaseController{
             }
         }
         model.addAttribute("owners", ownerRepository.findAll());
-        model.addAttribute("categories", reservationRepository.findAll());
+    }
+
+    @GetMapping("create")
+    public String displayCreateReservationsForm(Model model, @RequestParam(required = false) Integer ownerId, @RequestParam(required = false) Boolean checkInOnSave) {
+        model.addAttribute("title", "Create Reservation");
+        model.addAttribute(new Reservation());
+        model.addAttribute("checkInOnSave", checkInOnSave);
+        addLocation("New", model);
+        addCommonAttributes(ownerId, model);
         return "reservations/create";
     }
 
     @PostMapping("create")
     public String processCreateReservationsForm(@ModelAttribute @Valid Reservation newReservation,
-                                         @RequestParam(required = false) Boolean checkInOnSave,
-                                         Errors errors, Model model) {
-        if(errors.hasErrors()) {
+                                                @RequestParam(required = false) Integer ownerId,
+                                                @RequestParam(required = false) Boolean checkInOnSave,
+                                                Errors errors, Model model) {
+        boolean hasErrors = errors.hasErrors();
+        if(newReservation.getStartDateTime().after(newReservation.getEndDateTime())) {
+            hasErrors = true;
+            errors.rejectValue("startDateTime", "startDateTime.InvalidRange", "");
+            errors.rejectValue("endDateTime", "endDateTime.InvalidRange", "The end date must be the same day or after the start date.");
+        }
+        if(hasErrors) {
             model.addAttribute("title", "Create Event");
+            addCommonAttributes(ownerId, model);
             return "reservations/create";
         }
         newReservation.assignConfirmationCode();

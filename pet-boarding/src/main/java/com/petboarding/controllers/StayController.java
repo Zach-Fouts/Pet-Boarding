@@ -1,5 +1,6 @@
 package com.petboarding.controllers;
 
+import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.Employee;
 import com.petboarding.models.Reservation;
 import com.petboarding.models.Stay;
@@ -44,8 +45,6 @@ public class StayController extends AppBaseController {
     @Autowired
     private StayStatusRepository stayStatusRepository;
 
-    SimpleDateFormat parseFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    SimpleDateFormat showFormatter = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
 
     @GetMapping
     public String displayStaysCalenar(Model model) {
@@ -75,14 +74,13 @@ public class StayController extends AppBaseController {
     @PostMapping("add")
     public String processAddStayForm(@Valid Stay newStay, @RequestParam(required = false) String endDateValue, Errors validation, Model model) {
         boolean hasErrors = validation.hasErrors();
-        System.out.println(endDateValue);
         if(endDateValue != null) {
             try {
-                Date newEndDate = parseFormatter.parse(endDateValue);
+                Date newEndDate = DateUtils.parseFormatter.parse(endDateValue);
                 if(newStay.getReservation().getStartDateTime().after(newEndDate)) {
                     hasErrors = true;
                     model.addAttribute("errorMessage",
-                            "The new end date <strong>" + showFormatter.format(newEndDate) + "</strong> has to be equal or after <strong>" + showFormatter.format(newStay.getReservation().getStartDateTime()) + "</strong>");
+                            "The new end date <strong>" + DateUtils.showFormatter.format(newEndDate) + "</strong> has to be equal or after <strong>" + DateUtils.showFormatter.format(newStay.getReservation().getStartDateTime()) + "</strong>");
                 } else {
                     newStay.getReservation().setEndDateTime(newEndDate);
                 }
