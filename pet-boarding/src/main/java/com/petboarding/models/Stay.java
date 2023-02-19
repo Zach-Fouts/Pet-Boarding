@@ -2,6 +2,7 @@ package com.petboarding.models;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Stay extends AbstractEntity{
@@ -17,8 +18,9 @@ public class Stay extends AbstractEntity{
 //    private Kennel kennel;
 
     @Valid
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "employee_id", insertable = false, updatable = false)
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @ManyToOne

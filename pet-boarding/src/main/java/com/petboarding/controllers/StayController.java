@@ -75,13 +75,14 @@ public class StayController extends AppBaseController {
     @PostMapping("add")
     public String processAddStayForm(@Valid Stay newStay, @RequestParam(required = false) String endDateValue, Errors validation, Model model) {
         boolean hasErrors = validation.hasErrors();
+        System.out.println(endDateValue);
         if(endDateValue != null) {
             try {
                 Date newEndDate = parseFormatter.parse(endDateValue);
                 if(newStay.getReservation().getStartDateTime().after(newEndDate)) {
                     hasErrors = true;
                     model.addAttribute("errorMessage",
-                            "The new end date '" + showFormatter.format(newEndDate) + "' has to be equal or after '" + showFormatter.format(newStay.getReservation().getStartDateTime()) + "'");
+                            "The new end date <strong>" + showFormatter.format(newEndDate) + "</strong> has to be equal or after <strong>" + showFormatter.format(newStay.getReservation().getStartDateTime()) + "</strong>");
                 } else {
                     newStay.getReservation().setEndDateTime(newEndDate);
                 }

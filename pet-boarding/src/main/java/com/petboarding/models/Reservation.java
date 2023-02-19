@@ -33,7 +33,6 @@ public class Reservation extends AbstractEntity {
     @Size(max = 250, message = "A comment cannot be longer than 250 characters.")
     private String comments;
 
-    @Valid
     @OneToOne(mappedBy = "reservation")
     private Stay stay;
 
@@ -82,6 +81,14 @@ public class Reservation extends AbstractEntity {
 
     public void setConfirmation(String confirmation) {
         this.confirmation = confirmation;
+    }
+
+    public Stay getStay() {
+        return stay;
+    }
+
+    public void setStay(Stay stay) {
+        this.stay = stay;
     }
 
     public void assignConfirmationCode(){

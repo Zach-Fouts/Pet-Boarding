@@ -50,10 +50,11 @@ public class ReservationController extends AppBaseController{
         return "reservations/calendarView";
     }
     @GetMapping("create")
-    public String displayCreateReservationsForm(Model model, @RequestParam(required = false) Integer ownerId) {
+    public String displayCreateReservationsForm(Model model, @RequestParam(required = false) Integer ownerId, @RequestParam(required = false) Boolean checkInOnSave) {
         model.addAttribute("title", "Create Reservation");
         model.addAttribute(new Reservation());
-
+        model.addAttribute("checkInOnSave", checkInOnSave);
+        addLocation("New", model);
         if(ownerId == null){
             model.addAttribute("pets", new ArrayList <Pet>());
         }else{
@@ -72,6 +73,7 @@ public class ReservationController extends AppBaseController{
 
     @PostMapping("create")
     public String processCreateReservationsForm(@ModelAttribute @Valid Reservation newReservation,
+                                         @RequestParam(required = false) Boolean checkInOnSave,
                                          Errors errors, Model model) {
         if(errors.hasErrors()) {
             model.addAttribute("title", "Create Event");
@@ -90,6 +92,9 @@ public class ReservationController extends AppBaseController{
         message.setSubject("ReservationConfirmation");
         message.setText(body);
         emailService.send(message);
+        if(checkInOnSave) {
+            return "redirect:/stays/add?reservationId=" + newReservation.getId();
+        }
         return "redirect:";
     }
 
