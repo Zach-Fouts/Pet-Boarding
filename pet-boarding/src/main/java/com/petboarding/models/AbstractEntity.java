@@ -1,5 +1,6 @@
 package com.petboarding.models;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -19,6 +20,17 @@ public abstract class AbstractEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Column(columnDefinition = "boolean default true")
+    private Boolean active = true;
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     @Override
