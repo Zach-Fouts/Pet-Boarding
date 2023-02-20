@@ -55,9 +55,8 @@ public class Owner extends AbstractEntity{
 
     @Transient
     public String getPhotoPath() {
-        int id = this.getId();
-        if (photo == null || id == 0) {return null;}
-        return "/uploads/owner-photos/" + id + "/" + photo;
+        if (photo == null || getId() == 0) {return null;}
+        return "/uploads/owner-photos/" + getId() + "/" + photo;
     }
 
     @Override

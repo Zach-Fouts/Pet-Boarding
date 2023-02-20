@@ -141,6 +141,8 @@ public class UserManagementController extends AppBaseController{
         if(user.isPresent()){
             String username = user.get().getUsername();
             redirectAttributes.addFlashAttribute("infoMessage", "Role: <strong>" + username + "</strong>  was successfully deleted.");
+//            TODO: set inactive fields, remove delete
+//            user.get().setActive(false);
         userRepository.delete(user.get());
         }
         return "redirect:/users";

@@ -28,7 +28,7 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
-    public Pet getPetById(Long id) {
+    public Pet getPetById(Integer id) {
         Optional<Pet> optional = petRepository.findById(id);
         Pet pet = null;
         if(optional.isPresent()) {
@@ -40,7 +40,7 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
-    public void deletePetById(long id) {
+    public void deletePetById(Integer id) {
         this.petRepository.deleteById(id);
     }
 
