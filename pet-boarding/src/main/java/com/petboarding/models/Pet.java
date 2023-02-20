@@ -8,10 +8,7 @@ import javax.validation.constraints.NotBlank;
 //TODO: Discuss int or long, extend abstract
 @Entity
 @Table(name = "pets")
-public class Pet {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Pet extends AbstractEntity {
 
     @NotBlank(message = "Enter pet name!")
     @Column(name = "pet_name")
@@ -31,8 +28,8 @@ public class Pet {
     private String photo;
     @Transient
     public String getPhotoPath() {
-        if (photo == null || id == 0) {return null;}
-        return "/uploads/pet-photos/" + id + "/" + photo;
+        if (photo == null || getId() == 0) {return null;}
+        return "/uploads/pet-photos/" + getId() + "/" + photo;
     }
 
     public Pet(String petName, Owner owner, String breed, String notes) {
@@ -44,13 +41,6 @@ public class Pet {
     }
 
     public Pet(){}
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getPetName() {
         return petName;

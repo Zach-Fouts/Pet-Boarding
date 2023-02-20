@@ -3,6 +3,7 @@ package com.petboarding.controllers;
 import com.petboarding.models.Owner;
 import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
+import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.OwnerRepository;
 import com.petboarding.models.data.PetRepository;
 import com.petboarding.controllers.utils.FileUploadUtil;
@@ -29,6 +30,8 @@ public class OwnerController extends AppBaseController{
 
     @Autowired
     private PetRepository petRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
 // Owner Home Page
 
@@ -54,10 +57,7 @@ public class OwnerController extends AppBaseController{
     @GetMapping("/add")
     public String displayAddOwnerForm(Model model){
         this.setActiveModule("owners", model);
-        Iterable<Pet> pets;
-        pets = petRepository.findAll();
         model.addAttribute(new Owner());
-        model.addAttribute("pets", pets);
         return "owners/add";
     }
 
@@ -67,13 +67,15 @@ public class OwnerController extends AppBaseController{
         if(errors.hasErrors()){
             return "owners/add";
         }
+        newOwner.setPhoto(null);
+        model.addAttribute("owners", ownerRepository.save(newOwner));
+
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
             String uploadDir = "uploads/owner-photos/" + newOwner.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             newOwner.setPhoto(fileName);
         }
-        model.addAttribute("owners", ownerRepository.save(newOwner));
         return "redirect:../owners";
     }
 
@@ -115,12 +117,13 @@ public class OwnerController extends AppBaseController{
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
             String uploadDir = "uploads/owner-photos/" + updatedOwner.getId();
-            Optional<String> photo = Optional.ofNullable(updatedOwner.getPhoto());
-            if (photo.isPresent()){
-                FileUploadUtil.deletePhoto(uploadDir, photo.get());
+            if (!updatedOwner.getPhoto().equals("") && updatedOwner.getPhoto() != null){
+                FileUploadUtil.deletePhoto(uploadDir, updatedOwner.getPhoto());
             }
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             updatedOwner.setPhoto(fileName);
+        } else if(updatedOwner.getPhoto().equals("")) {
+            updatedOwner.setPhoto(null);
         }
         updatedOwner.setFirstName(owner.getFirstName());
         updatedOwner.setLastName(owner.getLastName());
