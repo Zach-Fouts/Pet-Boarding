@@ -33,4 +33,9 @@ public class EmployeeProfileController extends AppBaseController{
         return "employees/profile";
     }
 
+    @ModelAttribute("activeModule")
+    public Module addActiveModule() {
+        return getActiveModule("employees");
+    }
+
 }
