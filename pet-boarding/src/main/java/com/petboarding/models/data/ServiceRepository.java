@@ -7,5 +7,4 @@ import java.util.Collection;
 
 public interface ServiceRepository extends JpaRepository<Service, Integer> {
     public Collection<Service> findByStayService(Boolean isStayService);
-    )
 }
