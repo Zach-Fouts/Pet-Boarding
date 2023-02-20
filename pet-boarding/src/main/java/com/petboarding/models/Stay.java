@@ -27,8 +27,8 @@ public class Stay extends AbstractEntity{
     @JoinColumn(name = "status_id")
     private StayStatus status;
 
-    @Column(columnDefinition = "boolean default true")
-    private Boolean active = true;
+    @OneToOne(mappedBy = "stay")
+    private Invoice invoice;
 
     public Stay() {
     }
@@ -57,11 +57,4 @@ public class Stay extends AbstractEntity{
         this.status = status;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 }

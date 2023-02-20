@@ -22,7 +22,7 @@
         <div class="row g-2">
             <div class="form-group col-6 res">
                 <label class="form-label">Owner</label>
-                <select onchange="filterPets(this)" required id="ownerId" name="ownerId" class="form-control">
+                <select onchange="filterPets(this)" required id="ownerId" name="ownerId" class="form-select">
                     <option value="">Select a owner...</option>
                     <option th:selected="${ownerId == owner.id}" th:each=" owner : ${owners}"
                             th:value="${owner.id}" th:text="${owner.getFullName()}">
@@ -31,7 +31,7 @@
             </div>
             <div class="form-group col-6 res">
                 <label class="form-label">Pet</label>
-                <select th:field="${reservation.pet}" th:errorclass="is-invalid" required id="petId" name="petId" class="form-control">
+                <select th:field="${reservation.pet}" th:errorclass="is-invalid" required id="petId" name="petId" class="form-select">
                     <option value="">Select a pet...</option>
                     <option th:each=" pet : ${pets}"
                             th:value="${pet.id}" th:text="${pet.petName}">
@@ -41,7 +41,7 @@
             </div>
             <div class="form-group col-12 res">
                 <label class="form-label">Stay service</label>
-                <select id="serviceId" name="service" class="form-control">
+                <select id="serviceId" name="service" class="form-select">
                     <option value="">Select a service...</option>
                     <option th:each="service :${services}"
                             th:value="${service.id}" th:text="${service.name}">
