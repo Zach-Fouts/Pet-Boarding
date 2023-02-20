@@ -17,30 +17,20 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("profile/{id}")
+@RequestMapping("myprofile")
 public class EmployeeProfileController extends AppBaseController{
 
     @Autowired
     EmployeeRepository employeeRepository;
 
     @GetMapping("")
-    public String displayEmployeeProfile(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes, HttpSession httpSession){
-        Optional<Employee> optEmployee = employeeRepository.findById(id);
-        if(optEmployee.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
-            return "redirect:/";
-        }
+    public String displayEmployeeProfile(Model model, RedirectAttributes redirectAttributes, HttpSession httpSession){
+
         User user = (User) httpSession.getAttribute("user");
 
-        if(user.getEmployee().getId() == id) {
-        model.addAttribute("employee", optEmployee.get());
-        this.setActiveModule(user.getEmployee().getFullName(), model);
+        model.addAttribute("employee", user.getEmployee());
+        addLocation("my profile/" + user.getEmployee().getFullName(), model);
         return "employees/profile";
-        }
-
-        redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
-        return "redirect:/";
-
     }
 
 }
