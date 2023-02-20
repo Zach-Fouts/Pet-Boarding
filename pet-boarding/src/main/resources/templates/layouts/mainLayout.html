@@ -41,10 +41,14 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-end">
-      <a th:if="${session.user}" th:href="@{/profile/{id} (id=${session.user.employee.id})}"><span class="user-name mx-1" th:text="${session.user.employee.getFullName()}" >User's Names</span></a>
+      <a class="user-name mx-1" th:if="${session.user}" th:text="${session.user.employee.getFullName()}" th:href="@{/myprofile}">User's Names</a>
       <span class="user-name mx-1" th:unless="${session.user}">Placeholder Name</span>
       <span class="mx-2 d-none d-sm-inline-block">
-          <i class="bi bi-person-circle user-avatar"></i>
+        <th:block th:if="${session.user}">
+          <img class="user-profile-picture img-thumbnail" th:if="${session.user.employee.photo}" th:src="${session.user.employee.getPhotoPath()}" alt="User's profile picture">
+          <i th:unless="${session.user.employee.photo}" class="bi bi-person-circle user-avatar"></i>
+        </th:block>
+        <i th:unless="${session.user}" class="bi bi-person-circle user-avatar"></i>
         </span>
       <a class="btn btn-primary" th:href="@{/sign-in/logout}">Logout</a>
     </div>

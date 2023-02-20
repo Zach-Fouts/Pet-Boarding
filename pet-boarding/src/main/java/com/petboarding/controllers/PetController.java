@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
@@ -62,6 +63,7 @@ public class PetController extends AppBaseController {
         }
     }
 
+    @Transactional
     @PostMapping("/savePet")
     public String savePet(@ModelAttribute("pet") @Valid Pet pet, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         // save pet to database
@@ -69,21 +71,20 @@ public class PetController extends AppBaseController {
             model.addAttribute("parents", ownerRepository.findAll());   //Keeps Owner data on page
             return "pets/new_pet";
         }
-
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-            if (!fileName.equals("")){
-                String uploadDir = "uploads/pet-photos/" + pet.getId();
-                Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(pet.getId()));
-                if (optPet.isPresent()) {
-                    Optional<String> photo = Optional.ofNullable(optPet.get().getPhoto());
-                    if (photo.isPresent()){
-                        FileUploadUtil.deletePhoto(uploadDir, photo.get());
-                    }
+        petService.savePet(pet);
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        if (!fileName.equals("")){
+            String uploadDir = "uploads/pet-photos/" + pet.getId();
+            Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(pet.getId()));
+            if (optPet.isPresent()) {
+                Optional<String> photo = Optional.ofNullable(optPet.get().getPhoto());
+                if (photo.isPresent()){
+                    FileUploadUtil.deletePhoto(uploadDir, photo.get());
                 }
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-                pet.setPhoto(fileName);
-                petService.savePet(pet);
             }
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            pet.setPhoto(fileName);
+        }
 
         return "redirect:/pets";
     }
