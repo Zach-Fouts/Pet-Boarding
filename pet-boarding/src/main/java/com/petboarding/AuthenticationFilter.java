@@ -21,23 +21,15 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     @Autowired
     AuthenticationController authenticationController;
 
-
-
-//TODO: uncomment to re-enable security
     private static final List<String> whitelist = Arrays.asList("/sign-in/login");
-    private static final List<String> ADMIN_WHITELIST = Arrays.asList("/users", "/employees");
     private static final List<String> EMPLOYEE_WHITELIST = Arrays.asList("/users", "/employees");
 
-    //TODO: uncomment to re-enable security
     private static boolean isWhitelisted(String path, User user) {
 //        if (user != null) {
-//            if (user.isAdmin()) {
-//                return ADMIN_WHITELIST.contains(path);
-//            } else {
 //                return !EMPLOYEE_WHITELIST.contains(path);
 //            }
-//        }
 //        return whitelist.contains(path);
+        //TODO: uncomment and remove 'return true' to enable security
         return true;
     }
 

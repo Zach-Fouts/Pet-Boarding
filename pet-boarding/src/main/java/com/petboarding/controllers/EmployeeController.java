@@ -90,9 +90,8 @@ public class EmployeeController extends AppBaseController {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
                 String uploadDir = "uploads/employee-photos/" + employee.getId();
-                Optional<String> photo = Optional.ofNullable(employee.getPhoto());
-                    if (photo.isPresent()){
-                        FileUploadUtil.deletePhoto(uploadDir, photo.get());
+                    if (!employee.getPhoto().equals("")){
+                        FileUploadUtil.deletePhoto(uploadDir, employee.getPhoto());
                     }
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
                 employee.setPhoto(fileName);
@@ -116,7 +115,6 @@ public class EmployeeController extends AppBaseController {
                 employeeRepository.deleteById(id);
                 redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");
             }
-
         }
         return "redirect:/employees";
     }
