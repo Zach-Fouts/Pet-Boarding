@@ -10,8 +10,23 @@
     </th:block>
 </head>
 <body>
-    <th:block id="content">
-
-    </th:block>
+<th:block id="content">
+    <div class="container body-content">
+        <form th:object="${petService}" th:action="@{/petServices/update/}" method="post">
+            <div class="col-md-2">
+                <label for="name" class="form-label">Name</label>
+                <div class="input-group has-validation">
+                    <input th:field="*{name}" class="form-control" th:errorclass="is-invalid" id="name" required>
+                    <div id="validationServerNameFeedback" class="invalid-feedback" th:errors="*{name}"> </div>
+                </div>
+                <label for="price" class="form-label">Price</label>
+                <input th:field="*{pricePerUnit}" class="form-control" id="price" type="number" required>
+            </div>
+            <input type="hidden" th:field="*{id}">
+            <input type="submit" class="btn btn-primary" value="Add Service"/>
+            <button type="button" class="btn btn-secondary" onclick="location.href='/petServices'">Cancel</button>
+        </form>
+    </div>
+</th:block>
 </body>
 </html>

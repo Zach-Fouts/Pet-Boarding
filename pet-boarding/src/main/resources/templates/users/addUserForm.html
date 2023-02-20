@@ -11,8 +11,6 @@
 </head>
 <body>
 <th:block id="content">
-
-<div th:replace="fragments :: page-header"></div>
 <div class="container body-content">
     <form th:action="@{/users/addUserForm}" th:object="${addNewUserDTO}" method="post">
         <div class="col-md-2">
