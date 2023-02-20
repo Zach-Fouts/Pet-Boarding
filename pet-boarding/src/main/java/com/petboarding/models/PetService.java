@@ -1,14 +1,10 @@
 package com.petboarding.models;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-public class Service extends AbstractEntity{
+public class PetService extends AbstractEntity{
 
     @NotNull
     @Size(min = 3, max = 50, message = "The name must be between 3 and 50 characters long.")
@@ -20,7 +16,7 @@ public class Service extends AbstractEntity{
     @Column(columnDefinition = "boolean default false")
     private Boolean stayService = false;
 
-    public Service() {
+    public PetService() {
     }
 
     public String getName() {
