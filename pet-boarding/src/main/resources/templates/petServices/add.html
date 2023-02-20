@@ -22,8 +22,8 @@
                     <label for="price" class="form-label">Price</label>
                         <input th:field="*{pricePerUnit}" class="form-control" th:errorclass="is-invalid" id="price" type="number" required>
                 </div>
-                <input type="submit" class="btn btn-primary" value="Add Service"/>
                 <button type="button" class="btn btn-secondary" onclick="location.href='/petServices'">Cancel</button>
+                <input type="submit" class="btn btn-primary" value="Add Service"/>
             </form>
         </div>
     </th:block>
