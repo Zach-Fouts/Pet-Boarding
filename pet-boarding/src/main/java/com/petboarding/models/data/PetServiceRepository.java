@@ -1,10 +1,12 @@
 package com.petboarding.models.data;
 
-import com.petboarding.models.Service;
+import com.petboarding.models.PetService;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 
-public interface ServiceRepository extends JpaRepository<Service, Integer> {
-    public Collection<Service> findByStayService(Boolean isStayService);
+@Repository
+public interface PetServiceRepository extends JpaRepository<PetService, Integer> {
+    public Collection<PetService> findByStayService(Boolean isStayService);
 }
