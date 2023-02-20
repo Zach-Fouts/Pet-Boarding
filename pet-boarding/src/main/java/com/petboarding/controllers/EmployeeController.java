@@ -126,7 +126,9 @@ public class EmployeeController extends AppBaseController {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
             return "redirect:/employees";
         }
-        model.addAttribute("employee", optEmployee.get());
+        Employee employee = optEmployee.get();
+        addLocation("profile/" + employee.getFullName(), model);
+        model.addAttribute("employee", employee);
         return "employees/profile";
     }
 

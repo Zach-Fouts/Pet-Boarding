@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class Employee extends AbstractEntity{
@@ -48,6 +49,10 @@ public class Employee extends AbstractEntity{
 
     @Column(nullable = true, length = 64)
     private String photo;
+
+    @OneToMany
+    @JoinColumn(name = "employee_id")
+    private List<Stay> stays;
 
     public Employee() {}
 
@@ -133,6 +138,14 @@ public class Employee extends AbstractEntity{
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public List<Stay> getStays() {
+        return stays;
+    }
+
+    public void setStays(List<Stay> stays) {
+        this.stays = stays;
     }
 
     @Transient
