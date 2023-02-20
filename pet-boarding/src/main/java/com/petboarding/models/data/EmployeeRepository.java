@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-
+public interface EmployeeRepository extends JPARepositoryActiveFiltering<Employee, Integer> {
     public Collection<Employee> findByPositionName(String positionName);
 }
