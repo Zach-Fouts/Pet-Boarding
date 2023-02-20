@@ -16,7 +16,6 @@ public class Invoice extends AbstractEntity{
 
     @OneToOne
     @JoinColumn(name = "stay_id")
-    @Column(nullable = false)
     private Stay stay;
 
     @ManyToOne

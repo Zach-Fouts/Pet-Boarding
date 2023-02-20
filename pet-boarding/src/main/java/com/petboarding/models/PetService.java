@@ -1,9 +1,11 @@
 package com.petboarding.models;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
 public class PetService extends AbstractEntity{
 
     @NotNull
