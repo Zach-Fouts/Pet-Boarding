@@ -33,6 +33,9 @@ public class Reservation extends AbstractEntity {
     @Size(max = 250, message = "A comment cannot be longer than 250 characters.")
     private String comments;
 
+    @Column(columnDefinition = "boolean default true")
+    private Boolean active = true;
+
     @OneToOne(mappedBy = "reservation")
     private Stay stay;
 
@@ -81,6 +84,16 @@ public class Reservation extends AbstractEntity {
 
     public void setConfirmation(String confirmation) {
         this.confirmation = confirmation;
+    }
+
+    @Override
+    public Boolean getActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Stay getStay() {

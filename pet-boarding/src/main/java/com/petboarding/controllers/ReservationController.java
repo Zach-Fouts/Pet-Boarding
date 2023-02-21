@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +81,7 @@ public class ReservationController extends AppBaseController{
     public String processCreateReservationsForm(@ModelAttribute @Valid Reservation newReservation,
                                                 @RequestParam(required = false) Integer ownerId,
                                                 @RequestParam(required = false) Boolean checkInOnSave,
-                                                Errors errors, Model model) {
+                                                Errors errors, Model model,RedirectAttributes redirectAttributes) {
         boolean hasErrors = errors.hasErrors();
         if(newReservation.getStartDateTime().after(newReservation.getEndDateTime())) {
             hasErrors = true;
@@ -94,20 +96,20 @@ public class ReservationController extends AppBaseController{
         newReservation.assignConfirmationCode();
         reservationRepository.save(newReservation);
         SimpleMailMessage message=new SimpleMailMessage();
-        String body="Confirmation code:"+ newReservation.getConfirmation()+
-                "\nGuest:"+ newReservation.getPet().getPetName()+
-                "\nStart Date:"+ newReservation.getStartDateTime()+
-                "\nEnd Date:"+ newReservation.getEndDateTime();
-        System.out.println(body);
+        String body="Confirmation code: "+ newReservation.getConfirmation()+
+                "\nGuest: "+ newReservation.getPet().getPetName()+
+                "\nStart Date: "+ newReservation.getStartDateTime()+
+                "\nEnd Date: "+ newReservation.getEndDateTime();
         message.setFrom("petboardingservicelc@gmail.com");
         message.setTo(newReservation.getPet().getOwner().getEmail());
-        message.setSubject("ReservationConfirmation");
+        message.setSubject("Reservation Confirmation");
         message.setText(body);
         emailService.send(message);
+        redirectAttributes.addFlashAttribute("infoMessage", "Reservation info sent to email");
         if(checkInOnSave) {
             return "redirect:/stays/add?reservationId=" + newReservation.getId();
         }
-        return "redirect:";
+        return "redirect:/reservations/grid";
     }
 
     @GetMapping("delete")
@@ -125,14 +127,24 @@ public class ReservationController extends AppBaseController{
     }
 
     @PostMapping("delete")
-    public String processDeleteReservationsForm(@RequestParam Integer reservationId, Model model) {
+    public String processDeleteReservationsForm(@RequestParam Integer reservationId, Model model, RedirectAttributes redirectAttributes) {
 
         if (reservationId != null) {
-                reservationRepository.deleteById(reservationId);
-
+            Optional<Reservation> reservationOptional = reservationRepository.findById(reservationId);
+            if(reservationOptional.isPresent()){
+                Reservation reservation = reservationOptional.get();
+                if (reservation.getStay() == null){
+                    reservationRepository.deleteById(reservationId);
+                }else{
+                    reservation.setActive(false);
+                    reservationRepository.save(reservation);
+                    redirectAttributes.addFlashAttribute("infoMessage","Reservation has been deactivated could not be deleted");
+                }
+                return "redirect:/reservations/grid";
+            }
         }
-
-        return "redirect:";
+        redirectAttributes.addFlashAttribute("errorMessage", "Reservation could not be found");
+        return "redirect:/reservations/delete?reservationId=" + reservationId;
     }
 
     @GetMapping("detail")
@@ -147,8 +159,49 @@ public class ReservationController extends AppBaseController{
             model.addAttribute("title", reservation.getId() + " Details");
             model.addAttribute("reservation", reservation);
         }
-
         return "reservations/detail";
+    }
+    @PostMapping("detail")
+    public String resendReservationDetailsEmail(@RequestParam Integer reservationId, Model model){
+        Optional<Reservation> result = reservationRepository.findById(reservationId);
+        if (result.isEmpty()) {
+            model.addAttribute("title", "Invalid Reservation ID: " + reservationId);
+        }
+        Reservation reservation = result.get();
+        model.addAttribute("title", reservation.getId() + " Details");
+        model.addAttribute("reservation", reservation);
+        SimpleMailMessage message = new SimpleMailMessage();
+        String body="Confirmation code: "+ reservation.getConfirmation() +
+                "\nGuest: "+ reservation.getPet().getPetName()+
+                "\nStart Date: "+ reservation.getStartDateTime()+
+                "\nEnd Date: "+ reservation.getEndDateTime();
+        message.setFrom("petboardingservicelc@gmail.com");
+        message.setTo(reservation.getPet().getOwner().getEmail());
+        message.setSubject("Reservation Confirmation");
+        message.setText(body);
+        emailService.send(message);
+        model.addAttribute("infoMessage","Reservation details has been sent");
+        return "reservations/detail";
+    }
+    @GetMapping("resendEmail")
+    public String resendEmail(@RequestParam Integer reservationId, RedirectAttributes redirectAttributes){
+        Optional<Reservation> result = reservationRepository.findById(reservationId);
+        if (result.isEmpty()) {
+            redirectAttributes.addFlashAttribute("title", "Invalid Reservation ID: " + reservationId);
+        }
+        Reservation reservation = result.get();
+        SimpleMailMessage message = new SimpleMailMessage();
+        String body="Confirmation code: "+ reservation.getConfirmation() +
+                "\nGuest: "+ reservation.getPet().getPetName()+
+                "\nStart Date: "+ reservation.getStartDateTime()+
+                "\nEnd Date: "+ reservation.getEndDateTime();
+        message.setFrom("petboardingservicelc@gmail.com");
+        message.setTo(reservation.getPet().getOwner().getEmail());
+        message.setSubject("Reservation Confirmation");
+        message.setText(body);
+        emailService.send(message);
+        redirectAttributes.addFlashAttribute("infoMessage","Reservation details has been sent");
+        return "redirect:/reservations/detail?reservationId=" + reservationId;
     }
     @GetMapping("update")
     public String displayUpdateReservationsForm(@RequestParam Integer reservationId,@Valid Reservation reservation,Errors errors, Model model) {
@@ -185,7 +238,7 @@ public class ReservationController extends AppBaseController{
         if (errors.hasErrors()) {
             return "reservation/update";
         }
-        return "redirect:";
+        return "redirect:/reservations/grid";
     }
     @ModelAttribute("activeModule")
     public Module addActiveModule(){

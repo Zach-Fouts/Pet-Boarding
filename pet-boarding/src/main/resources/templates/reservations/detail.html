@@ -43,11 +43,12 @@
       </tr>
    </table>
    <div class="form-group">
-      <a type="button" class="btn btn-secondary" href="/reservations" title="Cancel reservation">
-         Back
+      <a type="button" class="btn btn-secondary" href="/reservations/grid" title="Cancel reservation">
+         Cancel
       </a>
       <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>
       <a class="btn btn-danger" title="delete" th:href="@{'/reservations/delete?reservationId=' + ${reservation.id}}"><i class="bi bi-trash"></i></a>
+      <a class="btn btn-primary" th:href="@{/reservations/resendEmail?reservationId={id}(id=${reservation.id})}">Resend email</a>
    </div>
 </th:block>
 </body>
