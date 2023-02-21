@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/mainLayout :: layout(~{:: #otherResources}, ~{:: #content})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <th:block id="otherResources">
+
+  </th:block>
+</head>
+<body>
+<th:block id="content" class="position-relative">
+  <div>
+    <a class="btn btn-primary" th:href="@{/kennels}" title="Calendar view">
+      <span class="d-none d-sm-inline">Map view</span>
+    </a>
+  </div>
+  <!-- MY OWNER STUFF-->
+
+  <table class="text-capitalize"
+         data-toolbar="#toolbar"
+         id="ownerTable"
+         data-toggle="table"
+         data-search="true"
+         data-show-search-button="true"
+         data-pagination="true"
+         data-show-columns="true"
+         data-show-toggle="true">
+    <thead>
+    <tr>
+      <th data-halign="center" data-sortable="true">Kennel Name</th>
+      <th data-halign="center" data-sortable="true">Pet Name</th>
+      <th data-halign="center" data-sortable="true">Start of stay</th>
+      <th data-halign="center" data-sortable="true">End of stay</th>
+      <th data-halign="center" data-sortable="true">Notes</th>
+      <th data-halign="center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="kennel: ${kennels}">
+      <td th:text="${kennel.name}"></td>
+<!--      <td th:text="${owner.lastName}"></td>-->
+<!--      <td th:text="${owner.address}"></td>-->
+<!--      <td th:text="${owner.address2}"></td>-->
+<!--      <td th:text="${owner.phoneNumber}"></td>-->
+<!--      <td th:text="${owner.email}"></td>-->
+<!--      <td th:if="${#lists.isEmpty(owner.pets)}" style="color:#FF0000"> No Pets</td>  &lt;!&ndash;- Keeps table aligned if no pets exist, red Text -&ndash;&gt;-->
+<!--      <td th:if="${not #lists.isEmpty(owner.pets)}"><p th:each="pet : ${owner.pets}"th:text="${pet.petName}"></p></td>-->
+<!--      <td th:text="${owner.notes}"></td>-->
+      <td>
+<!--        <a th:href="@{'owners/view/' + ${owner.id}}"  class="btn btn-primary">View</a>-->
+<!--        <a th:href="@{'owners/updateOwner/' + ${owner.id}}" class="btn btn-primary"/>Update</a>-->
+<!--        <a th:href="@{'showNewPetForm/' + ${owner.id}}" class="btn btn-primary" >Add Pet</a>-->
+<!--        <a th:href="@{'owners/' + ${owner.id}}" class="btn btn-danger"/>Delete</a>-->
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <!--End My Owner Stuff-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+  <script th:src="@{/js/employees.js}"></script>
+</th:block>
+
+</body>
+</html>
