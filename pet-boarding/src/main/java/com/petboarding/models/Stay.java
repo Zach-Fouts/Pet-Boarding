@@ -13,9 +13,10 @@ public class Stay extends AbstractEntity{
     private Reservation reservation;
 
     //TODO: Add support for Kennel model
-//    @Valid
-//    @ManyToOne
-//    private Kennel kennel;
+    @Valid
+    @ManyToOne
+    @JoinColumn(name = "kennel_id")
+    private Kennel kennel;
 
     @Valid
     @NotNull
