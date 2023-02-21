@@ -38,6 +38,7 @@ public class EmployeeController extends AppBaseController {
     @GetMapping
     public String displayEmployeesGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
         model.addAttribute("employees", showAll ? employeeRepository.findAll() : employeeRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "employees/index";
     }
 
