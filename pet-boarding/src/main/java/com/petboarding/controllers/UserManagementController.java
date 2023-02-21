@@ -121,7 +121,7 @@ public class UserManagementController extends AppBaseController{
     //Saves user profile changes in editUserForm
     @Transactional
     @PostMapping("/saveUser")
-    public String submitSaveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role,
+    public String saveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role,
                                  @RequestParam(required = false) String password)  {
 
         Optional<User> optUser = userRepository.findById(id);
@@ -137,10 +137,11 @@ public class UserManagementController extends AppBaseController{
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes) {
         Optional<User> user = userRepository.findById(id);
-
         if(user.isPresent()){
             String username = user.get().getUsername();
             redirectAttributes.addFlashAttribute("infoMessage", "Role: <strong>" + username + "</strong>  was successfully deleted.");
+//            TODO: set inactive fields, remove delete
+//            user.get().setActive(false);
         userRepository.delete(user.get());
         }
         return "redirect:/users";

@@ -71,19 +71,36 @@ public class PetController extends AppBaseController {
             model.addAttribute("parents", ownerRepository.findAll());   //Keeps Owner data on page
             return "pets/new_pet";
         }
-        petService.savePet(pet);
+//        petService.savePet(pet);
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        if (!fileName.equals("")){
-            String uploadDir = "uploads/pet-photos/" + pet.getId();
-            Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(pet.getId()));
-            if (optPet.isPresent()) {
-                Optional<String> photo = Optional.ofNullable(optPet.get().getPhoto());
-                if (photo.isPresent()){
-                    FileUploadUtil.deletePhoto(uploadDir, photo.get());
+
+        if (pet.getId() != null) {
+        Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(pet.getId()));
+        Optional<String> photo = Optional.ofNullable(optPet.get().getPhoto());
+        if (optPet.isPresent()) {
+            if (photo.isPresent()) {
+                if(photo.get().equals("")) {
+                    optPet.get().setPhoto(null);
                 }
             }
+            if (!fileName.equals("")){
+                String uploadDir = "uploads/pet-photos/" + pet.getId();
+                    if (photo.isPresent()){
+                        FileUploadUtil.deletePhoto(uploadDir, photo.get());
+                    }
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             pet.setPhoto(fileName);
+            petService.savePet(pet);
+            }
+        }
+        } else {
+                petService.savePet(pet);
+                pet.setPhoto(null);
+            if (!fileName.equals("")){
+                String uploadDir = "uploads/pet-photos/" + pet.getId();
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                pet.setPhoto(fileName);
+            }
         }
 
         return "redirect:/pets";
@@ -91,21 +108,21 @@ public class PetController extends AppBaseController {
 
     @GetMapping("/showFormForUpdate/{id}")
         // show update form for id chosen
-    public String showFormForUpdate(@PathVariable(value = "id") long id, Model model) {
+    public String showFormForUpdate(@PathVariable(value = "id") Integer id, Model model) {
         Pet pet = petService.getPetById(id);
         // set pet model to form
         model.addAttribute("pet", pet);
         return "pets/update_pet";
     }
     @GetMapping("/deletePet/{id}")
-    public String deletePet(@PathVariable (value = "id") long id) {
+    public String deletePet(@PathVariable (value = "id") Integer id) {
         // call delete method
         this.petService.deletePetById(id);
         return "redirect:/pets";
     }
 
     @GetMapping("pets/profile/{id}")
-    public String displayEmployeeProfile(@PathVariable("id") long id, Model model, RedirectAttributes redirectAttributes){
+    public String displayEmployeeProfile(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes){
         Optional<Pet> optPet = Optional.ofNullable(petService.getPetById(id));
         if(optPet.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "The Pet ID:" + id + " couldn't be found.");
@@ -133,7 +150,7 @@ public class PetController extends AppBaseController {
 //
 //    // get pet by id
 //    @GetMapping("/pets/{id}")
-//    public ResponseEntity<Pet> getPetById(@PathVariable Long id) {
+//    public ResponseEntity<Pet> getPetById(@PathVariable Integer id) {
 //        Pet pet = petRepository.findById(id)
 //                .orElseThrow(() -> new ResourceNotFoundException("Pet with id : " + id + "does not exist"));
 //        return ResponseEntity.ok(pet);
@@ -141,7 +158,7 @@ public class PetController extends AppBaseController {
 //
 //    // update pet api
 //    @PutMapping("/pets/{id}")
-//    public ResponseEntity<Pet> updatePet(@PathVariable Long id, @RequestBody Pet petDetails) {
+//    public ResponseEntity<Pet> updatePet(@PathVariable Integer id, @RequestBody Pet petDetails) {
 //        Pet pet = petRepository.findById(id)
 //                .orElseThrow(() -> new ResourceNotFoundException("Pet with id : " + id + "does not exist"));
 //

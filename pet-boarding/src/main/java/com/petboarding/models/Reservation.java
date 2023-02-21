@@ -4,6 +4,7 @@ import com.petboarding.models.AbstractEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -31,6 +32,9 @@ public class Reservation extends AbstractEntity {
     @NotNull
     @Size(max = 250, message = "A comment cannot be longer than 250 characters.")
     private String comments;
+
+    @OneToOne(mappedBy = "reservation")
+    private Stay stay;
 
     public Pet getPet() {
         return pet;
@@ -77,6 +81,14 @@ public class Reservation extends AbstractEntity {
 
     public void setConfirmation(String confirmation) {
         this.confirmation = confirmation;
+    }
+
+    public Stay getStay() {
+        return stay;
+    }
+
+    public void setStay(Stay stay) {
+        this.stay = stay;
     }
 
     public void assignConfirmationCode(){

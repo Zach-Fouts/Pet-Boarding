@@ -10,7 +10,7 @@ public interface PetService {
     List<Pet> getAllPets();
     void savePet(Pet pet);
 
-    Pet getPetById(Long id);
-    void deletePetById(long id);
+    Pet getPetById(Integer id);
+    void deletePetById(Integer id);
     Page<Pet> findPage(int pageNo, int pageSize, String sortField, String sortDirection);
 }

@@ -1,40 +1,23 @@
 package com.petboarding.models;
 
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Kennel extends AbstractEntity{
 
-    @OneToMany
-    @JoinColumn(name = "id")
-    private List<Reservation> reservations = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "id")
-    private List<Stay> stays = new ArrayList<>();
-
+    @NotNull
+    @Size(max = 25, message = "The name cannot be longer than 50 characters.")
     private String name;
 
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
-    public List<Stay> getStays() {
-        return stays;
-    }
-
-    public void setStays(List<Stay> stays) {
-        this.stays = stays;
+    public Kennel() {
     }
 
     public String getName() {
         return name;
     }
+
 }

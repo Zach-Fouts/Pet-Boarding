@@ -53,9 +53,41 @@ function addDeleteDialogElement( ) {
     deleteDialog = new bootstrap.Modal('#deleteDialog', {});
 }
 
+// photo upload preview
 function displayPhotoPreview(input, imgId) {
     if(input.files.length <= 0) return; // no photo
     let image = document.getElementById(imgId);
     image.src = URL.createObjectURL(input.files[0]);
     image.classList.add('d-block');
+}
+
+// table filtering byAll or just Active
+function tableFilterShowAll() {
+   return  {
+       btnShowAll: {
+            text: 'Show all records',
+            icon: 'bi-list',
+            event: function() {
+                document.location.href = '?showAll=true';
+            },
+            attributes: {
+                title: 'Show all the records active or inactive.'
+            }
+       }
+   };
+ }
+
+function tableFilterShowActive() {
+    return {
+        btnShowAll: {
+            text: 'Show active records',
+            icon: 'bi-filter',
+            event: function() {
+                document.location.href = '?showAll=false';
+            },
+            attributes: {
+                title: 'Show only active records.'
+            }
+        }
+    };
 }

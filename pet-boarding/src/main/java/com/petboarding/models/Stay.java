@@ -1,16 +1,15 @@
 package com.petboarding.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Stay extends AbstractEntity{
 
     @Valid
     @OneToOne
+    @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
     //TODO: Add support for Kennel model
@@ -19,11 +18,17 @@ public class Stay extends AbstractEntity{
     private Kennel kennel;
 
     @Valid
+    @NotNull
     @ManyToOne
-    private Employee caretaker;
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
-    @Column(columnDefinition = "boolean default true")
-    private Boolean active = true;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private StayStatus status;
+
+    @OneToOne(mappedBy = "stay")
+    private Invoice invoice;
 
     public Stay() {
     }
@@ -36,19 +41,20 @@ public class Stay extends AbstractEntity{
         this.reservation = reservation;
     }
 
-    public Employee getCaretaker() {
-        return caretaker;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setCaretaker(Employee caretaker) {
-        this.caretaker = caretaker;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
-    public Boolean getActive() {
-        return active;
+    public StayStatus getStatus() {
+        return status;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setStatus(StayStatus status) {
+        this.status = status;
     }
+
 }

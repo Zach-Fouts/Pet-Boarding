@@ -36,8 +36,9 @@ public class EmployeeController extends AppBaseController {
     private UserRepository userRepository;
 
     @GetMapping
-    public String displayEmployeesGrid(Model model) {
-        model.addAttribute("employees", employeeRepository.findAll());
+    public String displayEmployeesGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("employees", showAll ? employeeRepository.findAll() : employeeRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "employees/index";
     }
 
@@ -55,13 +56,14 @@ public class EmployeeController extends AppBaseController {
             model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
         }
+        newEmployee.setPhoto(null);
         employeeRepository.save(newEmployee);
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-            if (!fileName.equals("")){
-                String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-                newEmployee.setPhoto(fileName);
-            }
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        if (!fileName.equals("")){
+            String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            newEmployee.setPhoto(fileName);
+        }
 
         return "redirect:/employees";
 
@@ -87,14 +89,16 @@ public class EmployeeController extends AppBaseController {
             model.addAttribute("positions", positionRepository.findAll());
             return "employees/form";
         }
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
-                String uploadDir = "uploads/employee-photos/" + employee.getId();
-                    if (!employee.getPhoto().equals("")){
-                        FileUploadUtil.deletePhoto(uploadDir, employee.getPhoto());
-                    }
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-                employee.setPhoto(fileName);
+            String uploadDir = "uploads/employee-photos/" + employee.getId();
+            if (!employee.getPhoto().equals("") && employee.getPhoto() != null){
+                FileUploadUtil.deletePhoto(uploadDir, employee.getPhoto());
+            }
+            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            employee.setPhoto(fileName);
+        } else if(employee.getPhoto().equals("")){
+            employee.setPhoto(null);
         }
         employeeRepository.save(employee);
         redirectAttributes.addFlashAttribute("infoMessage", "The Job Position has been updated.");
@@ -126,7 +130,9 @@ public class EmployeeController extends AppBaseController {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
             return "redirect:/employees";
         }
-        model.addAttribute("employee", optEmployee.get());
+        Employee employee = optEmployee.get();
+        addLocation("profile/" + employee.getFullName(), model);
+        model.addAttribute("employee", employee);
         return "employees/profile";
     }
 
