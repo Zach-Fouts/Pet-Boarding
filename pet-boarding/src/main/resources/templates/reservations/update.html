@@ -11,27 +11,27 @@
 </head>
 <body>
 <th:block id="content">
-   <div class="form-group res">
-      <label>Confirmation Code
-         <strong><p th:text="${reservation.confirmation}"></p></strong>
-      </label>
-   </div>
-   <div class="form-group res">
-      <label>Owner
-         <strong><p th:text="${reservation.getPet().getOwner().getFullName()}"></p></strong>
-      </label>
-   </div>
-   <div class="form-group res">
-      <label>Contact
-         <strong><p th:text="${reservation.getPet().getOwner().getEmail()}"></p></strong>
-      </label>
-   </div>
-   <div class="form-group res">
-      <label>Pet
-         <strong><p th:text="${reservation.getPet().petName}"></p></strong>
-      </label>
-   </div>
     <form method="post">
+       <div class="form-group res">
+          <label>Confirmation Code
+             <input class="form-control" disabled th:value="${reservation.confirmation}">
+          </label>
+       </div>
+       <div class="form-group res">
+          <label>Owner
+             <input class="form-control" disabled th:value="${reservation.getPet().getOwner().getFullName()}">
+          </label>
+       </div>
+       <div class="form-group res">
+          <label>Contact
+             <input class="form-control" disabled th:value="${reservation.getPet().getOwner().getEmail()}">
+          </label>
+       </div>
+       <div class="form-group res">
+          <label>Pet
+             <input class="form-control" disabled th:value="${reservation.getPet().petName}">
+          </label>
+       </div>
        <div class="form-group res">
           <label>Start Date
              <input th:field="${reservation.startDateTime}" type="date" class="form-control" id="startDate" name="date" data-date-format="mm/dd/yyyy">
@@ -52,8 +52,8 @@
        </div>
        <div class="form-group res">
           <input type="submit" value="Save Changes" class="btn btn-success">
-          <a type="button" class="btn btn-secondary" href="/reservations" title="Cancel reservation">
-             Back
+          <a type="button" class="btn btn-secondary" href="/reservations/grid" title="Cancel reservation">
+             Cancel
           </a>
        </div>
     </form>
