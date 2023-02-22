@@ -56,7 +56,7 @@
                     <td th:text="${#dates.format(reservation.startDateTime, 'MM/dd/yyyy')}"></td>
                     <td th:text="${#dates.format(reservation.endDateTime, 'MM/dd/yyyy')}"></td>
                     <td th:text="${reservation.comments}"></td>
-                    <td><span class="status-indicator img-thumbnail bg-gradient" th:title="${reservation.service.name}" th:style="|background-color: ${reservation.status.color}|"></span></td>
+                    <td><span class="status-indicator bg-gradient" th:title="${reservation.status.name}" th:style="|background-color: ${reservation.status.color}|"></span></td>
                     <td>
                         <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
                         <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>

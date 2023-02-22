@@ -32,6 +32,7 @@
                 data-show-columns="true"
                 data-show-toggle="true"
                 data-toolbar="#toolbar"
+                th:data-buttons="${showAll} ? 'tableFilterShowActive' : 'tableFilterShowAll'"
                 class="table-striped">
             <thead>
             <tr>
@@ -43,25 +44,25 @@
                 <th data-halign="center" data-sortable="true">Service</th>
                 <th data-halign="center" data-align="center" data-sortable="true">Kennel</th>
                 <th data-halign="center" data-sortable="true">Caretaker</th>
-                <th data-halign="center" data-sortable="true">Status</th>
+                <th data-align="center" data-sortable="true">Status</th>
                 <th data-halign="center" data-align="center">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="stay: ${stays}" th:Object="${stay}">
-                <td><a th:href="@{/reservations/detail?reservationId={reservationId} (reservationId=*{reservation.id})}"
+                <td><a class="fw-semibold link-primary" th:href="@{/reservations/detail?reservationId={reservationId} (reservationId=*{reservation.id})}"
                        th:text="*{reservation.confirmation}"></a></td>
                 <td th:text="*{#dates.format(reservation.startDateTime, 'MM/dd/yyyy')}"></td>
                 <td th:text="*{#dates.format(reservation.endDateTime, 'MM/dd/yyyy')}"></td>
-                <td><a th:href="@{/owners/profile/{id} (id=*{reservation.pet.owner.id})}"
+                <td><a class="link-primary" th:href="@{/owners/profile/{id} (id=*{reservation.pet.owner.id})}"
                        th:text="*{reservation.pet.owner.getFullName()}"></a></td>
-                <td><a th:href="@{/pets/profile/{id} (id=*{reservation.pet.id})}"
+                <td><a class="link-primary" th:href="@{/pets/profile/{id} (id=*{reservation.pet.id})}"
                        th:text="*{reservation.pet.petName}"></a></td>
-                <td th:text="Service"></td>
-                <td th:text="Kennel"></td>
-                <td><a th:href="@{/employees/profile/{id} (id=*{employee.id})}"
+                <td th:text="*{reservation.service.name}"></td>
+                <td th:text="*{kennel.name}"></td>
+                <td><a class="link-primary" th:href="@{/employees/profile/{id} (id=*{employee.id})}"
                        th:text="*{employee.getFullName()}"></a></td>
-                <td th:text="*{status.name}"></td>
+                <td><span class="status-indicator bg-gradient" th:title="*{status.name}" th:style="|background-color: *{status.color}|"></span></td>
                 <td>
                     <a class="btn btn-primary" th:href="@{/stays/checkout/{id}(id=*{id})}" title="Checkout"><i class="bi-receipt"></i></a>
                     <a class="btn btn-primary" th:href="@{/stays/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>

@@ -53,8 +53,9 @@ public class StayController extends AppBaseController {
     }
 
     @GetMapping("grid")
-    public String displayStaysGrid(Model model) {
-        model.addAttribute("stays", stayRepository.findAll());
+    public String displayStaysGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("stays", showAll ? stayRepository.findAll() : stayRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "stays/indexGrid";
     }
 
