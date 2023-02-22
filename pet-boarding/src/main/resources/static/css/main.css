@@ -149,4 +149,12 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
+      border: 2px #FFF solid;
+      box-shadow: 0 0 2px 0 #00000033;
+    }
+
+
+    tr.inactive td {
+      font-style: oblique;
+      color: #777 !important;
     }

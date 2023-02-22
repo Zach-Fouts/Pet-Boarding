@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StayRepository extends JpaRepository<Stay, Integer> {
+public interface StayRepository extends JPARepositoryActiveFiltering<Stay, Integer> {
 }
