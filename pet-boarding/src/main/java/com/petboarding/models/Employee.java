@@ -48,13 +48,15 @@ public class Employee extends AbstractEntity{
     private User user;
 
     @Column(nullable = true, length = 64)
-    private String photo;
+    private String photo = null;
 
     @OneToMany
     @JoinColumn(name = "employee_id")
     private List<Stay> stays;
 
-    public Employee() {}
+    public Employee() {
+        this.photo = null;
+    }
 
     public String getFirstName() {
         return firstName;

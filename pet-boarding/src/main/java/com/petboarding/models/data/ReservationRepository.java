@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
+public interface ReservationRepository extends JPARepositoryActiveFiltering<Reservation, Integer> {
     public Collection<Reservation> findByPetId(long petId);
 }

@@ -44,7 +44,7 @@ public class EmployeeController extends AppBaseController {
 
     @GetMapping("add")
     public String displayAddEmployeeForm(Model model) {
-        prepareAddFormModel(model);
+        prepareAddFormModel(new Employee(), model);
         return "employees/form";
     }
 
@@ -53,7 +53,7 @@ public class EmployeeController extends AppBaseController {
     @PostMapping("add")
     public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         if(errors.hasErrors()) {
-            model.addAttribute("positions", positionRepository.findAll());
+            prepareAddFormModel(newEmployee, model);
             return "employees/form";
         }
         newEmployee.setPhoto(null);
@@ -86,7 +86,7 @@ public class EmployeeController extends AppBaseController {
             Errors errors, Model model, RedirectAttributes redirectAttributes,
             @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         if(errors.hasErrors()) {
-            model.addAttribute("positions", positionRepository.findAll());
+            prepareUpdateFormModel(employee, model);
             return "employees/form";
         }
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
@@ -144,9 +144,9 @@ public class EmployeeController extends AppBaseController {
     private void prepareCommonFormModel(Model model) {
         model.addAttribute("positions", positionRepository.findAll());
     }
-    private void prepareAddFormModel(Model model) {
+    private void prepareAddFormModel(Employee employee, Model model) {
         model.addAttribute("formTitle", FORM_NEW_TITLE);
-        model.addAttribute("employee", new Employee());
+        model.addAttribute("employee", employee);
         model.addAttribute("submitURL", "/employees/add");
         model.addAttribute("submitMethod", "post");
         addLocation("New", model);

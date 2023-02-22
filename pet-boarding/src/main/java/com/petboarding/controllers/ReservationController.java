@@ -32,6 +32,8 @@ public class ReservationController extends AppBaseController{
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
+    private PetServiceRepository serviceRepository;
+    @Autowired
     private EmailService emailService;
 
     @GetMapping("grid")
@@ -65,6 +67,7 @@ public class ReservationController extends AppBaseController{
             }
         }
         model.addAttribute("owners", ownerRepository.findAll());
+        model.addAttribute("services", serviceRepository.findAll());
     }
 
     @GetMapping("create")

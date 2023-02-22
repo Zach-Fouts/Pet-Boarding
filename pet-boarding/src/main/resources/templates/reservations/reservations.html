@@ -32,25 +32,31 @@
                data-toolbar="#toolbar">
             <thead>
             <tr>
-                <th>Confirmation code</th>
+                <th data-align="center">Confirmation #</th>
                 <th>Owner</th>
-                <th>Contact</th>
+                <th data-visible="false">Contact</th>
                 <th>Pet</th>
+                <th>Service</th>
                 <th data-halign="center" data-align="center" data-sortable="true">Start Date</th>
                 <th data-halign="center" data-align="center" data-sortable="true">End Date</th>
-                <th>Comments</th>
+                <th data-visible="false">Comments</th>
+                <th data-align="center">Status</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
                 <tr th:each="reservation : ${reservations}">
-                    <td class="fw-bold" th:text="${reservation.confirmation}"></td>
+                    <td class="fw-bold" >
+                        <a class="link-primary" th:text="${reservation.confirmation}" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"></a>
+                    </td>
                     <td th:text="${reservation.getPet().getOwner().getFullName()}"></td>
                     <td th:text="${reservation.getPet().getOwner().getEmail()}"></td>
                     <td th:text="${reservation.getPet().petName}"></td>
-                    <td th:text="${#dates.format(reservation.startDateTime, 'MM-dd-yyyy')}"></td>
-                    <td th:text="${#dates.format(reservation.endDateTime, 'MM-dd-yyyy')}"></td>
+                    <td th:text="${reservation.service.name}"></td>
+                    <td th:text="${#dates.format(reservation.startDateTime, 'MM/dd/yyyy')}"></td>
+                    <td th:text="${#dates.format(reservation.endDateTime, 'MM/dd/yyyy')}"></td>
                     <td th:text="${reservation.comments}"></td>
+                    <td><span class="status-indicator img-thumbnail bg-gradient" th:title="${reservation.service.name}" th:style="|background-color: ${reservation.status.color}|"></span></td>
                     <td>
                         <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
                         <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>

@@ -1,6 +1,7 @@
 package com.petboarding.models;
 
 import com.petboarding.models.AbstractEntity;
+import com.petboarding.models.data.PetServiceRepository;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -15,10 +16,10 @@ public class Reservation extends AbstractEntity {
 
     @ManyToOne
     private Pet pet;
-//    ******FUTURE REFERENCES TO BE ADDED AT A LATER DATE********
-//    @ManyToOne
-//    private Kennel kennel;
-    //**************************
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private PetService service;
 
     private String confirmation;
 
@@ -32,6 +33,11 @@ public class Reservation extends AbstractEntity {
     @NotNull
     @Size(max = 250, message = "A comment cannot be longer than 250 characters.")
     private String comments;
+
+    @Valid
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private ReservationStatus status;
 
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
@@ -55,6 +61,15 @@ public class Reservation extends AbstractEntity {
         this.endDateTime = anEndDateTime;
         this.comments = aComment;
     }
+
+    public PetService getService() {
+        return service;
+    }
+
+    public void setService(PetService service) {
+        this.service = service;
+    }
+
     public Date getStartDateTime() {
         return startDateTime;
     }
@@ -86,6 +101,14 @@ public class Reservation extends AbstractEntity {
         this.confirmation = confirmation;
     }
 
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
     @Override
     public Boolean getActive() {
         return active;
@@ -111,11 +134,13 @@ public class Reservation extends AbstractEntity {
         // get code based on current milliseconds
         String code = getCodeFromLong(System.currentTimeMillis());
         try {
-            while(true) {
+            int count = 0;
+            while(count < 3) { // three tries to get non-pure digits confirmation
                 // test if the code is decimal number
                 long longCode = Long.parseLong(code);
                 // turn new number into Hexadecimal
                 code = getCodeFromLong(longCode);
+                count++;
             }
         } catch(Exception e) {}
         return code;
