@@ -41,13 +41,13 @@
             </div>
             <div class="form-group col-12 res">
                 <label class="form-label">Stay service</label>
-                <select id="serviceId" name="service" class="form-select">
+                <select th:field="${reservation.service}" th:errorclass="is-invalid" required id="serviceId" name="service" class="form-select">
                     <option value="">Select a service...</option>
                     <option th:each="service :${services}"
                             th:value="${service.id}" th:text="${service.name}">
                     </option>
                 </select>
-                <p class="text-danger d-none"></p>
+                <p class="text-danger" th:errors="${reservation.service}"></p>
             </div>
             <div class="form-group col-sm-3 res">
                 <label class="form-label">Start Date</label>

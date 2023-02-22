@@ -143,3 +143,10 @@
     .preview-photo {
       max-height: 156px;
     }
+
+    .status-indicator {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
