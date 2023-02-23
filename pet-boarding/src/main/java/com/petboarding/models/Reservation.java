@@ -152,4 +152,9 @@ public class Reservation extends AbstractEntity {
         return code.substring( code.length() - 4 ).toUpperCase();
     }
 
+    public boolean isDateRangeValid() {
+        if(endDateTime == null || startDateTime == null) return false;
+        return !startDateTime.after(endDateTime);
+    }
+
 }

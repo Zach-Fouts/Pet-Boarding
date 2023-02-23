@@ -101,7 +101,7 @@ public class EmployeeController extends AppBaseController {
             employee.setPhoto(null);
         }
         employeeRepository.save(employee);
-        redirectAttributes.addFlashAttribute("infoMessage", "The Job Position has been updated.");
+        redirectAttributes.addFlashAttribute("infoMessage", "The Employee information has been updated.");
         return "redirect:" + id;
     }
 

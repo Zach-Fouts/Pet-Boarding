@@ -50,7 +50,7 @@
             <div class="col-sm-4">
                 <div class="col-sm-10">
                     <div class="input-group">
-                        <input type="date" class="form-control" id="endDate" name="endDateValue" data-date-format="mm/dd/yyyy" th:value="*{#dates.format(reservation.endDateTime, 'yyyy-MM-dd')}"
+                        <input type="date" class="form-control" id="endDate" name="endDateValue" data-date-format="mm/dd/yyyy" th:field="*{reservation.endDateTime}"
                         disabled>
                         <button id="btnEnableEndDate" type="button" class="btn btn-primary" onclick="toggleEndDate()" >
                             <i class="bi-pen"></i>

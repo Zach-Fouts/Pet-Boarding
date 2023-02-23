@@ -77,27 +77,12 @@ public class StayController extends AppBaseController {
     @PostMapping("add")
     public String processAddStayForm(@Valid Stay newStay, @RequestParam(required = false) String endDateValue, Errors validation, Model model) {
         boolean hasErrors = validation.hasErrors();
-        if(endDateValue != null) {
-            try {
-                Date newEndDate = DateUtils.parseFormatter.parse(endDateValue);
-                if(newStay.getReservation().getStartDateTime().after(newEndDate)) {
-                    hasErrors = true;
-                    model.addAttribute("errorMessage",
-                            "The new end date <strong>" + DateUtils.showFormatter.format(newEndDate) + "</strong> has to be equal or after <strong>" + DateUtils.showFormatter.format(newStay.getReservation().getStartDateTime()) + "</strong>");
-                } else {
-                    newStay.getReservation().setEndDateTime(newEndDate);
-                }
-            } catch(ParseException exception) {
-                hasErrors = true;
-                model.addAttribute("errorMessage",
-                        "There was an unexpected error trying to assign the new end date.");
-            }
-        }
+        hasErrors |= processDateValidation(newStay, model);
         if(hasErrors) {
-            prepareCommonFormModel(model);
+            prepareAddFormModel(newStay, model);
             return "stays/form";
         }
-        reservationRepository.save(newStay.getReservation());
+        //reservationRepository.save(newStay.getReservation());
         stayRepository.save(newStay);
         return "redirect:/stays";
     }
@@ -111,6 +96,22 @@ public class StayController extends AppBaseController {
         }
         prepareUpdateFormModel(optStay.get(), model);
         return "stays/form";
+    }
+
+    @PostMapping("update/{id}")
+    public String processUpdateStayForm(@Valid Stay stay,
+                                        Errors validation,
+                                        Model model,
+                                        RedirectAttributes redirectAttributes) {
+        boolean hasErrors = validation.hasErrors();
+        hasErrors |= processDateValidation(stay, model);
+        if(hasErrors) {
+            prepareUpdateFormModel(stay, model);
+            return "stays/form";
+        }
+        stayRepository.save(stay);
+        redirectAttributes.addFlashAttribute("infoMessage", "The Stay information has been updated.");
+        return "redirect:" + stay.getId();
     }
 
     private void prepareCommonFormModel(Model model) {
@@ -134,6 +135,17 @@ public class StayController extends AppBaseController {
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
         addLocation("Update", model);
         prepareCommonFormModel(model);
+    }
+
+    private boolean processDateValidation(Stay stay, Model model) {
+        boolean hasErrors = false;
+        if(!stay.getReservation().isDateRangeValid()) {
+            hasErrors = true;
+            model.addAttribute("errorMessage",
+                    "The end date <strong>" + DateUtils.showFormatter.format(stay.getReservation().getEndDateTime()) +
+                            "</strong> has to be on the same day or after <strong>" + DateUtils.showFormatter.format(stay.getReservation().getStartDateTime()) + "</strong>");
+        }
+        return hasErrors;
     }
 
     @ModelAttribute("activeModule")
