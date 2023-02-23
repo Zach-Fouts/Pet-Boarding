@@ -1,10 +1,7 @@
 package com.petboarding.controllers;
 
 import com.petboarding.controllers.utils.DateUtils;
-import com.petboarding.models.Employee;
-import com.petboarding.models.Reservation;
-import com.petboarding.models.Stay;
-import com.petboarding.models.StayStatus;
+import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
 import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
@@ -19,9 +16,7 @@ import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("stays")
@@ -82,7 +77,6 @@ public class StayController extends AppBaseController {
             prepareAddFormModel(newStay, model);
             return "stays/form";
         }
-        //reservationRepository.save(newStay.getReservation());
         stayRepository.save(newStay);
         return "redirect:/stays";
     }
@@ -114,9 +108,29 @@ public class StayController extends AppBaseController {
         return "redirect:" + stay.getId();
     }
 
+    @PostMapping("delete/{id}")
+    public String processDeleteStay(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        Optional<Stay> optStay = stayRepository.findById(id);
+        if(optStay.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The stay couldn't be found.");
+        } else {
+            Stay stay = optStay.get();
+            if(stay.getInvoice() != null) {
+                stay.setActive(false);
+                stayRepository.save(stay);
+                redirectAttributes.addFlashAttribute("infoMessage", "Stay <strong>#" + stay.getReservation().getConfirmation() +
+                        "</strong> is linked to the Invoice #<strong>" + stay.getInvoice().getFormattedNumber() + "</strong>, so it will be set inactive.");
+            } else {
+                stayRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("infoMessage", "Stay was successfully deleted.");
+            }
+        }
+        return "redirect:/stays/grid";
+    }
+
     private void prepareCommonFormModel(Model model) {
         model.addAttribute("kennels", kennelRepository.findAll());
-        model.addAttribute("services", serviceRepository.findAll());
+        model.addAttribute("services", serviceRepository.findByStayService(true));
         model.addAttribute("statuses", stayStatusRepository.findAll());
         model.addAttribute("caretakers", employeeRepository.findByPositionName("caretaker"));
     }
@@ -133,7 +147,13 @@ public class StayController extends AppBaseController {
         model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${confirmation}", stay.getReservation().getConfirmation()));
         model.addAttribute("stay", stay);
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
+        model.addAttribute("additionalServices", stay.getAdditionalServices());
         addLocation("Update", model);
+        Set<StayService> services = stay.getAdditionalServices();
+        System.out.println(services.size());
+        for(StayService service: services) {
+            System.out.println(service.getService().getName() + " | " + service.getQuantity());
+        }
         prepareCommonFormModel(model);
     }
 

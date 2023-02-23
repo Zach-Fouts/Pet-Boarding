@@ -78,4 +78,8 @@ public class Invoice extends AbstractEntity{
     public void setDetails(Set<InvoiceDetail> details) {
         this.details = details;
     }
+
+    public String getFormattedNumber() {
+        return this.createdOn.getYear() + "." + this.number;
+    }
 }

@@ -3,6 +3,9 @@ package com.petboarding.models;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Stay extends AbstractEntity{
@@ -25,6 +28,9 @@ public class Stay extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "status_id")
     private StayStatus status;
+
+    @OneToMany(mappedBy = "stay")
+    private Set<StayService> additionalServices;
 
     @OneToOne(mappedBy = "stay")
     private Invoice invoice;
@@ -72,4 +78,11 @@ public class Stay extends AbstractEntity{
         this.status = status;
     }
 
+    public Set<StayService> getAdditionalServices() {
+        return additionalServices;
+    }
+
+    public void setAdditionalServices(Set<StayService> additionalServices) {
+        this.additionalServices = additionalServices;
+    }
 }
