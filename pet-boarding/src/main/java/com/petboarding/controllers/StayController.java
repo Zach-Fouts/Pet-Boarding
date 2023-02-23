@@ -114,6 +114,8 @@ public class StayController extends AppBaseController {
     }
 
     private void prepareCommonFormModel(Model model) {
+        model.addAttribute("kennels", kennelRepository.findAll());
+        model.addAttribute("services", serviceRepository.findAll());
         model.addAttribute("statuses", stayStatusRepository.findAll());
         model.addAttribute("caretakers", employeeRepository.findByPositionName("caretaker"));
     }

@@ -68,24 +68,24 @@
         <div class="col-12">
             <label for="service" class="form-label">Service</label>
             <div class="input-group has-validation">
-                <select id="service"  class="form-select">
+                <select id="service" class="form-select" th:field="*{reservation.service}">
                     <option selected value="">Select a service...</option>
                     <option th:each="service: ${services}"
                             th:value="${service.id}"
-                            th:text="${service.code}">
+                            th:text="${service.name}">
                     </option>
                 </select>
-                <div id="validationServerServiceFeedback" class="invalid-feedback"></div>
+                <div id="validationServerServiceFeedback" class="invalid-feedback" th:errors="*{reservation.service}"></div>
             </div>
         </div>
         <div class="col-3">
             <label for="kennel" class="form-label">Kennel</label>
             <div class="input-group has-validation">
-                <select id="kennel"  class="form-select">
+                <select id="kennel"  class="form-select" th:field="*{kennel}">
                     <option selected value="">Select a kennel...</option>
                     <option th:each="kennel: ${kennels}"
                             th:value="${kennel.id}"
-                            th:text="${kennel.code}">
+                            th:text="${kennel.name}">
                     </option>
                 </select>
                 <div id="validationServerKennelFeedback" class="invalid-feedback"></div>
