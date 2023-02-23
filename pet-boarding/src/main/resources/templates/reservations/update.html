@@ -12,6 +12,9 @@
 <body>
 <th:block id="content">
     <form method="post">
+       <input type="hidden" id="id" th:field="${reservation.id}">
+       <input type="hidden" id="confirmation" th:field="${reservation.confirmation}">
+       <input type="hidden" id="pet" th:field="${reservation.pet}">
        <div class="form-group res">
           <label>Confirmation Code
              <input class="form-control" disabled th:value="${reservation.confirmation}">
@@ -33,6 +36,19 @@
           </label>
        </div>
        <div class="form-group res">
+          <label>Services
+             <div class="input-group has-validation">
+                <select id="service" th:field="${reservation.service}" class="form-select" th:errorclass="is-invalid" required>
+                   <option th:each="service: ${services}"
+                           th:value="${service.id}"
+                           th:text="${service.name}">
+                   </option>
+                </select>
+                <div id="validationServiceFeedback" class="invalid-feedback" th:errors="${reservation.service}"></div>
+             </div>
+          </label>
+       </div>
+       <div class="form-group res">
           <label>Start Date
              <input th:field="${reservation.startDateTime}" type="date" class="form-control" id="startDate" name="date" data-date-format="mm/dd/yyyy">
           </label>
@@ -50,6 +66,20 @@
           </label>
           <p class="error" th:errors="${reservation.comments}"></p>
        </div>
+       <div class="form-group res">
+          <label>Status
+             <div class="input-group has-validation">
+                <select id="status" th:field="${reservation.status}" class="form-select" th:errorclass="is-invalid" required>
+                   <option th:each="status: ${statuses}"
+                           th:value="${status.id}"
+                           th:text="${status.name}">
+                   </option>
+                </select>
+                <div id="validationServerStatusFeedback" class="invalid-feedback" th:errors="${reservation.status}"></div>
+             </div>
+          </label>
+       </div>
+
        <div class="form-group res">
           <input type="submit" value="Save Changes" class="btn btn-success">
           <a type="button" class="btn btn-secondary" href="/reservations/grid" title="Cancel reservation">
