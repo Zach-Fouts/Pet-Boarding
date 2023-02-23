@@ -1,0 +1,52 @@
+package com.petboarding.controllers.utils;
+
+import com.petboarding.exception.UserNotFoundException;
+import com.petboarding.models.Employee;
+import com.petboarding.models.User;
+import com.petboarding.models.data.EmployeeRepository;
+import com.petboarding.models.data.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
+
+public class PasswordResetUtil {
+
+    @Autowired
+    public EmployeeRepository employeeRepository;
+
+    @Autowired
+    public UserRepository userRepository;
+
+    public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
+        Optional<Employee> employee = Optional.ofNullable(employeeRepository.findByEmail(email));
+        if (employee.isPresent()){
+            User user = employee.get().getUser();
+            if (user != null) {
+                user.setResetPasswordToken(token);
+                userRepository.save(user);
+            } else {
+                throw new UserNotFoundException("Could not find any user with the email " + email);
+            }
+        }
+    }
+
+    public User getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(User user, String newPassword) {
+
+        user.setPwHash(newPassword);
+
+        user.setResetPasswordToken(null);
+        userRepository.save(user);
+    }
+
+    public static String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
+
+}

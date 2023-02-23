@@ -49,27 +49,22 @@ public class EmployeeController extends AppBaseController {
         return "employees/form";
     }
 
-
     @Transactional
     @PostMapping("add")
     public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
-//        TODO: add email check to prevent the same email from being used more than once
 
-//        Employee existingEmployee = employeeRepository.findByEmail(newEmployee.getEmail());
-//
-////      checks to see if an email is already associated with an employee
-//        if (existingEmployee != null) {
-//            errors.rejectValue("email", "email.alreadyexists", "This email is already associated with another employee");
-//        }
-
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        if (fileName.equals("")){
-            newEmployee.setPhoto(null);
+        Employee existingEmployee = employeeRepository.findByEmail(newEmployee.getEmail());
+//      checks to see if an email is already associated with an employee
+        if (existingEmployee != null) {
+            errors.rejectValue("email", "email.alreadyexists", "This email is already associated with another employee");
         }
+
+            newEmployee.setPhoto(null);
         if(errors.hasErrors()) {
             prepareAddFormModel(newEmployee, model);
             return "employees/form";
         }
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
             String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);

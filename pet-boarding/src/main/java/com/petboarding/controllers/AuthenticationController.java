@@ -1,11 +1,19 @@
 package com.petboarding.controllers;
 
+import com.petboarding.controllers.utils.PasswordResetUtil;
+import com.petboarding.exception.UserNotFoundException;
 import com.petboarding.models.User;
+import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.RoleRepository;
 import com.petboarding.models.data.UserRepository;
 import com.petboarding.models.dto.LoginFormDTO;
 import com.petboarding.models.dto.RegisterFormDTO;
+import com.petboarding.service.EmailService;
+import com.sun.mail.imap.Utility;
+import net.bytebuddy.utility.RandomString;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,9 +22,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 @Controller
@@ -26,9 +37,16 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String userSessionKey = "user";
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
         User user = (User) session.getAttribute(userSessionKey);
@@ -124,4 +142,43 @@ public class AuthenticationController {
         request.getSession().invalidate();
         return "redirect:/sign-in/login";
     }
+
+    //<---------------------------------------------Password Reset--------------------------------------------->
+
+    @GetMapping("forgotPassword")
+    public String forgotPasswordForm(){
+        return "sign-in/forgotPassword";
+    }
+
+    @PostMapping("forgotPassword")
+    public String processForgotPasswordForm(HttpServletRequest request, Model model){
+        String email = request.getParameter("email");
+        String token = RandomString.make(30);
+        PasswordResetUtil passwordResetUtil = new PasswordResetUtil();
+
+        try {
+            passwordResetUtil.updateResetPasswordToken(token, email);
+            String resetPasswordLink = PasswordResetUtil.getSiteURL(request) + "/reset_password?token=" + token;
+            emailService.sendResetPasswordLink(email, resetPasswordLink);
+            model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
+
+        } catch (UserNotFoundException ex) {
+            model.addAttribute("error", ex.getMessage());
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            model.addAttribute("error", "Error while sending email");
+        }
+
+        return "/sign-in/forgotPassword";
+    }
+
+    @GetMapping("resetPassword")
+    public String resetPasswordFrom() {
+        return "";
+    }
+
+    @PostMapping("resetPassword")
+    public String processResetPasswordForm(){
+        return "";
+    }
+
 }
