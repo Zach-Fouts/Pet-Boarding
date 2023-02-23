@@ -12,7 +12,7 @@
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
       <link rel="stylesheet" type="text/css" href="/css/main.css"/>
       <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
-
+      <script th:src="@{/js/uiUtils.js}"></script>
    </th:block>
 
 
@@ -35,7 +35,8 @@
                       data-pagination="true"
                       data-show-columns="true"
                       data-show-toggle="true"
-                      data-toolbar="#toolbar">
+                      data-toolbar="#toolbar"
+                      th:data-buttons="${showAll} ? 'tableFilterShowActive' : 'tableFilterShowAll'">
                   <thead>
                   <tr>
                      <th data-halign="center" data-sortable="true">Pet Name</th>
@@ -46,7 +47,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="pet: ${listPets}" th:object="${pet}">
+                  <tr th:each="pet: ${listPets}" th:object="${pet}" th:class="*{active} ? null : 'inactive'">
                      <td><a th:href="@{pets/profile/{id} (id=*{id})}" th:text="${pet.petName}"></a></td>
                      <td th:text="${pet.owner?.getFullName()}"></td>          <!--- ? acts as if owner then owner.firstName --->
                      <td th:text="${pet.breed}"></td>

@@ -3,14 +3,12 @@ package com.petboarding.service;
 import com.petboarding.models.Pet;
 import com.petboarding.models.data.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class PetServiceImpl implements PetService{
@@ -43,5 +41,12 @@ public class PetServiceImpl implements PetService{
     public void deletePetById(Integer id) {
         this.petRepository.deleteById(id);
     }
+
+
+    @Override
+    public List<Pet> findByActive(Boolean active) {
+        return petRepository.findByActive(active);
+    }
+
 
 }

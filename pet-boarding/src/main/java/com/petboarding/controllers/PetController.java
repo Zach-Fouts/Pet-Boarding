@@ -5,6 +5,7 @@ import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
 import com.petboarding.controllers.utils.FileUploadUtil;
 import com.petboarding.models.data.OwnerRepository;     // Needed to Grab Owners
+import com.petboarding.models.data.PetRepository;
 import com.petboarding.models.data.ReservationRepository;
 import com.petboarding.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +36,19 @@ public class PetController extends AppBaseController {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+
     // display list of pets page
     @GetMapping("/pets")
-    public String viewPetPage(Model model) {
-        model.addAttribute("listPets", petService.getAllPets());
+    public String viewPetPage(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("listPets", showAll ? petService.getAllPets() : petService.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "pets/petPage";
 
     }
 
     @GetMapping("/showNewPetForm")
-    public String showNewPetForm(Model model) {
+    public String showNewPetForm(Boolean showAll, Model model) {
         // create model attribute to bind form data
         Pet pet = new Pet();
         model.addAttribute("pet", pet);

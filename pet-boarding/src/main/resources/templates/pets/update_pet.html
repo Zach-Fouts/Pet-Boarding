@@ -20,7 +20,7 @@
 <th:block id="content">
 <div class="d-flex">
 
-      <main class="content pt-1 px-4">
+      <main class="col-md-12 col-lg-10 col-xl-8  col-xxl-6">
 
          <div>
             <h1>Update Pet</h1>
@@ -29,12 +29,22 @@
             <form action="#" th:action="@{/savePet}" th:object="${pet}" method="POST" enctype="multipart/form-data">
                <!-- Add hidden form field to handle update -->
                <input type="hidden" th:field="*{id}" />
+               <label class="form-label">Name</label>
                <input type="text" th:field="*{petName}" class="form-control mb-4 col-4">
+
                <input type="hidden" th:field="*{owner}" class="form-control mb-4 col-4">  <!--- Hidden because pet owners shouldn't change" --->
+               <label class="form-label">Breed</label>
                <select name="dogDropdown" id="dogDropList" th:field="*{breed}"
                        class="form-control mb-4 col-4"></select>
+               <label class="form-label">Notes</label>
                <input type="text" th:field="*{notes}" class="form-control mb-4 col-4">
-
+               <div class="col" th:if="*{id}">
+                  <div class="form-check form-switch">
+                     <input class="form-check-input" type="checkbox" role="switch" id="active" th:field="*{active}">
+                     <label class="form-check-label" for="active">Active</label>
+                  </div>
+               </div>
+               <br>
                <div class="col-12 mb-3">
                   <label for="photo" class="form-label">Photo</label>
                   <input type="file" name="image" value="image" class="form-control" id="photo" onchange="displayPhotoPreview(event.target, 'photoPreview')" accept="image/png, image/jpeg">
