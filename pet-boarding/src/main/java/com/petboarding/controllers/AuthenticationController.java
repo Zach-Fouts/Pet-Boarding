@@ -46,6 +46,9 @@ public class AuthenticationController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    PasswordResetUtil passwordResetUtil;
+
     private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
@@ -154,7 +157,7 @@ public class AuthenticationController {
     public String processForgotPasswordForm(HttpServletRequest request, Model model){
         String email = request.getParameter("email");
         String token = RandomString.make(30);
-        PasswordResetUtil passwordResetUtil = new PasswordResetUtil();
+
 
         try {
             passwordResetUtil.updateResetPasswordToken(token, email);

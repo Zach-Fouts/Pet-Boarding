@@ -6,26 +6,29 @@ import com.petboarding.models.User;
 import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
-
+@Service
+@Transactional
 public class PasswordResetUtil {
 
     @Autowired
-    public EmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    public UserRepository userRepository;
+    private UserRepository userRepository;
 
     public void updateResetPasswordToken(String token, String email) throws UserNotFoundException {
         Optional<Employee> employee = Optional.ofNullable(employeeRepository.findByEmail(email));
         if (employee.isPresent()){
-            User user = employee.get().getUser();
-            if (user != null) {
-                user.setResetPasswordToken(token);
-                userRepository.save(user);
+            Optional<User> user = Optional.ofNullable(employee.get().getUser());
+            if (user.isPresent()) {
+                user.get().setResetPasswordToken(token);
+                userRepository.save(user.get());
             } else {
                 throw new UserNotFoundException("Could not find any user with the email " + email);
             }
