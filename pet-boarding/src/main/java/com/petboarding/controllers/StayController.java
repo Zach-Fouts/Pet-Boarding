@@ -6,10 +6,7 @@ import com.petboarding.models.Reservation;
 import com.petboarding.models.Stay;
 import com.petboarding.models.StayStatus;
 import com.petboarding.models.app.Module;
-import com.petboarding.models.data.EmployeeRepository;
-import com.petboarding.models.data.ReservationRepository;
-import com.petboarding.models.data.StayRepository;
-import com.petboarding.models.data.StayStatusRepository;
+import com.petboarding.models.data.*;
 import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,11 +40,16 @@ public class StayController extends AppBaseController {
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private KennelRepository kennelRepository;
+
+    @Autowired
+    private PetServiceRepository serviceRepository;
+
+    @Autowired
     private StayStatusRepository stayStatusRepository;
 
-
     @GetMapping
-    public String displayStaysCalenar(Model model) {
+    public String displayStaysCalendar(Model model) {
         model.addAttribute("stays", stayRepository.findAll());
         return "stays/indexCalendar";
     }
@@ -95,10 +97,20 @@ public class StayController extends AppBaseController {
             prepareCommonFormModel(model);
             return "stays/form";
         }
-        //TODO Revise to add Kennel and Service provided
         reservationRepository.save(newStay.getReservation());
         stayRepository.save(newStay);
         return "redirect:/stays";
+    }
+
+    @GetMapping("update/{id}")
+    public String displayUpdateStayForm(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Stay> optStay = stayRepository.findById(id);
+        if(optStay.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The stay could not be found.");
+            return "redirect:/stays";
+        }
+        prepareUpdateFormModel(optStay.get(), model);
+        return "stays/form";
     }
 
     private void prepareCommonFormModel(Model model) {
