@@ -47,7 +47,7 @@ public class StayController extends AppBaseController {
 
 
     @GetMapping
-    public String displayStaysCalenar(Model model) {
+    public String displayStaysCalendar(Model model) {
         model.addAttribute("stays", stayRepository.findAll());
         return "stays/indexCalendar";
     }
