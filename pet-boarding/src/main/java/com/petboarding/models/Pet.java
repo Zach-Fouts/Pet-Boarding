@@ -26,18 +26,22 @@ public class Pet extends AbstractEntity {
     private String notes;
     @Column(nullable = true, length = 64)
     private String photo;
+
+    @Column(columnDefinition = "boolean default true")
+    private Boolean active = true;
     @Transient
     public String getPhotoPath() {
         if (photo == null || getId() == 0) {return null;}
         return "/uploads/pet-photos/" + getId() + "/" + photo;
     }
 
-    public Pet(String petName, Owner owner, String breed, String notes) {
+    public Pet(String petName, Owner owner, String breed, String notes, Boolean active) {
         super();
         this.petName = petName;
         this.owner = owner;                         // Parents -> Owner
         this.breed = breed;
         this.notes = notes;
+        this.active = active;
     }
 
     public Pet(){}
@@ -77,4 +81,14 @@ public class Pet extends AbstractEntity {
     public String getPhoto() {return photo;}
 
     public void setPhoto(String photo) {this.photo = photo;}
+
+    @Override
+    public Boolean getActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

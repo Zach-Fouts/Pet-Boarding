@@ -33,7 +33,7 @@
                 <input type="text" th:field="*{petName}" placeholder="Pet Name" class="form-control mb-4 col-4">
                 <p class="error text-danger" th:errors="${pet.petName}"></p>
                 <!--- Changed to dropdown selection of existing owners -->
-                <select name="ownerId" id="ownerId" placeholder="Parents Name"th:field="*{owner}"
+                <select name="ownerId" id="ownerId" placeholder="Owner" th:field="*{owner}"
                         class="form-control mb-4 col-4">
                     <option th:each="owner: ${parents}" th:value="${owner.id}" th:text="${owner.getFullName()}"></option>
                 </select>

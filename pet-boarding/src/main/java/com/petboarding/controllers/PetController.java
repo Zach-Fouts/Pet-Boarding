@@ -5,6 +5,7 @@ import com.petboarding.models.Pet;
 import com.petboarding.models.app.Module;
 import com.petboarding.controllers.utils.FileUploadUtil;
 import com.petboarding.models.data.OwnerRepository;     // Needed to Grab Owners
+import com.petboarding.models.data.ReservationRepository;
 import com.petboarding.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,8 @@ public class PetController extends AppBaseController {
     @Autowired   // Needed to grab owners
     private OwnerRepository ownerRepository;
 
+    @Autowired
+    private ReservationRepository reservationRepository;
     // display list of pets page
     @GetMapping("/pets")
     public String viewPetPage(Model model) {
@@ -115,9 +118,19 @@ public class PetController extends AppBaseController {
         return "pets/update_pet";
     }
     @GetMapping("/deletePet/{id}")
-    public String deletePet(@PathVariable (value = "id") Integer id) {
-        // call delete method
-        this.petService.deletePetById(id);
+    public String deletePet(@PathVariable (value = "id") Integer id, RedirectAttributes redirectAttributes) {
+        // dont delete if active
+        if(reservationRepository.findByPetId(id).size() > 0) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Pet with active reservation can not be deleted!");
+            Optional<Pet> optionalPet = Optional.ofNullable(petService.getPetById(id));
+            if(optionalPet.isPresent()) {
+                Pet pet = optionalPet.get();
+                pet.setActive(false);
+            }
+        } else {
+            // delete pet
+            this.petService.deletePetById(id);
+        }
         return "redirect:/pets";
     }
 

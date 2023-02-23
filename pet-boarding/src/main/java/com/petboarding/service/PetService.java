@@ -12,5 +12,5 @@ public interface PetService {
 
     Pet getPetById(Integer id);
     void deletePetById(Integer id);
-    Page<Pet> findPage(int pageNo, int pageSize, String sortField, String sortDirection);
+
 }
