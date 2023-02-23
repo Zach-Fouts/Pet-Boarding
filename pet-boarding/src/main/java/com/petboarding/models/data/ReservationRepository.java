@@ -10,5 +10,5 @@ import java.util.Collection;
 
 @Repository
 public interface ReservationRepository extends JPARepositoryActiveFiltering<Reservation, Integer> {
-    public Collection<Reservation> findByPetId(long petId);
+    public Collection<Reservation> findByPetId(Integer petId);
 }
