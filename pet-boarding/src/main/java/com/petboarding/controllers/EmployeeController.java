@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,22 +49,28 @@ public class EmployeeController extends AppBaseController {
         return "employees/form";
     }
 
-
     @Transactional
     @PostMapping("add")
     public String processAddEmployeeRequest(@Valid @ModelAttribute Employee newEmployee, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
+
+        Employee existingEmployee = employeeRepository.findByEmail(newEmployee.getEmail());
+//      checks to see if an email is already associated with an employee
+        if (existingEmployee != null) {
+            errors.rejectValue("email", "email.alreadyexists", "This email is already associated with another employee");
+        }
+
+            newEmployee.setPhoto(null);
         if(errors.hasErrors()) {
             prepareAddFormModel(newEmployee, model);
             return "employees/form";
         }
-        newEmployee.setPhoto(null);
-        employeeRepository.save(newEmployee);
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         if (!fileName.equals("")){
             String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             newEmployee.setPhoto(fileName);
         }
+        employeeRepository.save(newEmployee);
 
         return "redirect:/employees";
 

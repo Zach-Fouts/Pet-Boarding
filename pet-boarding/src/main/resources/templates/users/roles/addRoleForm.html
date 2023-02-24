@@ -13,7 +13,7 @@
           method="post" style="max-width: 600px; margin: 0 auto;">
 
         <div class="m-3">
-            <td><input type="hidden" th:field="${role.id}" readonly="readonly" /></td>
+            <td><input type="hidden" th:field="*{id}" readonly="readonly" /></td>
             <div class="col-md-2">
                 <label for="name" class="form-label">Name</label>
                 <div class="input-group has-validation">

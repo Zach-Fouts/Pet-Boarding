@@ -38,7 +38,7 @@ public class RoleController extends AppBaseController{
     }
 
     @GetMapping("/editRoleForm/{id}")
-    public String editRoleForm(@PathVariable("id") int id, Model model) {
+    public String editRoleForm(@PathVariable("id") Integer id, Model model) {
         Optional<Role> role = roleRepository.findById(id);
         if (role.isPresent()) {
             addLocation("Update", model);
@@ -49,14 +49,8 @@ public class RoleController extends AppBaseController{
 
     @Transactional
     @PostMapping("/saveRole")
-    public String createRole(@RequestParam int id, @RequestParam String name)  {
-        Optional<Role> role = roleRepository.findById(id);
-        if (role.isPresent()) {
-            role.get().setName(name);
-        } else {
-            Role newRole = new Role(name);
-            roleRepository.save(newRole);
-        }
+    public String createRole(@ModelAttribute Role role)  {
+            roleRepository.save(role);
         return "redirect:/users/roles";
     }
 

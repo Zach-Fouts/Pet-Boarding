@@ -3,6 +3,7 @@ package com.petboarding.models;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import javax.swing.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,10 @@ public class User extends AbstractEntity{
 
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
+
+    @Column(length = 30)
+    private String resetPasswordToken = null;
+
 
     //<---------------------------------------------Methods--------------------------------------------->
     public boolean isMatchingPassword(String password) {
@@ -87,5 +92,16 @@ public class User extends AbstractEntity{
         return username;
     }
 
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
+    }
+
+    public void setPwHash(String password) {
+        this.pwHash = encoder.encode(password);
+    }
 
 }
