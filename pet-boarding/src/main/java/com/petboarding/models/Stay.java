@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class Stay extends AbstractEntity{
     private StayStatus status;
 
     @OneToMany(mappedBy = "stay")
-    private Set<StayService> additionalServices;
+    private List<StayService> additionalServices = new ArrayList<>();
 
     @OneToOne(mappedBy = "stay")
     private Invoice invoice;
@@ -78,11 +79,11 @@ public class Stay extends AbstractEntity{
         this.status = status;
     }
 
-    public Set<StayService> getAdditionalServices() {
+    public List<StayService> getAdditionalServices() {
         return additionalServices;
     }
 
-    public void setAdditionalServices(Set<StayService> additionalServices) {
+    public void setAdditionalServices(List<StayService> additionalServices) {
         this.additionalServices = additionalServices;
     }
 }

@@ -4,8 +4,11 @@ import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
+import com.petboarding.models.dto.StayAdditionalServicesDTO;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -103,6 +106,9 @@ public class StayController extends AppBaseController {
             prepareUpdateFormModel(stay, model);
             return "stays/form";
         }
+        for(StayService service: stay.getAdditionalServices()) {
+            System.out.println(service.getDescription());
+        }
         stayRepository.save(stay);
         redirectAttributes.addFlashAttribute("infoMessage", "The Stay information has been updated.");
         return "redirect:" + stay.getId();
@@ -144,16 +150,13 @@ public class StayController extends AppBaseController {
 
 
     private void prepareUpdateFormModel(Stay stay, Model model) {
+        StayAdditionalServicesDTO additionalServicesDTO = new StayAdditionalServicesDTO();
+        additionalServicesDTO.setServices(stay.getAdditionalServices());
         model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${confirmation}", stay.getReservation().getConfirmation()));
         model.addAttribute("stay", stay);
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
-        model.addAttribute("additionalServices", stay.getAdditionalServices());
+        model.addAttribute("additionalServices", additionalServicesDTO);
         addLocation("Update", model);
-        Set<StayService> services = stay.getAdditionalServices();
-        System.out.println(services.size());
-        for(StayService service: services) {
-            System.out.println(service.getService().getName() + " | " + service.getQuantity());
-        }
         prepareCommonFormModel(model);
     }
 

@@ -109,12 +109,7 @@
         </div>
         <div class="col-12 d-grid">
             <button id="btnAddService" class="btn btn-outline-primary" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#additionalServicesContainer"
-                    aria-expanded="false"
-                    aria-controls="additionalServicesContainer"
-                    onclick="addAdditionalService()"
-                    th:if="*{additionalServices.size() == 0}">
+                    onclick="addAdditionalService()">
                 <span >Add Additional Service</span>
                 <i class="bi-plus-lg"></i>
             </button>
@@ -125,24 +120,29 @@
                     class="table-striped">
                     <thead>
                     <tr>
-                        <th data-halign="center" data-sortable="true">Qty</th>
-                        <th data-halign="center" data-sortable="true">Service</th>
-                        <th data-halign="center">Unit price</th>
+                        <th data-halign="center" data-align="center">Qty</th>
+                        <th data-halign="center" >Service</th>
+                        <th data-halign="center" data-align="right">Unit price</th>
                         <th data-halign="center">Description</th>
-                        <th data-halign="center">Subtotal</th>
+                        <th data-halign="center" data-align="right">Subtotal</th>
                         <th data-halign="center" data-align="center"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="service: *{additionalServices}">
+                    <tr th:each="service, stat: *{additionalServices}">
                         <td th:text="${service.quantity}"></td>
                         <td th:text="${service.service.name}"></a></td>
-                        <td th:text="${service.pricePerUnit}"></td>
+                        <td class="px-2" th:text="${service.pricePerUnit}"></td>
                         <td th:text="${service.description}"></td>
-                        <td th:text="${service.getSubTotal()}"></td>
+                        <td class="fw-semibold px-2" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
                         <td>
-                            <button class="btn btn-primary" title="Update/View"><i class="bi-pen"></i></button>
-                            <button class="btn btn-danger"  title="Delete"><i class="bi-trash"></i></button>
+                            <button type="button" class="btn btn-sm btn-primary" title="Update/View"><i class="bi-pen"></i></button>
+                            <button type="button" class="btn btn-sm btn-danger"  title="Delete"><i class="bi-trash"></i></button>
+                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].id}">
+                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].service}">
+                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].quantity}">
+                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].pricePerUnit}">
+                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].description}">
                         </td>
                     </tr>
                     </tbody>
