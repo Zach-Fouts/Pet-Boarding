@@ -15,7 +15,7 @@ public abstract class AbstractDetailEntity extends AbstractEntity{
 
     @NotNull(message = "The quantity is required.")
     @Column(columnDefinition = "float(3, 2) default 1.0")
-    private Double quantity;
+    private Float quantity;
 
     @NotNull(message = "The price per unit is required.")
     private Double pricePerUnit;
@@ -31,11 +31,11 @@ public abstract class AbstractDetailEntity extends AbstractEntity{
         this.service = service;
     }
 
-    public Double getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 

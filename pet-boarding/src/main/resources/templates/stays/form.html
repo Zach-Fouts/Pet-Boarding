@@ -10,7 +10,7 @@
         <script src="/js/uiUtils.js"></script>
         <script src="/js/stay.js"></script>
         <script th:inline="javascript">
-
+            additionalServices = [[${mapStaysAdditionalServices}]];
         </script>
     </th:block>
 </head>
@@ -55,7 +55,7 @@
                     <div class="input-group">
                         <input type="date" class="form-control" id="endDate" name="endDateValue" data-date-format="mm/dd/yyyy" th:field="*{reservation.endDateTime}"
                         disabled>
-                        <button id="btnEnableEndDate" type="button" class="btn btn-primary" onclick="toggleEndDate()" >
+                        <button id="btnEnableEndDate" type="button" class="btn btn-outline-primary" onclick="toggleEndDate()" >
                             <i class="bi-pen"></i>
                         </button>
                     </div>
@@ -136,8 +136,8 @@
                         <td th:text="${service.description}"></td>
                         <td class="fw-semibold px-2" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-primary" title="Update/View"><i class="bi-pen"></i></button>
-                            <button type="button" class="btn btn-sm btn-danger"  title="Delete"><i class="bi-trash"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" title="Update/View" th:onclick="|openAdditionalServicesDialog(${service.id}, ${stat.index})|"><i class="bi-pen"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-danger"  title="Remove" th:onclick="|removeAdditionalServices(${service.id}, ${stat.index})|"><i class="bi-dash-lg"></i></button>
                             <input type="hidden" th:field="*{additionalServices[__${stat.index}__].id}">
                             <input type="hidden" th:field="*{additionalServices[__${stat.index}__].service}">
                             <input type="hidden" th:field="*{additionalServices[__${stat.index}__].quantity}">
@@ -180,7 +180,64 @@
             </button>
         </div>
     </form>
+    <div id="addServiceDialog" class="modal" tab-index="-1">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Additional service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addServiceForm" class="row g-2">
+                        <input type="hidden" id="addId" name="id">
+                        <div class="col-12 row mb-1">
+                            <label for="addQuantity" class="col-sm-3 col-form-label">Quantity</label>
+                            <div class="col-sm-3">
+                                <input type="number" id="addQuantity" name="quantity" class="form-control text-end px-2 add-input" onchange="updateSubtotal()" required min="0.1" step="0.1">
+                            </div>
+                        </div>
+                        <div class="col-12 row mb-1">
+                            <label for="addService" class="col-sm-3 col-form-label">Service</label>
+                            <div class="col-sm-9">
+                                <select id="addService" name="serviceId" class="form-select add-input" required onchange="updateUnitPrice(this)">
+                                    <option value="" data-pricePerUnit="">Select a service...</option>
+                                    <option th:each="addService: ${additionalServices}"
+                                            th:value="${addService.id}"
+                                            th:text="${addService.name}"
+                                            th:data-pricePerUnit="${addService.pricePerUnit}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12 row mb-1">
+                            <label for="addPricePerUnit" class="col-sm-3 col-form-label">Unit Price</label>
+                            <div class="col-sm-5">
+                                <input type="number" id="addPricePerUnit" name="pricePerUnit" class="form-control text-end px-2 add-input" onchange="updateSubtotal()" min="0.01" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-12 row mb-1">
+                            <label for="addDescription" class="col-sm-3 col-form-label">Description</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="addDescription" name="description" class="form-control add-input">
+                            </div>
+                        </div>
+                        <div class="col-12 row">
+                            <label for="addSubTotal" class="col-sm-3 col-form-label">SubTotal</label>
+                            <div class="col-sm-5">
+                                <input type="text" id="addSubTotal" name="subTotal" class="fw-semibold form-control-plaintext text-end px-2" value="0.00">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="btnSaveAdditionalService" type="button" class="btn btn-primary">Add additional service
+                        <i class="bi-plus-lg"></i></button>
+                </div>
+            </div>
+        </div>
 
+    </div>
 
 </div>
 </body>

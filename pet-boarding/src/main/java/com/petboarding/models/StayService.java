@@ -17,7 +17,7 @@ public class StayService extends AbstractDetailEntity{
    public StayService() {
    }
 
-   public StayService(Integer id, PetService service, Double quantity, Double pricePerUnit, String description) {
+   public StayService(Integer id, PetService service, Float quantity, Double pricePerUnit, String description) {
        super();
        this.setId(id);
        this.setService(service);

@@ -2,6 +2,7 @@ package com.petboarding.controllers;
 
 import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.*;
+import com.petboarding.models.app.JsonStayService;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
 import com.petboarding.models.dto.StayAdditionalServicesDTO;
@@ -42,6 +43,9 @@ public class StayController extends AppBaseController {
 
     @Autowired
     private PetServiceRepository serviceRepository;
+
+    @Autowired
+    private StayServiceRepository stayServiceRepository;
 
     @Autowired
     private StayStatusRepository stayStatusRepository;
@@ -107,7 +111,12 @@ public class StayController extends AppBaseController {
             return "stays/form";
         }
         for(StayService service: stay.getAdditionalServices()) {
-            System.out.println(service.getDescription());
+            if(service.getService() == null) {
+                stayServiceRepository.delete(service);
+            } else {
+                service.setStay(stay);
+                stayServiceRepository.save(service);
+            }
         }
         stayRepository.save(stay);
         redirectAttributes.addFlashAttribute("infoMessage", "The Stay information has been updated.");
@@ -134,18 +143,25 @@ public class StayController extends AppBaseController {
         return "redirect:/stays/grid";
     }
 
-    private void prepareCommonFormModel(Model model) {
+    private void prepareCommonFormModel(Stay stay, Model model) {
         model.addAttribute("kennels", kennelRepository.findAll());
         model.addAttribute("services", serviceRepository.findByStayService(true));
         model.addAttribute("statuses", stayStatusRepository.findAll());
         model.addAttribute("caretakers", employeeRepository.findByPositionName("caretaker"));
+        model.addAttribute("additionalServices", serviceRepository.findByStayService(false));
+        HashMap<Integer, JsonStayService> mapJsonStayServices = new HashMap<>();
+        for(StayService service: stay.getAdditionalServices()) {
+            mapJsonStayServices.put(service.getId(),
+                    new JsonStayService(service));
+        }
+        model.addAttribute("mapStaysAdditionalServices", mapJsonStayServices);
     }
     private void prepareAddFormModel(Stay stay, Model model) {
         model.addAttribute("formTitle", FORM_NEW_TITLE);
         model.addAttribute("stay", stay);
         model.addAttribute("submitURL", "/stays/add");
         addLocation("New", model);
-        prepareCommonFormModel(model);
+        prepareCommonFormModel(stay, model);
     }
 
 
@@ -157,7 +173,7 @@ public class StayController extends AppBaseController {
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
         model.addAttribute("additionalServices", additionalServicesDTO);
         addLocation("Update", model);
-        prepareCommonFormModel(model);
+        prepareCommonFormModel(stay, model);
     }
 
     private boolean processDateValidation(Stay stay, Model model) {

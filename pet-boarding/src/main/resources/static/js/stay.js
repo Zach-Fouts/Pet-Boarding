@@ -17,16 +17,62 @@ function toggleEndDate() {
     .addClass(endDate.icons[+disabled]);
 }
 
-let additionalServices = [];
+let additionalServices;
+let additionalServiceDialog;
 
 // additional services
 function addAdditionalService() {
-  //$('#btnAddService').removeAttr('data-bs-toggle');
-  $('#additionalServicesContainer').show(200);
+  if (!$('#additionalServicesContainer').is(':visible'))
+    $('#additionalServicesContainer').show(200);
+  openAdditionalServicesDialog();
+}
+
+function openAdditionalServicesDialog(id, index) {
+  $('.add-input').val('').trigger('change');
+  if (id) {
+    $('#btnSaveAdditionalService')
+      .click(() => addOrUpdateAdditionalService(false, id, index))
+      .text('Update');
+    let data = additionalServices[id];
+    for (let name in data) {
+      $('[name="' + name + '"]')
+        .val(data[name])
+        .trigger('change');
+    }
+  } else {
+    // new service
+    $('#btnSaveAdditionalService')
+      .click(() => addOrUpdateAdditionalService(true, id, index))
+      .html('Add <i class="bi-plus"></i>');
+  }
+  additionalServiceDialog.show();
+}
+
+function addOrUpdateAdditionalService(add) {
+  const asTableBody = $('#additionalServicesTable > tbody');
+  if (add) {
+  }
+}
+
+function updateUnitPrice(select) {
+  $('#addPricePerUnit')
+    .val(select.selectedOptions[0].dataset.priceperunit)
+    .trigger('change');
+}
+
+function updateSubtotal() {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+  let subTotal = $('#addQuantity').val() * $('#addPricePerUnit').val();
+  $('#addSubTotal').val(formatter.format(subTotal));
 }
 
 $(function () {
   endDate.input = $('#endDate');
   endDate.value = endDate.input.val();
   endDate.button = $('#btnEnableEndDate');
+  //
+  additionalServiceDialog = new bootstrap.Modal('#addServiceDialog', {});
 });
