@@ -29,6 +29,8 @@ public class Pet extends AbstractEntity {
 
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
+
+
     @Transient
     public String getPhotoPath() {
         if (photo == null || getId() == 0) {return null;}
