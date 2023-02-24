@@ -185,8 +185,17 @@ public class AuthenticationController {
     }
 
     @PostMapping("resetPassword")
-    public String processResetPasswordForm(){
-        return "";
+    public String processResetPasswordForm(@RequestParam String password, @RequestParam String token, Model model){
+        Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
+
+        if (!user.isPresent()) {
+            model.addAttribute("errorMessage", "Unable to reset Password. Please try again.");
+            return "/sign-in/forgotPassword";
+        }
+        passwordResetService.updatePassword(user.get(), password);
+        model.addAttribute(new LoginFormDTO());
+        model.addAttribute("infoMessage", "Your password has been reset.");
+        return "/sign-in/login";
     }
 
 }
