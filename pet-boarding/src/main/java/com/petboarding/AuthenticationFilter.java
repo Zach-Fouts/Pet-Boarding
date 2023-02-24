@@ -21,6 +21,7 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     @Autowired
     AuthenticationController authenticationController;
 
+//    TODO: add password reset to whitelist
     private static final List<String> whitelist = Arrays.asList("/sign-in/login");
     private static final List<String> EMPLOYEE_WHITELIST = Arrays.asList("/users", "/employees");
 

@@ -1,6 +1,6 @@
 package com.petboarding.controllers;
 
-import com.petboarding.controllers.utils.PasswordResetUtil;
+import com.petboarding.service.PasswordResetService;
 import com.petboarding.exception.UserNotFoundException;
 import com.petboarding.models.User;
 import com.petboarding.models.data.EmployeeRepository;
@@ -9,19 +9,15 @@ import com.petboarding.models.data.UserRepository;
 import com.petboarding.models.dto.LoginFormDTO;
 import com.petboarding.models.dto.RegisterFormDTO;
 import com.petboarding.service.EmailService;
-import com.sun.mail.imap.Utility;
 import net.bytebuddy.utility.RandomString;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +43,7 @@ public class AuthenticationController {
     private EmailService emailService;
 
     @Autowired
-    PasswordResetUtil passwordResetUtil;
+    PasswordResetService passwordResetService;
 
     private static final String userSessionKey = "user";
 
@@ -160,8 +156,8 @@ public class AuthenticationController {
 
 
         try {
-            passwordResetUtil.updateResetPasswordToken(token, email);
-            String resetPasswordLink = PasswordResetUtil.getSiteURL(request) + "/reset_password?token=" + token;
+            passwordResetService.updateResetPasswordToken(token, email);
+            String resetPasswordLink = PasswordResetService.getSiteURL(request) + "/sign-in/resetPassword?token=" + token;
             emailService.sendResetPasswordLink(email, resetPasswordLink);
             model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
@@ -175,8 +171,17 @@ public class AuthenticationController {
     }
 
     @GetMapping("resetPassword")
-    public String resetPasswordFrom() {
-        return "";
+    public String resetPasswordFrom(@Param(value = "token") String token, Model model) {
+
+        User user = passwordResetService.getByResetPasswordToken(token);
+        model.addAttribute("token", token);
+
+        if (user == null) {
+            model.addAttribute("errorMessage", "Link has expired");
+            return "/sign-in/login";
+        }
+
+        return "/sign-in/resetPassword";
     }
 
     @PostMapping("resetPassword")

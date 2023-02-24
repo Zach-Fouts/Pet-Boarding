@@ -49,18 +49,17 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom("contact@shopme.com", "Shopme Support");
+        helper.setFrom("Cheese-Smack", "Pet Boarding Service");
         helper.setTo(recipientEmail);
 
-        String subject = "Here's the link to reset your password";
+        String subject = "Link to reset your password";
 
         String content = "<p>Hello,</p>"
                 + "<p>You have requested to reset your password.</p>"
                 + "<p>Click the link below to change your password:</p>"
-                + "<p><a href=\"" + resetPasswordLink + "\">Change my password</a></p>"
+                + "<p><a href=\"" + resetPasswordLink + "\">Change password</a></p>"
                 + "<br>"
-                + "<p>Ignore this email if you do remember your password, "
-                + "or you have not made the request.</p>";
+                + "<p>Ignore this email if you did not made the request.</p>";
 
         helper.setSubject(subject);
 

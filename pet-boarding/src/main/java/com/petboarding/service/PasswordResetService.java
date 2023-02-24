@@ -1,4 +1,4 @@
-package com.petboarding.controllers.utils;
+package com.petboarding.service;
 
 import com.petboarding.exception.UserNotFoundException;
 import com.petboarding.models.Employee;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class PasswordResetUtil {
+public class PasswordResetService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -28,7 +28,6 @@ public class PasswordResetUtil {
             Optional<User> user = Optional.ofNullable(employee.get().getUser());
             if (user.isPresent()) {
                 user.get().setResetPasswordToken(token);
-                userRepository.save(user.get());
             } else {
                 throw new UserNotFoundException("Could not find any user with the email " + email);
             }

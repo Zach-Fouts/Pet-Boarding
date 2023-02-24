@@ -33,7 +33,7 @@ public class User extends AbstractEntity{
     private Boolean active = true;
 
     @Column(length = 30)
-    private String resetPasswordToken;
+    private String resetPasswordToken = null;
 
 
     //<---------------------------------------------Methods--------------------------------------------->
