@@ -117,33 +117,32 @@
             <div id="additionalServicesContainer" th:class="*{additionalServices.size() == 0} ? collapse : null">
                 <table
                     id="additionalServicesTable"
-                    data-toggle="table"
-                    class="table-striped">
+                    data-toggle="table">
                     <thead>
                     <tr>
-                        <th data-halign="center" data-align="center">Qty</th>
-                        <th data-halign="center" >Service</th>
-                        <th data-halign="center" data-align="right">Unit price</th>
+                        <th data-halign="center">Qty</th>
+                        <th data-halign="center">Service</th>
+                        <th data-halign="center">Unit price</th>
                         <th data-halign="center">Description</th>
-                        <th data-halign="center" data-align="right">Subtotal</th>
-                        <th data-halign="center" data-align="center"></th>
+                        <th data-halign="center">Subtotal</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="service, stat: *{additionalServices}">
-                        <td th:text="${service.quantity}"></td>
-                        <td th:text="${service.service.name}"></a></td>
-                        <td class="px-2" th:text="${service.pricePerUnit}"></td>
-                        <td th:text="${service.description}"></td>
-                        <td class="fw-semibold px-2" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
-                        <td>
+                        <td class="text-center" data-field="_quantity" th:text="${service.quantity}"></td>
+                        <td data-field="_serviceText" th:text="${service.service.name}"></td>
+                        <td data-field="_pricePerUnit" class="px-2 text-end" th:text="${service.pricePerUnit}"></td>
+                        <td data-field="_description" th:text="${service.description}"></td>
+                        <td data-field="_subTotal" class="fw-semibold px-2 text-end" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
+                        <td class="text-center">
                             <button type="button" class="btn btn-sm btn-outline-primary" title="Update/View" th:onclick="|openAdditionalServicesDialog(${service.id}, ${stat.index})|"><i class="bi-pen"></i></button>
-                            <button type="button" class="btn btn-sm btn-outline-danger"  title="Remove" th:onclick="|removeAdditionalServices(${service.id}, ${stat.index})|"><i class="bi-dash-lg"></i></button>
-                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].id}">
-                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].service}">
-                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].quantity}">
-                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].pricePerUnit}">
-                            <input type="hidden" th:field="*{additionalServices[__${stat.index}__].description}">
+                            <button type="button" class="btn btn-sm btn-outline-danger"  title="Remove" th:onclick="|openConfirmRemoveDialog(${service.id}, ${stat.index})|"><i class="bi-dash-lg"></i></button>
+                            <input data-field="_id" type="hidden" th:field="*{additionalServices[__${stat.index}__].id}">
+                            <input data-field="_serviceId" type="hidden" th:field="*{additionalServices[__${stat.index}__].service}">
+                            <input data-field="_quantity" type="hidden" th:field="*{additionalServices[__${stat.index}__].quantity}">
+                            <input data-field="_pricePerUnit" type="hidden" th:field="*{additionalServices[__${stat.index}__].pricePerUnit}">
+                            <input data-field="_description" type="hidden" th:field="*{additionalServices[__${stat.index}__].description}">
                         </td>
                     </tr>
                     </tbody>
@@ -237,23 +236,37 @@
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="modal" id="confirmRemoveDialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>
+                        Do you wish to remove the service?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="btnRemoveService" type="button" class="btn btn-danger">Remove</button>
+                </div>
+            </div>
+        </div>
     </div>
     <template id="newAdditionalServiceRow">
         <tr data-index="">
-            <td field="_quantity" style="text-align: center; "></td>
-            <td field="_serviceText"></td>
-            <td field="_pricePerUnit" class="px-2" style="text-align: right; "></td>
-            <td field="_description"></td>
-            <td field="_subTotal" class="fw-semibold px-2" style="text-align: right; "></td>
+            <td data-field="_quantity" class="text-center"></td>
+            <td data-field="_serviceText"></td>
+            <td data-field="_pricePerUnit" class="px-2 text-end"></td>
+            <td data-field="_description"></td>
+            <td data-field="_subTotal" class="fw-semibold px-2 text-end"></td>
             <td style="text-align: center; ">
                 <button id="_btnEdit" type="button" class="btn btn-sm btn-outline-primary" title="Update/View"><i class="bi-pen"></i></button>
                 <button id="_btnRemove" type="button" class="btn btn-sm btn-outline-danger" title="Remove"><i class="bi-dash-lg"></i></button>
-            <input field="_id" type="hidden" id="additionalServices__index__.id" name="additionalServices[__index__].id" value="1">
-            <input field="_serviceId" type="hidden" id="additionalServices__index__.service" name="additionalServices[__index__].service" value="">
-            <input field="_quantity" type="hidden" id="additionalServices__index__.quantity" name="additionalServices[__index__].quantity" value="">
-            <input field="_pricePerUnit" type="hidden" id="additionalServices__index__.pricePerUnit" name="additionalServices[__index__].pricePerUnit" value="">
-            <input field="_description" type="hidden" id="additionalServices__index__.description" name="additionalServices[__index__].description" value="">
+                <input data-field="_id" type="hidden" id="additionalServices__index__.id" name="additionalServices[__index__].id" value="">
+                <input data-field="_serviceId" type="hidden" id="additionalServices__index__.service" name="additionalServices[__index__].service" value="">
+                <input data-field="_quantity" type="hidden" id="additionalServices__index__.quantity" name="additionalServices[__index__].quantity" value="">
+                <input data-field="_pricePerUnit" type="hidden" id="additionalServices__index__.pricePerUnit" name="additionalServices[__index__].pricePerUnit" value="">
+                <input data-field="_description" type="hidden" id="additionalServices__index__.description" name="additionalServices[__index__].description" value="">
             </td>
         </tr>
     </template>

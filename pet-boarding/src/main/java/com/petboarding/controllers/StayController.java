@@ -5,11 +5,7 @@ import com.petboarding.models.*;
 import com.petboarding.models.app.JsonStayService;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
-import com.petboarding.models.dto.StayAdditionalServicesDTO;
-import jdk.swing.interop.SwingInterOpUtils;
-import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -167,12 +160,9 @@ public class StayController extends AppBaseController {
 
 
     private void prepareUpdateFormModel(Stay stay, Model model) {
-        StayAdditionalServicesDTO additionalServicesDTO = new StayAdditionalServicesDTO();
-        additionalServicesDTO.setServices(stay.getAdditionalServices());
         model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${confirmation}", stay.getReservation().getConfirmation()));
         model.addAttribute("stay", stay);
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
-        model.addAttribute("additionalServices", additionalServicesDTO);
         addLocation("Update", model);
         prepareCommonFormModel(stay, model);
     }
