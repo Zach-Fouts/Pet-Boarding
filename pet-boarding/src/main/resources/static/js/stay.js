@@ -17,6 +17,7 @@ function toggleEndDate() {
     .addClass(endDate.icons[+disabled]);
 }
 
+let newCount;
 let additionalServices;
 let additionalServiceDialog;
 
@@ -48,9 +49,34 @@ function openAdditionalServicesDialog(id, index) {
   additionalServiceDialog.show();
 }
 
-function addOrUpdateAdditionalService(add) {
-  const asTableBody = $('#additionalServicesTable > tbody');
+function addOrUpdateAdditionalService(add, id, index) {
+  const tableBody = $('#additionalServicesTable > tbody');
   if (add) {
+    index = currentIndex;
+    let newId = 'new_' + newCount++;
+    let template = $($('#newAdditionalServiceRow')[0].content.cloneNode(true));
+    template.find('tr').attr('data-index', index);
+    let data = {};
+    for (let { name, value } of $('#addServiceForm').serializeArray()) {
+      data[name] = value;
+      template
+        .find(`input[field=_${name}]`)
+        .val(value)
+        .attr('id', (i, value) => value.replace('__index__', index))
+        .attr('name', (i, value) => value.replace('__index__', index));
+      template.find(`td[field=_${name}]`).text(value);
+    }
+    template
+      .find('td[field=_serviceText]')
+      .text($('#addService option:selected').text());
+    template
+      .find('#_btnEdit')
+      .click(() => openAdditionalServicesDialog(newId, index));
+    template
+      .find('#_btnRemove')
+      .click(() => removeServicesDialog(newId, index));
+    $('#additionalServicesTable > tbody').append(template);
+    currentIndex++;
   }
 }
 
@@ -74,5 +100,6 @@ $(function () {
   endDate.value = endDate.input.val();
   endDate.button = $('#btnEnableEndDate');
   //
+  newCount = 0;
   additionalServiceDialog = new bootstrap.Modal('#addServiceDialog', {});
 });

@@ -110,6 +110,7 @@ public class StayController extends AppBaseController {
             prepareUpdateFormModel(stay, model);
             return "stays/form";
         }
+        stayRepository.save(stay);
         for(StayService service: stay.getAdditionalServices()) {
             if(service.getService() == null) {
                 stayServiceRepository.delete(service);
@@ -118,7 +119,7 @@ public class StayController extends AppBaseController {
                 stayServiceRepository.save(service);
             }
         }
-        stayRepository.save(stay);
+
         redirectAttributes.addFlashAttribute("infoMessage", "The Stay information has been updated.");
         return "redirect:" + stay.getId();
     }

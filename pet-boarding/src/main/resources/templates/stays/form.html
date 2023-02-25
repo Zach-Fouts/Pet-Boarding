@@ -11,6 +11,7 @@
         <script src="/js/stay.js"></script>
         <script th:inline="javascript">
             additionalServices = [[${mapStaysAdditionalServices}]];
+            currentIndex = Object.keys(additionalServices).length;
         </script>
     </th:block>
 </head>
@@ -189,7 +190,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="addServiceForm" class="row g-2">
-                        <input type="hidden" id="addId" name="id">
+                        <input type="hidden" id="addId" name="id" class="add-input">
                         <div class="col-12 row mb-1">
                             <label for="addQuantity" class="col-sm-3 col-form-label">Quantity</label>
                             <div class="col-sm-3">
@@ -238,7 +239,24 @@
         </div>
 
     </div>
-
+    <template id="newAdditionalServiceRow">
+        <tr data-index="">
+            <td field="_quantity" style="text-align: center; "></td>
+            <td field="_serviceText"></td>
+            <td field="_pricePerUnit" class="px-2" style="text-align: right; "></td>
+            <td field="_description"></td>
+            <td field="_subTotal" class="fw-semibold px-2" style="text-align: right; "></td>
+            <td style="text-align: center; ">
+                <button id="_btnEdit" type="button" class="btn btn-sm btn-outline-primary" title="Update/View"><i class="bi-pen"></i></button>
+                <button id="_btnRemove" type="button" class="btn btn-sm btn-outline-danger" title="Remove"><i class="bi-dash-lg"></i></button>
+            <input field="_id" type="hidden" id="additionalServices__index__.id" name="additionalServices[__index__].id" value="1">
+            <input field="_serviceId" type="hidden" id="additionalServices__index__.service" name="additionalServices[__index__].service" value="">
+            <input field="_quantity" type="hidden" id="additionalServices__index__.quantity" name="additionalServices[__index__].quantity" value="">
+            <input field="_pricePerUnit" type="hidden" id="additionalServices__index__.pricePerUnit" name="additionalServices[__index__].pricePerUnit" value="">
+            <input field="_description" type="hidden" id="additionalServices__index__.description" name="additionalServices[__index__].description" value="">
+            </td>
+        </tr>
+    </template>
 </div>
 </body>
 </html>
