@@ -90,8 +90,17 @@ public class KennelController extends AppBaseController{
         Iterable<Kennel> kennels;
         kennels = kennelRepository.findAll();
 
+        Iterable<Stay> stays;
+        stays = stayRepository.findAll();
+
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+
         this.setActiveModule("kennels", model);
         model.addAttribute("kennels", kennels);
+        model.addAttribute("stays", stays);
+        model.addAttribute("TODAY", timestamp);
         return "kennels/kennelGrid";
     }
 }
