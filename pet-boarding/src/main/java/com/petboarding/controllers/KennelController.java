@@ -1,17 +1,15 @@
 package com.petboarding.controllers;
 
-import com.petboarding.models.Kennel;
-import com.petboarding.models.KennelSVGShape;
-import com.petboarding.models.Pet;
-import com.petboarding.models.Stay;
-import com.petboarding.models.data.KennelRepository;
-import com.petboarding.models.data.KennelSVGShapeRepository;
-import com.petboarding.models.data.PetRepository;
-import com.petboarding.models.data.StayRepository;
+import com.petboarding.models.*;
+import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("kennels")
@@ -29,17 +27,24 @@ public class KennelController extends AppBaseController{
     @Autowired
     private StayRepository stayRepository;
 
+    @Autowired
+    TestStayRepository testStayRepository;
+
 
     @RequestMapping("")
     public String showKennelMap(Model model){
-        Iterable<Pet> pets;
-        pets = petRepository.findAll();
+        Iterable<Kennel> kennels;
+        kennels = kennelRepository.findAll();
+
+        Iterable<KennelSVGShape> kennelSVGs;
+        kennelSVGs = kennelSVGShapeRepository.findAll();
 
         Iterable<Stay> stays;
         stays = stayRepository.findAll();
 
         this.setActiveModule("kennels", model);
-        model.addAttribute("pets", pets);
+        model.addAttribute("kennels", kennels);
+        model.addAttribute("kennelSVGs", kennelSVGs);
         model.addAttribute("stays", stays);
         return "kennels/kennelMap";
     }
@@ -53,17 +58,13 @@ public class KennelController extends AppBaseController{
         Iterable<KennelSVGShape> kennelSVGs;
         kennelSVGs = kennelSVGShapeRepository.findAll();
 
-
-        Iterable<Pet> pets;
-        pets = petRepository.findAll();
-
         Iterable<Stay> stays;
         stays = stayRepository.findAll();
+
 
         this.setActiveModule("kennels", model);
         model.addAttribute("kennels", kennels);
         model.addAttribute("kennelSVGs", kennelSVGs);
-        model.addAttribute("pets", pets);
         model.addAttribute("stays", stays);
         return "kennels/testPage";
     }
