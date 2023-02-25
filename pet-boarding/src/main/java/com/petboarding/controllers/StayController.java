@@ -78,6 +78,7 @@ public class StayController extends AppBaseController {
             return "stays/form";
         }
         stayRepository.save(newStay);
+        updateAdditionalServices(newStay);
         return "redirect:/stays";
     }
 
@@ -104,15 +105,7 @@ public class StayController extends AppBaseController {
             return "stays/form";
         }
         stayRepository.save(stay);
-        for(StayService service: stay.getAdditionalServices()) {
-            if(service.getService() == null) {
-                stayServiceRepository.delete(service);
-            } else {
-                service.setStay(stay);
-                stayServiceRepository.save(service);
-            }
-        }
-
+        updateAdditionalServices(stay);
         redirectAttributes.addFlashAttribute("infoMessage", "The Stay information has been updated.");
         return "redirect:" + stay.getId();
     }
@@ -135,6 +128,24 @@ public class StayController extends AppBaseController {
             }
         }
         return "redirect:/stays/grid";
+    }
+
+    @GetMapping("checkout/{id}")
+    public String processCheckoutAndShowInvoice(@PathVariable Integer id,
+                                                Model model,
+                                                RedirectAttributes redirectAttributes) {
+        return "redirect: /invoices/update/"; // add invoice id
+    }
+
+    private void updateAdditionalServices(Stay stay) {
+        for(StayService service: stay.getAdditionalServices()) {
+            if(service.getService() == null) {
+                stayServiceRepository.delete(service);
+            } else {
+                service.setStay(stay);
+                stayServiceRepository.save(service);
+            }
+        }
     }
 
     private void prepareCommonFormModel(Stay stay, Model model) {

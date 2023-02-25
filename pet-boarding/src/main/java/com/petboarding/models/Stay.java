@@ -1,15 +1,23 @@
 package com.petboarding.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Stay extends AbstractEntity{
+
+    @CreationTimestamp
+    @Column(name = "checkin_time", updatable = false)
+    private Timestamp checkInTime = null;
+
+    @Column(name = "checkout_time")
+    private Timestamp checkOutTime = null;
 
     @Valid
     @OneToOne
@@ -17,11 +25,12 @@ public class Stay extends AbstractEntity{
     private Reservation reservation;
 
     @Valid
+    @NotNull(message = "Select a kennel.")
     @ManyToOne
     private Kennel kennel;
 
     @Valid
-    @NotNull
+    @NotNull(message = "Select a caretaker")
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
@@ -37,6 +46,22 @@ public class Stay extends AbstractEntity{
     private Invoice invoice;
 
     public Stay() {
+    }
+
+    public Timestamp getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(Timestamp checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public Timestamp getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(Timestamp checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 
     public Reservation getReservation() {
