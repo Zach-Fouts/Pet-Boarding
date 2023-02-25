@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 
 @Controller
@@ -42,10 +44,15 @@ public class KennelController extends AppBaseController{
         Iterable<Stay> stays;
         stays = stayRepository.findAll();
 
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+
         this.setActiveModule("kennels", model);
         model.addAttribute("kennels", kennels);
         model.addAttribute("kennelSVGs", kennelSVGs);
         model.addAttribute("stays", stays);
+        model.addAttribute("TODAY", timestamp);
         return "kennels/kennelMap";
     }
 
@@ -61,11 +68,14 @@ public class KennelController extends AppBaseController{
         Iterable<Stay> stays;
         stays = stayRepository.findAll();
 
-
+        Date date = new Date();
+//        Timestamp timestamp = new Timestamp(date.getTime());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         this.setActiveModule("kennels", model);
         model.addAttribute("kennels", kennels);
         model.addAttribute("kennelSVGs", kennelSVGs);
         model.addAttribute("stays", stays);
+        model.addAttribute("DEAN", timestamp);
         return "kennels/testPage";
     }
     /*****************************************************************************/
