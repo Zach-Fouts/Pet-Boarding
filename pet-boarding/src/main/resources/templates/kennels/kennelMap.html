@@ -44,7 +44,7 @@
 
         <!--- container for a kennel, basically a rectangle. Coordinates scale with image --->
         <g th:each="kennel: ${kennels}" th:object="${kennel}" class="icon" fill-opacity="0">
-            <rect th:id="${kennel.id}" th:x="${kennel.kennelSVGShape.getXPos()}" th:y="${kennel.kennelSVGShape.yPos}" th:width="${kennel.kennelSVGShape.width}" th:height="${kennel.kennelSVGShape.height}" onclick="modalClick(this.id)"/>
+            <rect th:id="${kennel.id}" th:x="${kennel.getXPos()}" th:y="${kennel.yPos}" th:width="${kennel.width}" th:height="${kennel.height}" onclick="modalClick(this.id)"/>
         </g>
     </svg>
 
