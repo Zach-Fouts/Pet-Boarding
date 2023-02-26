@@ -46,32 +46,6 @@ public class KennelController extends AppBaseController{
         return "kennels/kennelMap";
     }
 
-    /*****************************************************************************/
-    @RequestMapping("/testPage")
-    public String showTestMap(Model model){
-        Iterable<Kennel> kennels;
-        kennels = kennelRepository.findAll();
-
-
-        Iterable<Stay> stays;
-        stays = stayRepository.findAll();
-
-        Date date = new Date();
-//        Timestamp timestamp = new Timestamp(date.getTime());
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.setActiveModule("kennels", model);
-        model.addAttribute("kennels", kennels);
-        model.addAttribute("stays", stays);
-        model.addAttribute("DEAN", timestamp);
-        return "kennels/testPage";
-    }
-    /*****************************************************************************/
-
-
-
-
-
-
     @RequestMapping("/grid")
     public String showKennelGrid(Model model){
         Iterable<Kennel> kennels;
