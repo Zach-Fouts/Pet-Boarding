@@ -70,7 +70,7 @@ public class ReservationController extends AppBaseController{
             }
         }
         model.addAttribute("owners", ownerRepository.findAll());
-        model.addAttribute("services", serviceRepository.findAll());
+        model.addAttribute("services", serviceRepository.findByStayService(true));
         model.addAttribute("statuses", reservationStatusRepository.findAll());
     }
 
@@ -114,11 +114,11 @@ public class ReservationController extends AppBaseController{
         message.setTo(newReservation.getPet().getOwner().getEmail());
         message.setSubject("Reservation Confirmation");
         message.setText(body);
-        emailService.send(message);
-        redirectAttributes.addFlashAttribute("infoMessage", "Reservation info sent to email");
+//        emailService.send(message);
         if(checkInOnSave) {
             return "redirect:/stays/add?reservationId=" + newReservation.getId();
         }
+        redirectAttributes.addFlashAttribute("infoMessage", "Reservation info sent to email");
         return "redirect:/reservations/grid";
     }
 

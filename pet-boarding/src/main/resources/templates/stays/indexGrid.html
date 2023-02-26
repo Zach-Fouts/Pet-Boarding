@@ -49,7 +49,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="stay: ${stays}" th:Object="${stay}">
+            <tr th:each="stay: ${stays}" th:Object="${stay}" th:class="*{active} ? null : 'inactive'">
                 <td><a class="fw-semibold link-primary" th:href="@{/reservations/detail?reservationId={reservationId} (reservationId=*{reservation.id})}"
                        th:text="*{reservation.confirmation}"></a></td>
                 <td th:text="*{#dates.format(reservation.startDateTime, 'MM/dd/yyyy')}"></td>
@@ -64,9 +64,9 @@
                        th:text="*{employee.getFullName()}"></a></td>
                 <td><span class="status-indicator bg-gradient" th:title="*{status.name}" th:style="|background-color: *{status.color}|"></span></td>
                 <td>
-                    <a class="btn btn-primary" th:href="@{/stays/checkout/{id}(id=*{id})}" title="Checkout"><i class="bi-receipt"></i></a>
-                    <a class="btn btn-primary" th:href="@{/stays/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{reservation.confirmation}','/stays', *{id});|"><i class="bi-trash"></i></a>
+                    <a class="btn btn-sm btn-primary" th:href="@{/stays/checkout/{id}(id=*{id})}" title="Checkout"><i class="bi-receipt"></i></a>
+                    <a class="btn btn-sm btn-primary" th:href="@{/stays/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
+                    <a class="btn btn-sm btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{reservation.confirmation}','/stays', *{id});|"><i class="bi-trash"></i></a>
                 </td>
             </tr>
             </tbody>

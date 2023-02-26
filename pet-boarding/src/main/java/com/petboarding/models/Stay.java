@@ -1,11 +1,23 @@
 package com.petboarding.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Stay extends AbstractEntity{
+
+    @CreationTimestamp
+    @Column(name = "checkin_time", updatable = false)
+    private Timestamp checkInTime = null;
+
+    @Column(name = "checkout_time")
+    private Timestamp checkOutTime = null;
 
     @Valid
     @OneToOne
@@ -14,12 +26,13 @@ public class Stay extends AbstractEntity{
 
     //TODO: Add support for Kennel model
     @Valid
+    @NotNull(message = "Select a kennel.")
     @ManyToOne
     @JoinColumn(name = "kennel_id")
     private Kennel kennel;
 
     @Valid
-    @NotNull
+    @NotNull(message = "Select a caretaker")
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
@@ -28,10 +41,29 @@ public class Stay extends AbstractEntity{
     @JoinColumn(name = "status_id")
     private StayStatus status;
 
+    @OneToMany(mappedBy = "stay")
+    private List<StayService> additionalServices = new ArrayList<>();
+
     @OneToOne(mappedBy = "stay")
     private Invoice invoice;
 
     public Stay() {
+    }
+
+    public Timestamp getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(Timestamp checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public Timestamp getCheckOutTime() {
+        return checkOutTime;
+    }
+
+    public void setCheckOutTime(Timestamp checkOutTime) {
+        this.checkOutTime = checkOutTime;
     }
 
     public Reservation getReservation() {
@@ -58,4 +90,11 @@ public class Stay extends AbstractEntity{
         this.status = status;
     }
 
+    public List<StayService> getAdditionalServices() {
+        return additionalServices;
+    }
+
+    public void setAdditionalServices(List<StayService> additionalServices) {
+        this.additionalServices = additionalServices;
+    }
 }

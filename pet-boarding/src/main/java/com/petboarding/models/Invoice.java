@@ -1,25 +1,29 @@
 package com.petboarding.models;
 
+import com.petboarding.controllers.utils.DateUtils;
+import com.petboarding.models.data.InvoiceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Set;
 
 @Entity
 public class Invoice extends AbstractEntity{
+    @Column(nullable = false, updatable = false)
+    private Date date;
 
-    @Column(nullable = false, columnDefinition = "timestamp default now()")
-    private LocalDateTime createdOn;
-
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Integer number;
 
     @OneToOne
-    @JoinColumn(name = "stay_id")
+    @JoinColumn(name = "stay_id", updatable = false)
     private Stay stay;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", updatable = false)
     private Owner owner;
 
     @ManyToOne
@@ -31,12 +35,12 @@ public class Invoice extends AbstractEntity{
 
     public Invoice() {}
 
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
+    public Date getDate() {
+        return date;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Integer getNumber() {
@@ -45,6 +49,10 @@ public class Invoice extends AbstractEntity{
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public String getFullNumber() {
+        return DateUtils.format(this.date, "yyyy") + "." + this.number;
     }
 
     public Stay getStay() {
@@ -78,4 +86,13 @@ public class Invoice extends AbstractEntity{
     public void setDetails(Set<InvoiceDetail> details) {
         this.details = details;
     }
+
+    public String getServicesList() {
+        return "Services_list";
+    }
+
+    public Double getTotal() {
+        return 100.00;
+    }
+
 }
