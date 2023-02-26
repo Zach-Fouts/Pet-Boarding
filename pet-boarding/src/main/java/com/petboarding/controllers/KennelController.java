@@ -21,9 +21,6 @@ public class KennelController extends AppBaseController{
     private PetRepository petRepository;
 
     @Autowired
-    private KennelSVGShapeRepository kennelSVGShapeRepository;
-
-    @Autowired
     private KennelRepository kennelRepository;
 
     @Autowired
@@ -35,9 +32,6 @@ public class KennelController extends AppBaseController{
         Iterable<Kennel> kennels;
         kennels = kennelRepository.findAll();
 
-        Iterable<KennelSVGShape> kennelSVGs;
-        kennelSVGs = kennelSVGShapeRepository.findAll();
-
         Iterable<Stay> stays;
         stays = stayRepository.findAll();
 
@@ -47,40 +41,10 @@ public class KennelController extends AppBaseController{
 
         this.setActiveModule("kennels", model);
         model.addAttribute("kennels", kennels);
-        model.addAttribute("kennelSVGs", kennelSVGs);
         model.addAttribute("stays", stays);
         model.addAttribute("TODAY", timestamp);
         return "kennels/kennelMap";
     }
-
-    /*****************************************************************************/
-    @RequestMapping("/testPage")
-    public String showTestMap(Model model){
-        Iterable<Kennel> kennels;
-        kennels = kennelRepository.findAll();
-
-        Iterable<KennelSVGShape> kennelSVGs;
-        kennelSVGs = kennelSVGShapeRepository.findAll();
-
-        Iterable<Stay> stays;
-        stays = stayRepository.findAll();
-
-        Date date = new Date();
-//        Timestamp timestamp = new Timestamp(date.getTime());
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.setActiveModule("kennels", model);
-        model.addAttribute("kennels", kennels);
-        model.addAttribute("kennelSVGs", kennelSVGs);
-        model.addAttribute("stays", stays);
-        model.addAttribute("DEAN", timestamp);
-        return "kennels/testPage";
-    }
-    /*****************************************************************************/
-
-
-
-
-
 
     @RequestMapping("/grid")
     public String showKennelGrid(Model model){

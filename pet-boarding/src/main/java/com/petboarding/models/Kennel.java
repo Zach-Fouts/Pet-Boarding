@@ -1,9 +1,6 @@
 package com.petboarding.models;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -20,19 +17,17 @@ public class Kennel extends AbstractEntity{
     @JoinColumn(name = "id")
     private List<Stay> stays = new ArrayList<>();
 
-    @OneToOne(mappedBy ="kennel")
-    private KennelSVGShape kennelSVGShape;
+    @Column(name="x_Pos", precision = 7, scale = 3)
+    private float xPos;
+    @Column(name="y_Pos", precision = 7, scale = 3)
+    private float yPos;
+    @Column(precision = 7, scale = 3)
+    private float width;
+    @Column(precision = 7, scale = 3)
+    private float height;
 
 
     public Kennel() {
-    }
-
-    public KennelSVGShape getKennelSVGShape() {
-        return kennelSVGShape;
-    }
-
-    public void setKennelSVGShape(KennelSVGShape kennelSVGShape) {
-        this.kennelSVGShape = kennelSVGShape;
     }
 
     public String getName() {
@@ -41,5 +36,37 @@ public class Kennel extends AbstractEntity{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public float getXPos() {
+        return xPos;
+    }
+
+    public void setXPos(float xPos) {
+        this.xPos = xPos;
+    }
+
+    public float getYPos() {
+        return yPos;
+    }
+
+    public void setYPos(float yPos) {
+        this.yPos = yPos;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 }
