@@ -23,7 +23,7 @@
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Stay</span>
         <div th:if="${stay.id}" class="form-toolbar d-flex ms-auto">
-            <a class="btn btn-primary ms-auto" title="Start check-out">
+            <a class="btn btn-primary ms-auto" title="Start check-out" th:href="@{/stays/checkout/{id}(id=${stay.id})}">
                 <i class="bi bi-receipt"></i>
                 <span class="d-none d-sm-inline">Check-Out</span>
             </a>

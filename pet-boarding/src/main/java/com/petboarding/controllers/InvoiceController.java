@@ -40,7 +40,7 @@ public class InvoiceController extends AppBaseController{
     @GetMapping("add")
     public String displayAddStayForm(Model model) {
         prepareAddFormModel(new Invoice(), model);
-        return "stays/form";
+        return "invoices/form";
     }
 
     @GetMapping("update/{id}")
@@ -51,7 +51,7 @@ public class InvoiceController extends AppBaseController{
             return "redirect: /invoices";
         }
         prepareUpdateFormModel(optInvoice.get(), model);
-        return "stays/form";
+        return "invoices/form";
     }
 
     private void prepareCommonFormModel(Invoice invoice, Model model) {

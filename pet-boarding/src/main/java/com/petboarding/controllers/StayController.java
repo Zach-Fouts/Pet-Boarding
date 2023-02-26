@@ -1,6 +1,7 @@
 package com.petboarding.controllers;
 
 import com.petboarding.controllers.utils.DateUtils;
+import com.petboarding.controllers.utils.InvoiceUtils;
 import com.petboarding.models.*;
 import com.petboarding.controllers.utils.JsonStayService;
 import com.petboarding.models.app.Module;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Controller
@@ -42,6 +45,12 @@ public class StayController extends AppBaseController {
 
     @Autowired
     private StayStatusRepository stayStatusRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private InvoiceDetailRepository invoiceDetailRepository;
 
     @GetMapping
     public String displayStaysCalendar(Model model) {
@@ -134,7 +143,44 @@ public class StayController extends AppBaseController {
     public String processCheckoutAndShowInvoice(@PathVariable Integer id,
                                                 Model model,
                                                 RedirectAttributes redirectAttributes) {
-        return "redirect: /invoices/update/"; // add invoice id
+        Optional<Stay> optStay = stayRepository.findById(id);
+        if(optStay.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The stay wasn't found.");
+            return "redirect: /stays";
+        }
+        Stay stay = optStay.get();
+        Invoice invoice = new Invoice();
+        invoice.setDate(new Date());
+        invoice.setNumber(invoiceRepository.findNextNumberByDate(invoice.getDate()).intValue());
+        invoice.setStatus(InvoiceUtils.getActiveStatus());
+        stay.setCheckOutTime(new Timestamp(invoice.getDate().getTime()));
+        stayRepository.save(stay);
+        invoice.setStay(stay);
+        invoiceRepository.save(invoice);
+        // generating detail
+        Long daysStay = DateUtils.getDaysDifference(stay.getCheckInTime(), stay.getCheckOutTime());
+        InvoiceDetail stayDetail = new InvoiceDetail();
+        stayDetail.setInvoice(invoice);
+        stayDetail.setQuantity(daysStay.floatValue());
+        stayDetail.setService(stay.getReservation().getService());
+        stayDetail.setPricePerUnit(stay.getReservation().getService().getPricePerUnit());
+        stayDetail.setDescription("Stay from " +
+                DateUtils.format(stay.getCheckInTime(), "MM/dd/yyyy") +
+                " to " +
+                DateUtils.format(stay.getCheckOutTime(), "MM/dd/yyyy"));
+        invoiceDetailRepository.save(stayDetail);
+        for(StayService service: stay.getAdditionalServices()) {
+            InvoiceDetail detail = new InvoiceDetail(service);
+            detail.setInvoice(invoice);
+            invoiceDetailRepository.save(detail);
+        }
+        return "redirect:/invoices/update/" + invoice.getId();
+    }
+
+    @GetMapping("test")
+    public String testing(Model model) {
+        model.addAttribute("infoMessage","");
+        return "index";
     }
 
     private void updateAdditionalServices(Stay stay) {

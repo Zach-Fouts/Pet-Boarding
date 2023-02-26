@@ -61,6 +61,7 @@ public class Invoice extends AbstractEntity{
 
     public void setStay(Stay stay) {
         this.stay = stay;
+        this.owner = stay.getReservation().getPet().getOwner();
     }
 
     public Owner getOwner() {
