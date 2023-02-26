@@ -2,7 +2,7 @@ package com.petboarding.controllers;
 
 import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.*;
-import com.petboarding.models.app.JsonStayService;
+import com.petboarding.controllers.utils.JsonStayService;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +121,7 @@ public class StayController extends AppBaseController {
                 stay.setActive(false);
                 stayRepository.save(stay);
                 redirectAttributes.addFlashAttribute("infoMessage", "Stay <strong>#" + stay.getReservation().getConfirmation() +
-                        "</strong> is linked to the Invoice #<strong>" + stay.getInvoice().getFormattedNumber() + "</strong>, so it will be set inactive.");
+                        "</strong> is linked to the Invoice #<strong>" + stay.getInvoice().getFullNumber() + "</strong>, so it will be set inactive.");
             } else {
                 stayRepository.deleteById(id);
                 redirectAttributes.addFlashAttribute("infoMessage", "Stay was successfully deleted.");

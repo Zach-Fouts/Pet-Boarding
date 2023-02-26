@@ -50,7 +50,7 @@ public class CalendarEventUtils {
                 stays,
                 getReservation,
                 getTitle,
-                "/stays/detail/",
+                "/stays/update/",
                 null
         );
     }

@@ -1,4 +1,4 @@
-package com.petboarding.models.app;
+package com.petboarding.controllers.utils;
 
 import com.petboarding.models.StayService;
 import com.petboarding.models.data.StayServiceRepository;
