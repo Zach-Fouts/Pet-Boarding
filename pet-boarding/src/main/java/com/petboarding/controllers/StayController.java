@@ -3,7 +3,7 @@ package com.petboarding.controllers;
 import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.controllers.utils.InvoiceUtils;
 import com.petboarding.models.*;
-import com.petboarding.controllers.utils.JsonStayService;
+import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Controller
@@ -200,10 +199,10 @@ public class StayController extends AppBaseController {
         model.addAttribute("statuses", stayStatusRepository.findAll());
         model.addAttribute("caretakers", employeeRepository.findByPositionName("caretaker"));
         model.addAttribute("additionalServices", serviceRepository.findByStayService(false));
-        HashMap<Integer, JsonStayService> mapJsonStayServices = new HashMap<>();
+        HashMap<Integer, JsonService> mapJsonStayServices = new HashMap<>();
         for(StayService service: stay.getAdditionalServices()) {
             mapJsonStayServices.put(service.getId(),
-                    new JsonStayService(service));
+                    new JsonService(service));
         }
         model.addAttribute("mapStaysAdditionalServices", mapJsonStayServices);
     }

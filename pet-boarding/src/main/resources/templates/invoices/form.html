@@ -8,10 +8,10 @@
         <link rel="stylesheet" href="/css/stay.css">
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
         <script src="/js/uiUtils.js"></script>
-        <script src="/js/stay.js"></script>
+        <script src="/js/invoice.js"></script>
         <script th:inline="javascript">
-            additionalServices = [[${mapStaysAdditionalServices}]];
-            currentIndex = Object.keys(additionalServices).length;
+            servicesMap = [[${mapInvoiceDetails}]];
+            currentIndex = Object.keys(servicesMap).length;
         </script>
     </th:block>
 </head>
@@ -21,63 +21,63 @@
         <a class="btn btn-secondary" href="/stays" title="Go back to Stays">
             <i class="bi bi-box-arrow-in-left"></i>
         </a>
-        <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Stay</span>
-        <div th:if="${stay.id}" class="form-toolbar d-flex ms-auto">
+        <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Invoice</span>
+        <div th:if="${invoice.id}" class="form-toolbar d-flex ms-auto">
             <a class="btn btn-primary ms-auto" title="Start check-out">
-                <i class="bi bi-receipt"></i>
-                <span class="d-none d-sm-inline">Check-Out</span>
+                <i class="bi bi-cash-coin"></i>
+                <span class="d-none d-sm-inline">Pay</span>
             </a>
             <div class="vr mx-2"></div>
-            <a class="btn btn-danger" title="Delete this stay" th:href="|javascript:openDeleteDialog('${stay.reservation.confirmation}','/stays', ${stay.id});|">
-                <i class="bi-trash"></i>
-                <span class="d-none d-sm-inline">Delete</span>
+            <a class="btn btn-danger" title="Cancel this invoice" th:href="|javascript:openDeleteDialog('${invoice.getFullNumber()}','/invoices', ${invoice.id});|">
+                <i class="bi-xcircle"></i>
+                <span class="d-none d-sm-inline">Cancel</span>
             </a>
         </div>
     </div>
-    <form id="mainForm" class="row g-3 " th:Object="${stay}" method="POST" th:action="@{${submitURL}}">
+    <form id="mainForm" class="row g-3 " th:Object="${invoice}" method="POST" th:action="@{${submitURL}}">
         <input type="hidden" id="id" th:field="*{id}">
         <!--v Reservation v-->
-        <input type="hidden" id="reservationId" th:field="*{reservation}">
-        <div class="row bg-light-subtle shadow-sm mx-0 mt-1 py-1">
-            <label for="confirmationCode" class="col-sm-2 col-form-label">Confirmation #</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control-plaintext fw-bold text-lg" id="confirmationCode" th:value="*{reservation.confirmation}" readonly tabindex="-1">
-            </div>
-            <label for="petOwner" class="col-sm-2 col-form-label">Parent</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control-plaintext" id="petOwner" th:value="*{reservation.pet.owner.getFullName()}" readonly tabindex="-1">
-            </div>
-            <label for="pet" class="col-sm-2 col-form-label">Pet</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control-plaintext" id="pet" th:value="*{reservation.pet.petName}" readonly tabindex="-1">
-            </div>
-            <label for="startDate" class="col-sm-2 col-form-label">From</label>
-            <div class="col-sm-4">
-                <input type="date" class="form-control-plaintext" id="startDate" data-date-format="mm/dd/yyyy" th:value="*{#dates.format(reservation.startDateTime, 'yyyy-MM-dd')}" readonly tabindex="-1">
-            </div>
-            <label for="endDate" class="col-sm-2 col-form-label">To</label>
-            <div class="col-sm-4">
-                <div class="col-sm-10">
-                    <div class="input-group">
-                        <input type="date" class="form-control" id="endDate" name="endDateValue" data-date-format="mm/dd/yyyy" th:field="*{reservation.endDateTime}"
-                        disabled>
-                        <button id="btnEnableEndDate" type="button" class="btn btn-outline-primary" onclick="toggleEndDate()" >
-                            <i class="bi-pen"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <label for="reservationComments" class="col-sm-2 col-form-label">Comments</label>
-            <div class="col-sm-10">
-                <textarea class="form-control-plaintext" id="reservationComments" th:text="*{reservation.comments}" rows="2" readonly tabindex="-1"></textarea>
-            </div>
-        </div>
+<!--        <input type="hidden" id="reservationId" th:field="*{reservation}">-->
+<!--        <div class="row bg-light-subtle shadow-sm mx-0 mt-1 py-1">-->
+<!--            <label for="confirmationCode" class="col-sm-2 col-form-label">Confirmation #</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                <input type="text" class="form-control-plaintext fw-bold text-lg" id="confirmationCode" th:value="*{reservation.confirmation}" readonly tabindex="-1">-->
+<!--            </div>-->
+<!--            <label for="petOwner" class="col-sm-2 col-form-label">Parent</label>-->
+<!--            <div class="col-sm-4">-->
+<!--                <input type="text" class="form-control-plaintext" id="petOwner" th:value="*{reservation.pet.owner.getFullName()}" readonly tabindex="-1">-->
+<!--            </div>-->
+<!--            <label for="pet" class="col-sm-2 col-form-label">Pet</label>-->
+<!--            <div class="col-sm-4">-->
+<!--                <input type="text" class="form-control-plaintext" id="pet" th:value="*{reservation.pet.petName}" readonly tabindex="-1">-->
+<!--            </div>-->
+<!--            <label for="startDate" class="col-sm-2 col-form-label">From</label>-->
+<!--            <div class="col-sm-4">-->
+<!--                <input type="date" class="form-control-plaintext" id="startDate" data-date-format="mm/dd/yyyy" th:value="*{#dates.format(reservation.startDateTime, 'yyyy-MM-dd')}" readonly tabindex="-1">-->
+<!--            </div>-->
+<!--            <label for="endDate" class="col-sm-2 col-form-label">To</label>-->
+<!--            <div class="col-sm-4">-->
+<!--                <div class="col-sm-10">-->
+<!--                    <div class="input-group">-->
+<!--                        <input type="date" class="form-control" id="endDate" name="endDateValue" data-date-format="mm/dd/yyyy" th:field="*{reservation.endDateTime}"-->
+<!--                        disabled>-->
+<!--                        <button id="btnEnableEndDate" type="button" class="btn btn-outline-primary" onclick="toggleEndDate()" >-->
+<!--                            <i class="bi-pen"></i>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <label for="reservationComments" class="col-sm-2 col-form-label">Comments</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                <textarea class="form-control-plaintext" id="reservationComments" th:text="*{reservation.comments}" rows="2" readonly tabindex="-1"></textarea>-->
+<!--            </div>-->
+<!--        </div>-->
         <!--^ Reservation ^-->
         <hr class="my-1"/>
         <div class="col-12 hstack">
             <div class="col-sm-auto">
-                <label for="checkInDate" class="form-label">Check-In Time</label>
-                <input id="checkInDate" type="text" class="form-control bg-success bg-opacity-10 text-center fw-semibold" th:value="*{#dates.format(checkInTime, 'MM/dd/yyyy HH:mm:ss')}" readonly tabindex="-1">
+                <label for="date" class="form-label">Date</label>
+                <input id="date" type="text" class="form-control text-center" th:value="*{#dates.format(checkInTime, 'MM/dd/yyyy HH:mm:ss')}" readonly tabindex="-1">
             </div>
             <div class="col-sm-auto ms-auto">
                 <label for="checkOutDate" class="form-label">Check-Out Time</label>

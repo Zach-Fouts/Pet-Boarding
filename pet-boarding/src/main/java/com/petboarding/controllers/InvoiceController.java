@@ -1,5 +1,6 @@
 package com.petboarding.controllers;
 
+import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.InvoiceDetailRepository;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 @Controller
@@ -55,12 +57,12 @@ public class InvoiceController extends AppBaseController{
     }
 
     private void prepareCommonFormModel(Invoice invoice, Model model) {
-//        HashMap<Integer, JsonStayService> mapJsonStayServices = new HashMap<>();
-//        for(StayService service: stay.getAdditionalServices()) {
-//            mapJsonStayServices.put(service.getId(),
-//                    new JsonStayService(service));
-//        }
-//        model.addAttribute("mapStaysAdditionalServices", mapJsonStayServices);
+        HashMap<Integer, JsonService> mapJsonServices = new HashMap<>();
+        for(InvoiceDetail service: invoice.getDetails()) {
+            mapJsonServices.put(service.getId(),
+                    new JsonService(service));
+        }
+        model.addAttribute("mapInvoiceDetails", mapJsonServices);
     }
 
     private void prepareAddFormModel(Invoice invoice, Model model) {
