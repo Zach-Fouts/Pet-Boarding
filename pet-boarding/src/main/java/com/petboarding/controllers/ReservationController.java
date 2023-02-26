@@ -56,6 +56,19 @@ public class ReservationController extends AppBaseController{
         model.addAttribute("reservations", events);
         return "reservations/calendarView";
     }
+//
+//    @GetMapping
+//    public String displayWeek(Model model) {
+//        Function<Reservation, String> getTitle = reservation ->
+//                "#" + reservation.getConfirmation() + " | " +
+//                        reservation.getPet().getOwner().getFullName() + " | " +
+//                        reservation.getPet().getPetName();
+//        List<CalendarEvent> events = CalendarEventUtils.parseEventsFromReservations(
+//                reservationRepository.findAll(),
+//                getTitle);
+//        model.addAttribute("reservations", events);
+//        return "reservations/calendarView";
+//    }
 
     private void addCommonAttributes(Integer ownerId, Model model) {
         if(ownerId == null){
