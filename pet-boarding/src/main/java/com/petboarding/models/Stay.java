@@ -12,8 +12,10 @@ public class Stay extends AbstractEntity{
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
+    //TODO: Add support for Kennel model
     @Valid
     @ManyToOne
+    @JoinColumn(name = "kennel_id")
     private Kennel kennel;
 
     @Valid
@@ -38,22 +40,6 @@ public class Stay extends AbstractEntity{
 
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
-    }
-
-    public Kennel getKennel() {
-        return kennel;
-    }
-
-    public void setKennel(Kennel kennel) {
-        this.kennel = kennel;
-    }
-
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
     }
 
     public Employee getEmployee() {
