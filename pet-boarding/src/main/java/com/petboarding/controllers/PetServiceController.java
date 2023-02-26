@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("petServices")
+@RequestMapping("invoices/petServices")
 public class PetServiceController extends AppBaseController{
 
     @Autowired
@@ -44,11 +44,12 @@ public class PetServiceController extends AppBaseController{
             return "petServices/add";
         }
         petServiceRepository.save(petService);
-        return "redirect:/petServices";
+        return "redirect:/invoices/petServices";
     }
 
     @GetMapping("update/{id}")
     public String updateServiceForm(@PathVariable Integer id, Model model) {
+        addLocation("services/update", model);
         model.addAttribute("petService", petServiceRepository.findById(id));
         return "petServices/update";
     }
@@ -64,11 +65,11 @@ public class PetServiceController extends AppBaseController{
             existingService.get().setName(name);
             existingService.get().setPricePerUnit(pricePerUnit);
         }
-        return "redirect:/petServices";
+        return "redirect:/invoices/petServices";
     }
 
     @ModelAttribute("activeModule")
     public Module addActiveModule() {
-        return getActiveModule("reservations");
+        return getActiveModule("invoices");
     }
 }
