@@ -1,7 +1,7 @@
 package com.petboarding.service;
 
 import com.petboarding.models.Pet;
-import org.springframework.data.domain.Page;
+import com.petboarding.models.data.JPARepositoryActiveFiltering;
 
 import java.util.List;
 
@@ -12,5 +12,6 @@ public interface PetService {
 
     Pet getPetById(Integer id);
     void deletePetById(Integer id);
-    Page<Pet> findPage(int pageNo, int pageSize, String sortField, String sortDirection);
+
+    List<Pet> findByActive(Boolean active);
 }

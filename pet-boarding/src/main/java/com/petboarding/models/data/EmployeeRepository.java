@@ -9,4 +9,6 @@ import java.util.Collection;
 @Repository
 public interface EmployeeRepository extends JPARepositoryActiveFiltering<Employee, Integer> {
     public Collection<Employee> findByPositionName(String positionName);
+
+    public Employee findByEmail(String email);
 }

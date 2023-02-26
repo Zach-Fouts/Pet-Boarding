@@ -3,14 +3,12 @@ package com.petboarding.service;
 import com.petboarding.models.Pet;
 import com.petboarding.models.data.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class PetServiceImpl implements PetService{
@@ -44,11 +42,11 @@ public class PetServiceImpl implements PetService{
         this.petRepository.deleteById(id);
     }
 
+
     @Override
-    public Page<Pet> findPage(int pageNo, int pageSize, String sortField, String sortDirection) {
-        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
-                Sort.by(sortField).descending();
-        Pageable pageable = PageRequest.of(pageNo -1, pageSize, sort);
-        return this.petRepository.findAll(pageable);
+    public List<Pet> findByActive(Boolean active) {
+        return petRepository.findByActive(active);
     }
+
+
 }

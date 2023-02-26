@@ -36,7 +36,7 @@ public class Reservation extends AbstractEntity {
 
     @Valid
     @ManyToOne
-    @JoinColumn(name = "status_id")
+    @JoinColumn(name = "status_id",columnDefinition = "int default 1")
     private ReservationStatus status;
 
     @Column(columnDefinition = "boolean default true")

@@ -7,6 +7,7 @@
 <!--        BOOTSTRAP FOR TABLE-->
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+        <script th:src="@{/js/uiUtils.js}"></script>
     </th:block>
 
 </head>
@@ -25,11 +26,12 @@
                id="reservationsTable"
                data-toggle="table"
                data-search="true"
-               data-show-search-button="true"
                data-pagination="true"
                data-show-columns="true"
                data-show-toggle="true"
-               data-toolbar="#toolbar">
+               data-toolbar="#toolbar"
+               th:data-buttons="${showAll} ? 'tableFilterShowActive' : 'tableFilterShowAll'"
+               class="table-striped">
             <thead>
             <tr>
                 <th data-align="center">Confirmation #</th>
@@ -41,11 +43,11 @@
                 <th data-halign="center" data-align="center" data-sortable="true">End Date</th>
                 <th data-visible="false">Comments</th>
                 <th data-align="center">Status</th>
-                <th>Actions</th>
+                <th data-halign="center" data-align="center">Actions</th>
             </tr>
             </thead>
             <tbody>
-                <tr th:each="reservation : ${reservations}">
+                <tr th:each="reservation : ${reservations}" th:class="*{reservation.active} ? null : 'inactive'">
                     <td class="fw-bold" >
                         <a class="link-primary" th:text="${reservation.confirmation}" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"></a>
                     </td>

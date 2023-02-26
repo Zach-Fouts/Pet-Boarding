@@ -67,7 +67,6 @@ public class UserManagementController extends AppBaseController{
 
     @PostMapping("/addUserForm")
     public String addUser(@ModelAttribute @Valid AddNewUserDTO addNewUserDTO, BindingResult result, Model model, Errors errors) {
-
         boolean fieldError = false;
         User existingUser = userRepository.findByUsername(addNewUserDTO.getUsername());
         if (existingUser != null) {

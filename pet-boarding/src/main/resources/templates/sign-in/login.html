@@ -7,21 +7,23 @@
 <body class="container">
 <div th:replace="fragments :: page-header"></div>
 <div class="container body-content">
-    <form method="post">
+    <form method="post" th:object="${loginFormDTO}">
         <div class="form-group">
             <label th:for="username">Username
-                <input class="form-control" th:field="${loginFormDTO.username}"/>
+                <input class="form-control" th:field="*{username}"/>
             </label>
-            <p class="error" th:errors="${loginFormDTO.username}"></p>
+            <p class="error" th:errors="*{username}"></p>
         </div>
         <div class="form-group">
             <label>Password
-                <input class="form-control" th:field="${loginFormDTO.password}" type="password" />
+                <input class="form-control" th:field="*{password}" type="password" />
             </label>
-            <p class="error" th:errors="${loginFormDTO.password}"></p>
+            <p class="error" th:errors="*{password}"></p>
         </div>
         <input type="submit" class="btn btn-primary" value="Log In" />
     </form>
+
+    <a th:href="@{/sign-in/forgotPassword}">Forgot your password?</a>
 <!--<p>Don't have an account? <a href="/sign-in/register">Register for one.</a></p>-->
 </div>
 </body>

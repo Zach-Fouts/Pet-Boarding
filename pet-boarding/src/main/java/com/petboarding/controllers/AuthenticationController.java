@@ -1,22 +1,29 @@
 package com.petboarding.controllers;
 
+import com.petboarding.service.PasswordResetService;
+import com.petboarding.exception.UserNotFoundException;
 import com.petboarding.models.User;
+import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.RoleRepository;
 import com.petboarding.models.data.UserRepository;
 import com.petboarding.models.dto.LoginFormDTO;
 import com.petboarding.models.dto.RegisterFormDTO;
+import com.petboarding.service.EmailService;
+import net.bytebuddy.utility.RandomString;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 @Controller
@@ -26,9 +33,19 @@ public class AuthenticationController {
     @Autowired
     private UserRepository userRepository;
 
-    private static final String userSessionKey = "user";
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    PasswordResetService passwordResetService;
+
+    private static final String userSessionKey = "user";
 
     public User getUserFromSession(HttpSession session) {
         User user = (User) session.getAttribute(userSessionKey);
@@ -124,4 +141,61 @@ public class AuthenticationController {
         request.getSession().invalidate();
         return "redirect:/sign-in/login";
     }
+
+    //<---------------------------------------------Password Reset--------------------------------------------->
+
+    @GetMapping("forgotPassword")
+    public String forgotPasswordForm(){
+        return "sign-in/forgotPassword";
+    }
+
+    @PostMapping("forgotPassword")
+    public String processForgotPasswordForm(HttpServletRequest request, Model model){
+        String email = request.getParameter("email");
+        String token = RandomString.make(30);
+
+
+        try {
+            passwordResetService.updateResetPasswordToken(token, email);
+            String resetPasswordLink = PasswordResetService.getSiteURL(request) + "/sign-in/resetPassword?token=" + token;
+            emailService.sendResetPasswordLink(email, resetPasswordLink);
+            model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
+
+        } catch (UserNotFoundException ex) {
+            model.addAttribute("error", ex.getMessage());
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            model.addAttribute("error", "Error while sending email");
+        }
+
+        return "/sign-in/forgotPassword";
+    }
+
+    @GetMapping("resetPassword")
+    public String resetPasswordFrom(@Param(value = "token") String token, Model model) {
+
+        User user = passwordResetService.getByResetPasswordToken(token);
+        model.addAttribute("token", token);
+
+        if (user == null) {
+            model.addAttribute("errorMessage", "Link has expired");
+            return "/sign-in/login";
+        }
+
+        return "/sign-in/resetPassword";
+    }
+
+    @PostMapping("resetPassword")
+    public String processResetPasswordForm(@RequestParam String password, @RequestParam String token, Model model){
+        Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
+
+        if (!user.isPresent()) {
+            model.addAttribute("errorMessage", "Unable to reset Password. Please try again.");
+            return "/sign-in/forgotPassword";
+        }
+        passwordResetService.updatePassword(user.get(), password);
+        model.addAttribute(new LoginFormDTO());
+        model.addAttribute("infoMessage", "Your password has been reset.");
+        return "/sign-in/login";
+    }
+
 }

@@ -34,11 +34,14 @@ public class ReservationController extends AppBaseController{
     @Autowired
     private PetServiceRepository serviceRepository;
     @Autowired
+    private ReservationStatusRepository reservationStatusRepository;
+    @Autowired
     private EmailService emailService;
 
     @GetMapping("grid")
-    public String displayReservations(Model model) {
-        model.addAttribute("reservations", reservationRepository.findAll());
+    public String displayReservations(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("reservations", showAll ? reservationRepository.findAll() : reservationRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "reservations/reservations";
     }
     @GetMapping
@@ -68,6 +71,7 @@ public class ReservationController extends AppBaseController{
         }
         model.addAttribute("owners", ownerRepository.findAll());
         model.addAttribute("services", serviceRepository.findByStayService(true));
+        model.addAttribute("statuses", reservationStatusRepository.findAll());
     }
 
     @GetMapping("create")
@@ -97,6 +101,9 @@ public class ReservationController extends AppBaseController{
             return "reservations/create";
         }
         newReservation.assignConfirmationCode();
+        ReservationStatus status = new ReservationStatus();
+        status.setId(1);
+        newReservation.setStatus(status);
         reservationRepository.save(newReservation);
         SimpleMailMessage message=new SimpleMailMessage();
         String body="Confirmation code: "+ newReservation.getConfirmation()+
@@ -164,28 +171,6 @@ public class ReservationController extends AppBaseController{
         }
         return "reservations/detail";
     }
-    @PostMapping("detail")
-    public String resendReservationDetailsEmail(@RequestParam Integer reservationId, Model model){
-        Optional<Reservation> result = reservationRepository.findById(reservationId);
-        if (result.isEmpty()) {
-            model.addAttribute("title", "Invalid Reservation ID: " + reservationId);
-        }
-        Reservation reservation = result.get();
-        model.addAttribute("title", reservation.getId() + " Details");
-        model.addAttribute("reservation", reservation);
-        SimpleMailMessage message = new SimpleMailMessage();
-        String body="Confirmation code: "+ reservation.getConfirmation() +
-                "\nGuest: "+ reservation.getPet().getPetName()+
-                "\nStart Date: "+ reservation.getStartDateTime()+
-                "\nEnd Date: "+ reservation.getEndDateTime();
-        message.setFrom("petboardingservicelc@gmail.com");
-        message.setTo(reservation.getPet().getOwner().getEmail());
-        message.setSubject("Reservation Confirmation");
-        message.setText(body);
-        emailService.send(message);
-        model.addAttribute("infoMessage","Reservation details has been sent");
-        return "reservations/detail";
-    }
     @GetMapping("resendEmail")
     public String resendEmail(@RequestParam Integer reservationId, RedirectAttributes redirectAttributes){
         Optional<Reservation> result = reservationRepository.findById(reservationId);
@@ -216,31 +201,25 @@ public class ReservationController extends AppBaseController{
             reservation = result.get();
             model.addAttribute("title", reservation.getId() + " Details");
             model.addAttribute("reservation", reservation);
+            model.addAttribute("services", serviceRepository.findAll());
+            model.addAttribute("statuses", reservationStatusRepository.findAll());
         }
         return "reservations/update";
     }
     @PostMapping("update")
-    public String processUpdateReservationsForm(@RequestParam Integer reservationId,@Valid Reservation updatedReservation,Errors errors, Model model) {
-        Optional<Reservation> result = reservationRepository.findById(reservationId);
+    public String processUpdateReservationsForm(@Valid Reservation updatedReservation,Errors errors, Model model) {
+//        Optional<Reservation> result = reservationRepository.findById(reservationId);
 
-        if (result.isEmpty()) {
-            model.addAttribute("title", "Invalid Reservation ID: " + reservationId);
-        } else {
-            Reservation reservation = result.get();
-            model.addAttribute("title", reservation.getId() + " Details");
-            model.addAttribute("reservation", reservation);
-
-            //update the existing reservation
-            reservation.setStartDateTime(updatedReservation.getStartDateTime());
-            reservation.setEndDateTime(updatedReservation.getEndDateTime());
-            reservation.setComments(updatedReservation.getComments());
-
-            //save the updated reservation
-            reservationRepository.save(reservation);
-        }
         if (errors.hasErrors()) {
+            model.addAttribute("services", serviceRepository.findAll());
+            model.addAttribute("statuses", reservationStatusRepository.findAll());
             return "reservation/update";
         }
+
+        //save the updated reservation
+        reservationRepository.save(updatedReservation);
+
+
         return "redirect:/reservations/grid";
     }
     @ModelAttribute("activeModule")
