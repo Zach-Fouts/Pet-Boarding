@@ -29,9 +29,6 @@ public class KennelController extends AppBaseController{
     @Autowired
     private StayRepository stayRepository;
 
-    @Autowired
-    TestStayRepository testStayRepository;
-
 
     @RequestMapping("")
     public String showKennelMap(Model model){
