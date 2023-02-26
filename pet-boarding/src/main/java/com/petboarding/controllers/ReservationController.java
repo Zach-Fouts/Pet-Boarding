@@ -56,19 +56,6 @@ public class ReservationController extends AppBaseController{
         model.addAttribute("reservations", events);
         return "reservations/calendarView";
     }
-//
-//    @GetMapping("home")
-//    public String displayWeek(Model model) {
-//        Function<Reservation, String> getTitle = reservation ->
-//                "#" + reservation.getConfirmation() + " | " +
-//                        reservation.getPet().getOwner().getFullName() + " | " +
-//                        reservation.getPet().getPetName();
-//        List<CalendarEvent> events = CalendarEventUtils.parseEventsFromReservations(
-//                reservationRepository.findAll(),
-//                getTitle);
-//        model.addAttribute("reservations", events);
-//        return "index";
-//    }
 
     private void addCommonAttributes(Integer ownerId, Model model) {
         if(ownerId == null){
@@ -83,7 +70,7 @@ public class ReservationController extends AppBaseController{
             }
         }
         model.addAttribute("owners", ownerRepository.findAll());
-        model.addAttribute("services", serviceRepository.findByStayService(true));
+        model.addAttribute("services", serviceRepository.findAll());
         model.addAttribute("statuses", reservationStatusRepository.findAll());
     }
 

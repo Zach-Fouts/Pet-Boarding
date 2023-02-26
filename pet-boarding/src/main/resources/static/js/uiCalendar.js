@@ -1,10 +1,18 @@
 
 
 function uiCalendar(events){
+//    var events = [];
+//       for(var i=0;i<reservations.length;i++){
+//           var reservation = reservations[i];
+//           events.push({
+//               title:reservation.comments,
+//               start:reservation.startDateTime,
+//               end:reservation.endDateTime,
+//               url:'/reservations/detail?reservationId='+ reservation.id
+//           });
+//       }
 
     var calendarEl=document.getElementById('calendar');
-//    var calendarEl=document.getElementById('week');
-
     var calendar=new FullCalendar.Calendar(calendarEl,{
         timeZone:'UTC',
         themeSystem:'bootstrap5',
@@ -28,7 +36,7 @@ function uiCalendar(events){
             right:'dayGridMonth,timeGridWeek,timeGridDay prev,next today'},
         events:events,
         dayMaxEvents:true,//allow"more"link when too many events,
+        allDay: false
     });
-
     calendar.render();
 }
