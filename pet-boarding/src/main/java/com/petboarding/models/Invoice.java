@@ -109,7 +109,7 @@ public class Invoice extends AbstractEntity{
     }
 
     public Double getDiscountTotal() {
-        return getSubTotal() * discountPercent;
+        return getSubTotal() * (discountPercent/100);
     }
 
     public Float getTaxPercent() {
@@ -121,7 +121,7 @@ public class Invoice extends AbstractEntity{
     }
 
     public Double getTaxTotal() {
-        return getSubTotal() * taxPercent;
+        return getSubTotal() * (taxPercent/100);
     }
 
     public String getServicesList() {
