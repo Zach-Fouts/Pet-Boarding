@@ -10,8 +10,7 @@ public class InvoiceStatus extends AbstractStatusEntity{
     }
 
     public InvoiceStatus(Integer id) {
-        super();
-        setId(id);
+        super(id);
     }
 
 }

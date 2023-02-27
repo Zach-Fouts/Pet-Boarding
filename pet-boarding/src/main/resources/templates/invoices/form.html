@@ -142,39 +142,40 @@
             </div>
         </div>
         <div class="col-12 vstack text-end">
-            <div class="col-12 col-sm-8 row ms-auto">
+            <div class="col-12 col-sm-8 col-lg-6 row ms-auto">
                 <label for="subTotal" class="col-form-label col-sm-4">SubTotal</label>
                 <div class="col-sm-8">
-                        <input type="text" id="subTotal" class="form-control text-end"
+                        <input type="text" id="subTotal" class="form-control text-end bg-light"
                                 th:value="*{#numbers.formatCurrency(getSubTotal())}" disabled tabindex="-1">
                 </div>
                 <label for="discountTotal" class="col-form-label col-sm-4">Discount</label>
                 <div class="col-sm-8 hstack">
                     <div class="col-sm-5">
                         <div class="input-group">
-                            <input type="number" id="discountPercent" class="form-control text-end px-0"
+                            <input type="number" id="discountPercent" class="form-control text-end px-1"
                                    th:field="*{discountPercent}" step="0.01" max="100" min="0" onchange="updateDiscountTotal()">
                             <span class="input-group-text">%</span>
                         </div>
                     </div>
-                    <input type="text" id="discountTotal" class="form-control text-end"
+                    <input type="text" id="discountTotal" class="form-control text-end bg-light"
                             th:value="*{#numbers.formatCurrency(getDiscountTotal())}" disabled>
                 </div>
                 <label for="taxTotal" class="col-form-label col-sm-4">Sale Taxes</label>
                 <div class="col-sm-8 hstack">
                     <div class="col-sm-5">
                         <div class="input-group">
-                            <input type="number" id="taxPercent" class="form-control text-end px-0"
-                                   th:field="*{taxPercent}" step="0.01" max="100" min="0" onchange="updateTaxTotal()">
+                            <input type="hidden" th:field="*{taxPercent}">
+                            <input type="text" id="taxPercent" class="form-control text-end px-2 bg-light"
+                                   th:value="*{taxPercent}" step="0.01" max="100" min="0" onchange="updateTaxTotal()" disabled>
                             <span class="input-group-text">%</span>
                         </div>
                     </div>
-                    <input type="text" id="taxTotal" class="form-control text-end"
+                    <input type="text" id="taxTotal" class="form-control text-end bg-light"
                        th:value="*{#numbers.formatCurrency(getTaxTotal())}" disabled>
                 </div>
                 <label for="total" class="col-form-label col-sm-4 fw-semibold">Total</label>
                 <div class="col-sm-8">
-                    <input type="text" id="total" class="form-control text-end fw-semibold"
+                    <input type="text" id="total" class="form-control text-end fw-semibold bg-light"
                        th:value="*{#numbers.formatCurrency(getTotal())}" disabled tabindex="-1">
                 </div>
             </div>

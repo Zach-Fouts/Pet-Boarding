@@ -7,13 +7,14 @@ import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Controller
 @RequestMapping("invoices")
@@ -37,6 +38,9 @@ public class InvoiceController extends AppBaseController{
     @Autowired
     private PetServiceRepository petServiceRepository;
 
+    @Autowired
+    private ConfigurationRepository configurationRepository;
+
     @GetMapping
     public String displayStaysGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
         model.addAttribute("invoices", showAll ? invoiceRepository.findAll() : invoiceRepository.findByActive(true));
@@ -44,10 +48,31 @@ public class InvoiceController extends AppBaseController{
         return "invoices/index";
     }
 
+    @GetMapping("test")
+    public String test(Model model) {
+        model.addAttribute("infoMessage", Float.parseFloat(configurationRepository.findByName("SALES_TAX").getValue()));
+        return "index";
+    }
+
     @GetMapping("add")
     public String displayAddStayForm(Model model) {
         prepareAddFormModel(new Invoice(), model);
         return "invoices/form";
+    }
+
+    @Transactional
+    @PostMapping("add")
+    public String processAddStayForm(@Valid Invoice newInvoice, Errors validation, Model model) {
+        if(validation.hasErrors()) {
+            prepareAddFormModel(newInvoice, model);
+            return "stays/form";
+        }
+        newInvoice.setDate(new Date());
+        BigDecimal nextNumber = invoiceRepository.findNextNumberByDate(newInvoice.getDate());
+        newInvoice.setNumber(nextNumber == null ? 1 : nextNumber.intValue());
+        invoiceRepository.save(newInvoice);
+        updateDetailServices(newInvoice);
+        return "redirect:/invoices";
     }
 
     @GetMapping("update/{id}")
@@ -59,6 +84,17 @@ public class InvoiceController extends AppBaseController{
         }
         prepareUpdateFormModel(optInvoice.get(), model);
         return "invoices/form";
+    }
+
+    private void updateDetailServices(Invoice invoice) {
+        for(InvoiceDetail service: invoice.getDetails()) {
+            if(service.getService() == null) {
+                invoiceDetailRepository.delete(service);
+            } else {
+                service.setInvoice(invoice);
+                invoiceDetailRepository.save(service);
+            }
+        }
     }
 
     private void prepareCommonFormModel(Invoice invoice, Model model) {
@@ -73,6 +109,8 @@ public class InvoiceController extends AppBaseController{
     }
 
     private void prepareAddFormModel(Invoice invoice, Model model) {
+        invoice.setTaxPercent(Float.parseFloat(configurationRepository.findByName("SALES_TAX").getValue()));
+        invoice.setDate(new Date());
         model.addAttribute("formTitle", FORM_NEW_TITLE);
         model.addAttribute("invoice", invoice);
         model.addAttribute("submitURL", "/invoices/add");

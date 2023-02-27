@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -51,6 +52,9 @@ public class StayController extends AppBaseController {
 
     @Autowired
     private InvoiceDetailRepository invoiceDetailRepository;
+
+    @Autowired
+    private ConfigurationRepository configurationRepository;
 
     @GetMapping
     public String displayStaysCalendar(Model model) {
@@ -139,6 +143,7 @@ public class StayController extends AppBaseController {
         return "redirect:/stays/grid";
     }
 
+    @Transactional
     @GetMapping("checkout/{id}")
     public String processCheckoutAndShowInvoice(@PathVariable Integer id,
                                                 Model model,
@@ -156,7 +161,10 @@ public class StayController extends AppBaseController {
         invoice.setNumber(nextNumber == null ? 1 : nextNumber.intValue());
         invoice.setStatus(InvoiceUtils.getActiveStatus());
         stay.setCheckOutTime(new Timestamp(invoice.getDate().getTime()));
+        stay.setStatus(getStayStatus("COMPLETED_STAY"));
         stayRepository.save(stay);
+        stay.getReservation().setStatus(getReservationStatus("COMPLETED_RESERVATION"));
+        reservationRepository.save(stay.getReservation());
         invoice.setStay(stay);
         invoiceRepository.save(invoice);
         // generating detail
@@ -218,6 +226,16 @@ public class StayController extends AppBaseController {
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
         addLocation("Update", model);
         prepareCommonFormModel(stay, model);
+    }
+
+    private ReservationStatus getReservationStatus(String name) {
+        Integer statusId = Integer.parseInt(configurationRepository.findByName("COMPLETED_RESERVATION").getValue());
+        return new ReservationStatus(statusId);
+    }
+
+    private StayStatus getStayStatus(String name) {
+        Integer statusId = Integer.parseInt(configurationRepository.findByName("COMPLETED_RESERVATION").getValue());
+        return new StayStatus(statusId);
     }
 
     private boolean processDateValidation(Stay stay, Model model) {

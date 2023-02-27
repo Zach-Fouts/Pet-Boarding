@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @MappedSuperclass
-abstract class AbstractStatusEntity extends AbstractEntity{
+public abstract class AbstractStatusEntity extends AbstractEntity{
     @NotEmpty
     @Size(max = 25, message = "Status name cannot be longer than 25 characters.")
     @Column(length = 25)
@@ -20,6 +20,11 @@ abstract class AbstractStatusEntity extends AbstractEntity{
     private Boolean active = true;
 
     public AbstractStatusEntity() {
+    }
+
+    public AbstractStatusEntity(Integer id) {
+        super();
+        setId(id);
     }
 
     public String getName() {

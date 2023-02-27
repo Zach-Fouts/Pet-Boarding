@@ -4,6 +4,7 @@ import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.data.InvoiceRepository;
 import com.petboarding.models.utils.InvoiceAggregatedInformation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.*;
@@ -36,10 +37,10 @@ public class Invoice extends AbstractEntity{
     @OrderBy("id ASC")
     private List<InvoiceDetail> details = new ArrayList<>();
 
-    @Column(columnDefinition = "float(3,2) default 0.0")
+    @Column(columnDefinition = "float(5,2) default 0.0")
     private Float discountPercent = 0.0f;
 
-    @Column(columnDefinition = "float(3,2) default 0.0")
+    @Column(columnDefinition = "float(5,2) default 0.0")
     private Float taxPercent = 0.0f;
 
     public Invoice() {}
@@ -61,7 +62,7 @@ public class Invoice extends AbstractEntity{
     }
 
     public String getFullNumber() {
-        if(date == null) return "";
+        if(date == null || number == null) return "";
         return DateUtils.format(this.date, "yyyy") + "." + this.number;
     }
 
