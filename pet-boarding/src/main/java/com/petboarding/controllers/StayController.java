@@ -229,12 +229,12 @@ public class StayController extends AppBaseController {
     }
 
     private ReservationStatus getReservationStatus(String name) {
-        Integer statusId = Integer.parseInt(configurationRepository.findByName("COMPLETED_RESERVATION").getValue());
+        Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
         return new ReservationStatus(statusId);
     }
 
     private StayStatus getStayStatus(String name) {
-        Integer statusId = Integer.parseInt(configurationRepository.findByName("COMPLETED_RESERVATION").getValue());
+        Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
         return new StayStatus(statusId);
     }
 

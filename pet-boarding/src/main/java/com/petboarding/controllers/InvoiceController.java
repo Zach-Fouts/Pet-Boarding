@@ -21,7 +21,8 @@ import java.util.*;
 public class InvoiceController extends AppBaseController{
 
     private final String FORM_NEW_TITLE = "New Invoice";
-    private final String FORM_UPDATE_TITLE = "Update: ${number}";
+    private final String FORM_UPDATE_TITLE = "Update #${number}";
+    private final String FORM_PAYMENT_TITLE = "Paying invoice #${number}";
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -48,21 +49,15 @@ public class InvoiceController extends AppBaseController{
         return "invoices/index";
     }
 
-    @GetMapping("test")
-    public String test(Model model) {
-        model.addAttribute("infoMessage", Float.parseFloat(configurationRepository.findByName("SALES_TAX").getValue()));
-        return "index";
-    }
-
     @GetMapping("add")
-    public String displayAddStayForm(Model model) {
+    public String displayAddInvoiceForm(Model model) {
         prepareAddFormModel(new Invoice(), model);
         return "invoices/form";
     }
 
     @Transactional
     @PostMapping("add")
-    public String processAddStayForm(@Valid Invoice newInvoice, Errors validation, Model model) {
+    public String processAddInvoiceForm(@Valid Invoice newInvoice, Errors validation, Model model) {
         if(validation.hasErrors()) {
             prepareAddFormModel(newInvoice, model);
             return "stays/form";
@@ -79,11 +74,54 @@ public class InvoiceController extends AppBaseController{
     public String displayUpdateInvoiceForm(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Invoice> optInvoice = invoiceRepository.findById(id);
         if(optInvoice.isEmpty()){
-            redirectAttributes.addFlashAttribute("errorMessage", "The invoice couldn't be foound.");
+            redirectAttributes.addFlashAttribute("errorMessage", "The invoice couldn't be found.");
             return "redirect: /invoices";
         }
         prepareUpdateFormModel(optInvoice.get(), model);
         return "invoices/form";
+    }
+
+    @Transactional
+    @PostMapping("update/{id}")
+    public String processUpdateInvoice(@Valid Invoice invoice,
+                                        Errors validation,
+                                        Model model,
+                                        RedirectAttributes redirectAttributes) {
+        boolean hasErrors = validation.hasErrors();
+        if(hasErrors) {
+            prepareUpdateFormModel(invoice, model);
+            return "invoices/form";
+        }
+        invoiceRepository.save(invoice);
+        updateDetailServices(invoice);
+        redirectAttributes.addFlashAttribute("infoMessage", "The Invoice information has been updated.");
+        return "redirect:" + invoice.getId();
+    }
+
+    @GetMapping("cancel/{id}")
+    public String proccessCancelInvoice(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Invoice> optInvoice = invoiceRepository.findById(id);
+        if(optInvoice.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The invoice couldn't be found.");
+            return "redirect:/invoices";
+        }
+        Invoice invoice = optInvoice.get();
+        invoice.setStatus(getInvoiceStatus("CANCELED_INVOICE"));
+        invoiceRepository.save(invoice);
+        redirectAttributes.addFlashAttribute("infoMessage", "The Invoice <strong># " + invoice.getFullNumber() + "</strong> has been canceled.");
+        return "redirect:/invoices";
+    }
+
+    @GetMapping("{id}/pay")
+    public String displayInvoicePaymentForm(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Invoice> optInvoice = invoiceRepository.findById(id);
+        if(optInvoice.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The invoice couldn't be found.");
+            return "redirect:/invoices";
+        }
+        Invoice invoice = optInvoice.get();
+        preparePaymentFormModel(invoice, model);
+        return "invoices/payment";
     }
 
     private void updateDetailServices(Invoice invoice) {
@@ -129,6 +167,23 @@ public class InvoiceController extends AppBaseController{
         model.addAttribute("owners", owners);
         addLocation("Update", model);
         prepareCommonFormModel(invoice, model);
+    }
+
+    private void preparePaymentFormModel(Invoice invoice, Model model) {
+        List<Owner> owners = ownerRepository.findByActive(true);
+        if(!invoice.getOwner().getActive() && !owners.contains(invoice.getOwner()))
+            owners.add(invoice.getOwner());
+        model.addAttribute("formTitle", FORM_PAYMENT_TITLE.replace("${number}", invoice.getFullNumber()));
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("submitURL", "/invoices/update/" + invoice.getId());
+        model.addAttribute("owners", owners);
+        addLocation("pay/" + invoice.getFullNumber() , model);
+        prepareCommonFormModel(invoice, model);
+    }
+
+    private InvoiceStatus getInvoiceStatus(String name) {
+        Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
+        return new InvoiceStatus(statusId);
     }
 
 
