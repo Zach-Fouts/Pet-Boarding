@@ -11,7 +11,6 @@
         <script src="/js/invoices.js"></script>
         <script th:inline="javascript" >
             $(function() {
-
              ammounts.subTotal= [[${invoice.getSubTotal()}]];
              ammounts.total= [[${invoice.getTotal()}]];
              ammounts.discountPercent= [[${invoice.discountPercent}]];
@@ -79,31 +78,48 @@
             </div>
         </div>
         <div class="col-12 d-grid">
-            <div id="additionalServicesContainer" th:class="*{details.size() == 0} ? collapse : null">
-                <table
-                    id="additionalServicesTable"
-                    data-toggle="table"
-                    class="striped-table">
-                    <thead>
-                    <tr>
-                        <th data-halign="center">Qty</th>
-                        <th data-halign="center">Service</th>
-                        <th data-halign="center">Unit price</th>
-                        <th data-halign="center">Description</th>
-                        <th data-halign="center">Subtotal</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="service, stat: *{details}">
-                        <td class="text-center" data-field="_quantity" th:text="${service.quantity}"></td>
-                        <td th:text="${service.service.name}"></td>
-                        <td class="px-2 text-end" th:text="${service.pricePerUnit}"></td>
-                        <td th:text="${service.description}"></td>
-                        <td class="fw-semibold px-2 text-end" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
+            <div class="accordion" id="detailsListAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed p-2" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#detailsList"
+                                aria-expanded="false"
+                                aria-controls="detailsList">
+                            Invoice Details
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" id="detailsList"
+                         aria-labelledby="detailsList"
+                         data-bs-parent="#detailsListAccordion">
+                        <div class="accordion-body">
+                            <table
+                                    id="additionalServicesTable"
+                                    data-toggle="table"
+                                    class="striped-table">
+                                <thead>
+                                <tr>
+                                    <th data-halign="center">Qty</th>
+                                    <th data-halign="center">Service</th>
+                                    <th data-halign="center">Unit price</th>
+                                    <th data-halign="center">Description</th>
+                                    <th data-halign="center">Subtotal</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="service, stat: *{details}">
+                                    <td class="text-center" data-field="_quantity" th:text="${service.quantity}"></td>
+                                    <td th:text="${service.service.name}"></td>
+                                    <td class="px-2 text-end" th:text="${service.pricePerUnit}"></td>
+                                    <td th:text="${service.description}"></td>
+                                    <td class="fw-semibold px-2 text-end" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
 
-                    </tr>
-                    </tbody>
-                </table>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-12 vstack text-end">
@@ -142,6 +158,46 @@
                 <div class="col-sm-8">
                     <input type="text" id="total" class="form-control text-end fw-semibold bg-light"
                        th:value="*{#numbers.formatCurrency(getTotal())}" disabled tabindex="-1">
+                </div>
+            </div>
+        </div>
+        <div class="col-12 d-grid">
+            <div class="accordion" id="paymentMethodsAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed p-2" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#cashPayment"
+                                aria-expanded="false"
+                                aria-controls="cashPayment">
+                            Cash payment
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" id="cashPayment"
+                         aria-labelledby="cashPayment"
+                         data-bs-parent="#paymentMethodsAccordion">
+                        <div class="accordion-body">
+                            Cash
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed p-2" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#cashPayment"
+                                aria-expanded="false"
+                                aria-controls="cashPayment">
+                            Card payment
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" id="stripePayment"
+                         aria-labelledby="stripePayment"
+                         data-bs-parent="#paymentMethodsAccordion">
+                        <div class="accordion-body">
+                            Stripe cash
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
