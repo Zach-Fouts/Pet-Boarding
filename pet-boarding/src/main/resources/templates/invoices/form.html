@@ -19,7 +19,7 @@
 <body>
 <div id="content" class="col-md-12 col-lg-10 col-xl-8  col-xxl-6">
     <div class="d-flex align-items-center col-12 border-bottom pb-2 mb-3">
-        <a class="btn btn-secondary" href="/stays" title="Go back to Stays">
+        <a class="btn btn-secondary" href="/invoices" title="Go back to Stays">
             <i class="bi bi-box-arrow-in-left"></i>
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Invoice</span>
@@ -37,44 +37,32 @@
     </div>
     <form id="mainForm" class="row g-3 " th:Object="${invoice}" method="POST" th:action="@{${submitURL}}">
         <input type="hidden" id="id" th:field="*{id}">
-        <!--v Reservation v-->
-<!--        <input type="hidden" id="reservationId" th:field="*{reservation}">-->
-<!--        <div class="row bg-light-subtle shadow-sm mx-0 mt-1 py-1">-->
-<!--            <label for="confirmationCode" class="col-sm-2 col-form-label">Confirmation #</label>-->
-<!--            <div class="col-sm-10">-->
-<!--                <input type="text" class="form-control-plaintext fw-bold text-lg" id="confirmationCode" th:value="*{reservation.confirmation}" readonly tabindex="-1">-->
-<!--            </div>-->
-<!--            <label for="petOwner" class="col-sm-2 col-form-label">Parent</label>-->
-<!--            <div class="col-sm-4">-->
-<!--                <input type="text" class="form-control-plaintext" id="petOwner" th:value="*{reservation.pet.owner.getFullName()}" readonly tabindex="-1">-->
-<!--            </div>-->
-<!--            <label for="pet" class="col-sm-2 col-form-label">Pet</label>-->
-<!--            <div class="col-sm-4">-->
-<!--                <input type="text" class="form-control-plaintext" id="pet" th:value="*{reservation.pet.petName}" readonly tabindex="-1">-->
-<!--            </div>-->
-<!--            <label for="startDate" class="col-sm-2 col-form-label">From</label>-->
-<!--            <div class="col-sm-4">-->
-<!--                <input type="date" class="form-control-plaintext" id="startDate" data-date-format="mm/dd/yyyy" th:value="*{#dates.format(reservation.startDateTime, 'yyyy-MM-dd')}" readonly tabindex="-1">-->
-<!--            </div>-->
-<!--            <label for="endDate" class="col-sm-2 col-form-label">To</label>-->
-<!--            <div class="col-sm-4">-->
-<!--                <div class="col-sm-10">-->
-<!--                    <div class="input-group">-->
-<!--                        <input type="date" class="form-control" id="endDate" name="endDateValue" data-date-format="mm/dd/yyyy" th:field="*{reservation.endDateTime}"-->
-<!--                        disabled>-->
-<!--                        <button id="btnEnableEndDate" type="button" class="btn btn-outline-primary" onclick="toggleEndDate()" >-->
-<!--                            <i class="bi-pen"></i>-->
-<!--                        </button>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <label for="reservationComments" class="col-sm-2 col-form-label">Comments</label>-->
-<!--            <div class="col-sm-10">-->
-<!--                <textarea class="form-control-plaintext" id="reservationComments" th:text="*{reservation.comments}" rows="2" readonly tabindex="-1"></textarea>-->
-<!--            </div>-->
-<!--        </div>-->
-        <!--^ Reservation ^-->
-        <hr class="my-1"/>
+        <!--v Stay v-->
+        <th:block th:if="*{stay}">
+            <input type="hidden" id="stayId" th:field="*{stay}">
+            <div class="row bg-light shadow-sm mx-0 mt-1 py-1">
+                <label for="confirmationCode" class="col-sm-2 col-form-label">Confirmation #</label>
+                <div class="col-sm-10">
+                    <a class="link-primary form-control-plaintext fw-bold text-lg" id="confirmationCode"
+                       th:text="*{stay.reservation.confirmation}"
+                       th:href="@{/stays/update/{id} (id=*{stay.id})}" tabindex="-1"></a>
+                </div>
+                <label for="stayService" class="col-sm-2 col-form-label">Service</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" id="stayService" th:value="*{stay.reservation.service.name}" readonly tabindex="-1">
+                </div>
+                <label for="checkInDate" class="col-sm-2 col-form-label">Check-in</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control-plaintext" id="checkInDate" th:value="*{#dates.format(stay.checkInTime, 'MM/dd/yyyy HH:mm:ss')}" readonly tabindex="-1">
+                </div>
+                <label for="checkOutDate" class="col-sm-2 col-form-label">Check-out</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control-plaintext" id="checkOutDate" th:value="*{#dates.format(stay.checkOutTime, 'MM/dd/yyyy HH:mm:ss')}" readonly tabindex="-1">
+                </div>
+            </div>
+            <!--^ Stay ^-->
+            <hr class="my-1"/>
+        </th:block>
         <div class="col-12 hstack">
             <div class="col-sm-auto">
                 <label for="date" class="form-label">Date</label>
@@ -82,7 +70,7 @@
             </div>
             <div class="col-sm-auto ms-auto">
                 <label for="number" class="form-label">Number</label>
-                <input id="number" type="text" class="form-control bg-info bg-opacity-10 text-center fw-semibold" th:value="*{getFullNumber()}" readonly tabindex="-1">
+                <input id="number" type="text" class="form-control bg-primary bg-opacity-10 text-center fw-semibold" th:value="*{getFullNumber()}" readonly tabindex="-1">
             </div>
         </div>
         <div class="col-12">
@@ -109,7 +97,7 @@
         <div class="col-12 d-grid">
             <button id="btnAddService" class="btn btn-outline-primary" type="button"
                     onclick="addAdditionalService()">
-                <span >Add Additional Service</span>
+                <span >Add Service</span>
                 <i class="bi-plus-lg"></i>
             </button>
             <div id="additionalServicesContainer" th:class="*{details.size() == 0} ? collapse : null">

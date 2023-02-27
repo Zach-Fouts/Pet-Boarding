@@ -59,8 +59,8 @@
                     </th:block>
                     <th:block th:unless="*{stay}">-</th:block>
                 </td>
-                <td th:text="*{getServicesList()}"></td>
-                <td th:text="*{getTotal()}"></td>
+                <td th:utext="*{getCondensedServicesList()}"></td>
+                <td class="fw-semibold" th:text="*{#numbers.formatCurrency(getTotal())}"></td>
                 <td><span class="status-indicator bg-gradient" th:title="*{status.name}" th:style="|background-color: *{status.color}|"></span></td>
                 <td>
                     <a class="btn btn-sm btn-primary" th:href="@{/invoices/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>

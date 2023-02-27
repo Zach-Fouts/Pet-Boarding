@@ -2,6 +2,7 @@ package com.petboarding.models;
 
 import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.data.InvoiceRepository;
+import com.petboarding.models.utils.InvoiceAggregatedInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -9,6 +10,10 @@ import java.util.*;
 
 @Entity
 public class Invoice extends AbstractEntity{
+
+    @Transient
+    private InvoiceAggregatedInformation aggregatedInformation;
+
     @Column(nullable = false, updatable = false)
     private Date date;
 
@@ -28,10 +33,14 @@ public class Invoice extends AbstractEntity{
     private InvoiceStatus status;
 
     @OneToMany(mappedBy = "invoice")
-    private Set<InvoiceDetail> details = new HashSet<>();
+    @OrderBy("id ASC")
+    private List<InvoiceDetail> details = new ArrayList<>();
 
-    private float discountPercent;
-    private float taxPercent;
+    @Column(columnDefinition = "float(3,2) default 0.0")
+    private Float discountPercent = 0.0f;
+
+    @Column(columnDefinition = "float(3,2) default 0.0")
+    private Float taxPercent = 0.0f;
 
     public Invoice() {}
 
@@ -81,46 +90,63 @@ public class Invoice extends AbstractEntity{
         this.status = status;
     }
 
-    public Set<InvoiceDetail> getDetails() {
+    public List<InvoiceDetail> getDetails() {
         return details;
     }
 
-    public void setDetails(Set<InvoiceDetail> details) {
+    public void setDetails(List<InvoiceDetail> details) {
         this.details = details;
+        processAggregated();
+        aggregatedInformation.processDetails(details);
     }
 
-    public float getDiscountPercent() {
+    public Float getDiscountPercent() {
         return discountPercent;
     }
 
-    public void setDiscountPercent(float discountPercent) {
+    public void setDiscountPercent(Float discountPercent) {
         this.discountPercent = discountPercent;
     }
 
+    public Double getDiscountTotal() {
+        return getSubTotal() * discountPercent;
+    }
 
-    public float getTaxPercent() {
+    public Float getTaxPercent() {
         return taxPercent;
     }
 
-    public void setTaxPercent(float taxPercent) {
+    public void setTaxPercent(Float taxPercent) {
         this.taxPercent = taxPercent;
     }
 
-    public String getServicesList() {
-        return "Services_list";
+    public Double getTaxTotal() {
+        return getSubTotal() * taxPercent;
     }
 
-    public Double subTotal() {
-        double subTotal = 0.0;
-        for(InvoiceDetail detail: details) {
+    public String getServicesList() {
+        processAggregated();
+        return aggregatedInformation.getServicesList();
+    }
 
-        }
-        return subTotal;
+    public String getCondensedServicesList() {
+        String condensedList = "";
+        if(details.size() > 0) condensedList = details.get(0).getService().getName();
+        if(details.size() > 1) condensedList += " ...";
+        return condensedList;
+    }
+
+    public Double getSubTotal() {
+        processAggregated();
+        return aggregatedInformation.getSubTotal();
     }
 
     public Double getTotal() {
-        return 100.00;
+        return getSubTotal() + getTaxTotal() - getDiscountTotal();
     }
 
+    private void processAggregated() {
+        if(aggregatedInformation != null) return;
+        aggregatedInformation = new InvoiceAggregatedInformation(details);
+    }
 }
-

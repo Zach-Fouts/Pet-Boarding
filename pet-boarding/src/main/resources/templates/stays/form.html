@@ -38,10 +38,12 @@
         <input type="hidden" id="id" th:field="*{id}">
         <!--v Reservation v-->
         <input type="hidden" id="reservationId" th:field="*{reservation}">
-        <div class="row bg-light-subtle shadow-sm mx-0 mt-1 py-1">
+        <div class="row bg-light shadow-sm mx-0 mt-1 py-1">
             <label for="confirmationCode" class="col-sm-2 col-form-label">Confirmation #</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control-plaintext fw-bold text-lg" id="confirmationCode" th:value="*{reservation.confirmation}" readonly tabindex="-1">
+                <a class="link-primary form-control-plaintext fw-bold text-lg" id="confirmationCode"
+                   th:text="*{reservation.confirmation}"
+                   th:href="@{/reservations/update?reservationId={id} (id=*{reservation.id})}" tabindex="-1"></a>
             </div>
             <label for="petOwner" class="col-sm-2 col-form-label">Parent</label>
             <div class="col-sm-4">

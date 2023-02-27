@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequestMapping("invoices")
@@ -68,7 +69,6 @@ public class InvoiceController extends AppBaseController{
         }
         model.addAttribute("mapInvoiceDetails", mapJsonServices);
         model.addAttribute("statuses", invoiceStatusRepository.findAll());
-        model.addAttribute("owners", ownerRepository.findByActive(true));
         model.addAttribute("services", petServiceRepository.findAll());
     }
 
@@ -76,17 +76,21 @@ public class InvoiceController extends AppBaseController{
         model.addAttribute("formTitle", FORM_NEW_TITLE);
         model.addAttribute("invoice", invoice);
         model.addAttribute("submitURL", "/invoices/add");
+        model.addAttribute("owners", ownerRepository.findByActive(true));
         addLocation("New", model);
         prepareCommonFormModel(invoice, model);
     }
 
     private void prepareUpdateFormModel(Invoice invoice, Model model) {
+        List<Owner> owners = ownerRepository.findByActive(true);
+        if(!invoice.getOwner().getActive() && !owners.contains(invoice.getOwner()))
+            owners.add(invoice.getOwner());
         model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${number}", invoice.getFullNumber()));
         model.addAttribute("invoice", invoice);
         model.addAttribute("submitURL", "/invoices/update/" + invoice.getId());
+        model.addAttribute("owners", owners);
         addLocation("Update", model);
         prepareCommonFormModel(invoice, model);
-        ((List<Owner>)model.getAttribute("owners")).add(invoice.getOwner());
     }
 
 
