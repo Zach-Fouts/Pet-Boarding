@@ -3,9 +3,7 @@ package com.petboarding.controllers;
 import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
-import com.petboarding.models.data.InvoiceDetailRepository;
-import com.petboarding.models.data.InvoiceRepository;
-import com.petboarding.models.data.InvoiceStatusRepository;
+import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,11 +25,16 @@ public class InvoiceController extends AppBaseController{
     private InvoiceRepository invoiceRepository;
 
     @Autowired
-
     private InvoiceDetailRepository invoiceDetailRepository;
 
     @Autowired
     private InvoiceStatusRepository invoiceStatusRepository;
+
+    @Autowired
+    private OwnerRepository ownerRepository;
+
+    @Autowired
+    private PetServiceRepository petServiceRepository;
 
     @GetMapping
     public String displayStaysGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
@@ -63,6 +67,9 @@ public class InvoiceController extends AppBaseController{
                     new JsonService(service));
         }
         model.addAttribute("mapInvoiceDetails", mapJsonServices);
+        model.addAttribute("statuses", invoiceStatusRepository.findAll());
+        model.addAttribute("owners", ownerRepository.findByActive(true));
+        model.addAttribute("services", petServiceRepository.findAll());
     }
 
     private void prepareAddFormModel(Invoice invoice, Model model) {
@@ -79,6 +86,7 @@ public class InvoiceController extends AppBaseController{
         model.addAttribute("submitURL", "/invoices/update/" + invoice.getId());
         addLocation("Update", model);
         prepareCommonFormModel(invoice, model);
+        ((List<Owner>)model.getAttribute("owners")).add(invoice.getOwner());
     }
 
 

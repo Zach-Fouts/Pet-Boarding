@@ -5,10 +5,7 @@ import com.petboarding.models.data.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Invoice extends AbstractEntity{
@@ -31,7 +28,10 @@ public class Invoice extends AbstractEntity{
     private InvoiceStatus status;
 
     @OneToMany(mappedBy = "invoice")
-    private Set<InvoiceDetail> details;
+    private Set<InvoiceDetail> details = new HashSet<>();
+
+    private float discountPercent;
+    private float taxPercent;
 
     public Invoice() {}
 
@@ -52,6 +52,7 @@ public class Invoice extends AbstractEntity{
     }
 
     public String getFullNumber() {
+        if(date == null) return "";
         return DateUtils.format(this.date, "yyyy") + "." + this.number;
     }
 
@@ -88,8 +89,33 @@ public class Invoice extends AbstractEntity{
         this.details = details;
     }
 
+    public float getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(float discountPercent) {
+        this.discountPercent = discountPercent;
+    }
+
+
+    public float getTaxPercent() {
+        return taxPercent;
+    }
+
+    public void setTaxPercent(float taxPercent) {
+        this.taxPercent = taxPercent;
+    }
+
     public String getServicesList() {
         return "Services_list";
+    }
+
+    public Double subTotal() {
+        double subTotal = 0.0;
+        for(InvoiceDetail detail: details) {
+
+        }
+        return subTotal;
     }
 
     public Double getTotal() {
@@ -97,3 +123,4 @@ public class Invoice extends AbstractEntity{
     }
 
 }
+

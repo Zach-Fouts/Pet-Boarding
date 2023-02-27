@@ -8,7 +8,8 @@
         <link rel="stylesheet" href="/css/stay.css">
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
         <script src="/js/uiUtils.js"></script>
-        <script src="/js/invoice.js"></script>
+        <script src="/js/invoices.js"></script>
+        <script src="/js/detailServices.js"></script>
         <script th:inline="javascript">
             servicesMap = [[${mapInvoiceDetails}]];
             currentIndex = Object.keys(servicesMap).length;
@@ -77,50 +78,32 @@
         <div class="col-12 hstack">
             <div class="col-sm-auto">
                 <label for="date" class="form-label">Date</label>
-                <input id="date" type="text" class="form-control text-center" th:value="*{#dates.format(checkInTime, 'MM/dd/yyyy HH:mm:ss')}" readonly tabindex="-1">
+                <input id="date" type="text" class="form-control text-center" th:value="*{#dates.format(date, 'MM/dd/yyyy')}" readonly tabindex="-1">
             </div>
             <div class="col-sm-auto ms-auto">
-                <label for="checkOutDate" class="form-label">Check-Out Time</label>
-                <input id="checkOutDate" type="text" class="form-control bg-danger bg-opacity-10 text-center fw-semibold" th:value="*{#dates.format(checkOutTime, 'MM/dd/yyyy HH:mm:ss')}" readonly tabindex="-1">
+                <label for="number" class="form-label">Number</label>
+                <input id="number" type="text" class="form-control bg-info bg-opacity-10 text-center fw-semibold" th:value="*{getFullNumber()}" readonly tabindex="-1">
             </div>
         </div>
         <div class="col-12">
-            <label for="service" class="form-label">Service</label>
+            <label for="billTo" class="form-label">Bill to</label>
             <div class="input-group has-validation">
-                <select id="service" class="form-select" th:field="*{reservation.service}" tabindex="1" autofocus>
-                    <option selected value="">Select a service...</option>
-                    <option th:each="service: ${services}"
-                            th:value="${service.id}"
-                            th:text="${service.name}">
+                <select id="billTo" class="form-select" th:field="*{owner}" tabindex="1" autofocus onclick="updateContactInformation($(this))">
+                    <option selected value="" data-contact="">Select one...</option>
+                    <option th:each="owner: ${owners}"
+                            th:value="${owner.id}"
+                            th:text="${owner.getFullName()}"
+                            th:data-contact="${owner.getContactInformation()}">
                     </option>
                 </select>
-                <div id="validationServerServiceFeedback" class="invalid-feedback" th:errors="*{reservation.service}"></div>
+                <div id="validationServerOwnerFeedback" class="invalid-feedback" th:errors="*{owner}"></div>
             </div>
         </div>
-        <div class="col-sm-3">
-            <label for="kennel" class="form-label">Kennel</label>
-            <div class="input-group has-validation">
-                <select id="kennel"  class="form-select" th:field="*{kennel}">
-                    <option selected value="">Select a kennel...</option>
-                    <option th:each="kennel: ${kennels}"
-                            th:value="${kennel.id}"
-                            th:text="${kennel.name}">
-                    </option>
-                </select>
-                <div id="validationServerKennelFeedback" class="invalid-feedback"></div>
-            </div>
-        </div>
-        <div class="col-9">
-            <label for="employee" class="form-label">Caretaker</label>
-            <div class="input-group has-validation">
-                <select id="employee" th:field="*{employee}" class="form-select" th:errorclass="is-invalid" required>
-                    <option selected value="">Select a caretaker...</option>
-                    <option th:each="caretaker: ${caretakers}"
-                            th:value="${caretaker.id}"
-                            th:text="${caretaker.getFullName()}">
-                    </option>
-                </select>
-                <div id="validationServerEmployeeFeedback" class="invalid-feedback" th:errors="*{employee}"></div>
+        <div class="col-12">
+            <label for="contact" class="form-label">Contact</label>
+            <div id="contact" class="bg-secondary bg-opacity-10 p-2 rounded"
+                 style="min-height: 4em;"
+                 th:utext="*{owner != null ? owner.getContactInformation()  : ''}">
             </div>
         </div>
         <div class="col-12 d-grid">
@@ -129,7 +112,7 @@
                 <span >Add Additional Service</span>
                 <i class="bi-plus-lg"></i>
             </button>
-            <div id="additionalServicesContainer" th:class="*{additionalServices.size() == 0} ? collapse : null">
+            <div id="additionalServicesContainer" th:class="*{details.size() == 0} ? collapse : null">
                 <table
                     id="additionalServicesTable"
                     data-toggle="table">
@@ -144,7 +127,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="service, stat: *{additionalServices}">
+                    <tr th:each="service, stat: *{details}">
                         <td class="text-center" data-field="_quantity" th:text="${service.quantity}"></td>
                         <td data-field="_serviceText" th:text="${service.service.name}"></td>
                         <td data-field="_pricePerUnit" class="px-2 text-end" th:text="${service.pricePerUnit}"></td>
@@ -153,11 +136,11 @@
                         <td class="text-center">
                             <button type="button" class="btn btn-sm btn-outline-primary" title="Update/View" th:onclick="|openAdditionalServicesDialog(${service.id}, ${stat.index})|"><i class="bi-pen"></i></button>
                             <button type="button" class="btn btn-sm btn-outline-danger"  title="Remove" th:onclick="|openConfirmRemoveDialog(${service.id}, ${stat.index})|"><i class="bi-dash-lg"></i></button>
-                            <input data-field="_id" type="hidden" th:field="*{additionalServices[__${stat.index}__].id}">
-                            <input data-field="_serviceId" type="hidden" th:field="*{additionalServices[__${stat.index}__].service}">
-                            <input data-field="_quantity" type="hidden" th:field="*{additionalServices[__${stat.index}__].quantity}">
-                            <input data-field="_pricePerUnit" type="hidden" th:field="*{additionalServices[__${stat.index}__].pricePerUnit}">
-                            <input data-field="_description" type="hidden" th:field="*{additionalServices[__${stat.index}__].description}">
+                            <input data-field="_id" type="hidden" th:field="*{details[__${stat.index}__].id}">
+                            <input data-field="_serviceId" type="hidden" th:field="*{details[__${stat.index}__].service}">
+                            <input data-field="_quantity" type="hidden" th:field="*{details[__${stat.index}__].quantity}">
+                            <input data-field="_pricePerUnit" type="hidden" th:field="*{details[__${stat.index}__].pricePerUnit}">
+                            <input data-field="_description" type="hidden" th:field="*{details[__${stat.index}__].description}">
                         </td>
                     </tr>
                     </tbody>
@@ -186,7 +169,7 @@
             <button class="me-auto btn btn-secondary o-1" title="Clear form" type="reset" th:if="*{id == null}">
                 <i class="bi bi-eraser"></i>
             </button>
-            <a type="button" class="btn btn-secondary mx-1 ms-auto" href="/stays/grid" title="Cancel register and go back">
+            <a type="button" class="btn btn-secondary mx-1 ms-auto" href="/stays/grid" title="Cancel and go back">
                 Cancel
             </a>
             <button type="submit" class="btn btn-primary mx-1" title="Save changes">
@@ -199,7 +182,7 @@
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Additional service</h5>
+                    <h5 class="modal-title">Add service</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -216,10 +199,10 @@
                             <div class="col-sm-9">
                                 <select id="addService" name="serviceId" class="form-select add-input" required onchange="updateUnitPrice(this)">
                                     <option value="" data-pricePerUnit="">Select a service...</option>
-                                    <option th:each="addService: ${additionalServices}"
-                                            th:value="${addService.id}"
-                                            th:text="${addService.name}"
-                                            th:data-pricePerUnit="${addService.pricePerUnit}">
+                                    <option th:each="service: ${services}"
+                                            th:value="${service.id}"
+                                            th:text="${service.name}"
+                                            th:data-pricePerUnit="${service.pricePerUnit}">
                                     </option>
                                 </select>
                             </div>
@@ -246,7 +229,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button id="btnSaveAdditionalService" type="button" class="btn btn-primary">Add additional service
+                    <button id="btnSaveAdditionalService" type="button" class="btn btn-primary">
+                        Add service
                         <i class="bi-plus-lg"></i></button>
                 </div>
             </div>
@@ -277,11 +261,11 @@
             <td class="text-center">
                 <button id="_btnEdit" type="button" class="btn btn-sm btn-outline-primary" title="Update/View"><i class="bi-pen"></i></button>
                 <button id="_btnRemove" type="button" class="btn btn-sm btn-outline-danger" title="Remove"><i class="bi-dash-lg"></i></button>
-                <input data-field="_id" type="hidden" id="additionalServices__index__.id" name="additionalServices[__index__].id" value="">
-                <input data-field="_serviceId" type="hidden" id="additionalServices__index__.service" name="additionalServices[__index__].service" value="">
-                <input data-field="_quantity" type="hidden" id="additionalServices__index__.quantity" name="additionalServices[__index__].quantity" value="">
-                <input data-field="_pricePerUnit" type="hidden" id="additionalServices__index__.pricePerUnit" name="additionalServices[__index__].pricePerUnit" value="">
-                <input data-field="_description" type="hidden" id="additionalServices__index__.description" name="additionalServices[__index__].description" value="">
+                <input data-field="_id" type="hidden" id="details__index__.id" name="details[__index__].id" value="">
+                <input data-field="_serviceId" type="hidden" id="details__index__.service" name="details[__index__].service" value="">
+                <input data-field="_quantity" type="hidden" id="details__index__.quantity" name="details[__index__].quantity" value="">
+                <input data-field="_pricePerUnit" type="hidden" id="details__index__.pricePerUnit" name="details[__index__].pricePerUnit" value="">
+                <input data-field="_description" type="hidden" id="details__index__.description" name="details[__index__].description" value="">
             </td>
         </tr>
     </template>

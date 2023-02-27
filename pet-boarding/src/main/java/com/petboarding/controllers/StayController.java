@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -147,10 +148,12 @@ public class StayController extends AppBaseController {
             redirectAttributes.addFlashAttribute("errorMessage", "The stay wasn't found.");
             return "redirect: /stays";
         }
+
         Stay stay = optStay.get();
         Invoice invoice = new Invoice();
         invoice.setDate(new Date());
-        invoice.setNumber(invoiceRepository.findNextNumberByDate(invoice.getDate()).intValue());
+        BigDecimal nextNumber = invoiceRepository.findNextNumberByDate(invoice.getDate());
+        invoice.setNumber(nextNumber == null ? 1 : nextNumber.intValue());
         invoice.setStatus(InvoiceUtils.getActiveStatus());
         stay.setCheckOutTime(new Timestamp(invoice.getDate().getTime()));
         stayRepository.save(stay);
@@ -174,12 +177,6 @@ public class StayController extends AppBaseController {
             invoiceDetailRepository.save(detail);
         }
         return "redirect:/invoices/update/" + invoice.getId();
-    }
-
-    @GetMapping("test")
-    public String testing(Model model) {
-        model.addAttribute("infoMessage","");
-        return "index";
     }
 
     private void updateAdditionalServices(Stay stay) {
