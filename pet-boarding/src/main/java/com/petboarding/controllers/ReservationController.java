@@ -70,7 +70,7 @@ public class ReservationController extends AppBaseController{
             }
         }
         model.addAttribute("owners", ownerRepository.findAll());
-        model.addAttribute("services", serviceRepository.findAll());
+        model.addAttribute("services", serviceRepository.findByStayService(true));
         model.addAttribute("statuses", reservationStatusRepository.findAll());
     }
 
