@@ -10,7 +10,7 @@
     <div class="wrapper fadeInDown">
         <div id="formContent">
             <div class="fadeIn first">
-                <img src="/img/logo.svg" class="img-fluid app-logo" alt="Application Logo" />
+                <img src="/img/logo.svg" class="img-fluid p-3 app-logo" alt="Application Logo" />
             </div>
             <form method="post" th:object="${loginFormDTO}">
                 <input th:field="*{username}" id="login" class="fadeIn second" name="login" placeholder="Username" required>
@@ -18,7 +18,7 @@
                 <input type="submit" class="fadeIn fourth" value="Log In">
             </form>
             <div id="formFooter">
-                <a class="underlineHover" th:href="@{/sign-in/forgotPassword}" >Forgot Password?</a>
+                <span>Forgot your password?<br>Contact your Manager<br>or <a class="underlineHover" th:href="@{/sign-in/forgotPassword}" >click here.</a></span>
             </div>
         </div>
     </div>
