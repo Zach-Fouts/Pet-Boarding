@@ -1,5 +1,4 @@
-function modalClick(id) {
-
+function modalClick(id) {   //Makes specific Modal visible
   if( id == 1){
     var modal1 = document.getElementById("myModal1");
     modal1.style.display = "block";
@@ -38,7 +37,7 @@ function modalClick(id) {
   }
 }
 
-function closeModal(id){
+function closeModal(id){    //Closes specific Modal
     if(id == "close1"){
     var modal1 = document.getElementById("myModal1");
         modal1.style.display = "none";
@@ -78,32 +77,32 @@ function closeModal(id){
 }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal1) {
-    modal1.style.display = "none";
+window.addEventListener("click", function(event) {
+  if (event.target == myModal1) {
+    myModal1.style.display = "none";
   }
-  else if (event.target == modal2) {
-    modal2.style.display = "none";
+  else if (event.target == myModal2) {
+    myModal2.style.display = "none";
   }
-  else if (event.target == modal3) {
-    modal3.style.display = "none";
+  else if (event.target == myModal3) {
+    myModal3.style.display = "none";
   }
-  else if (event.target == modal4) {
-    modal4.style.display = "none";
+  else if (event.target == myModal4) {
+    myModal4.style.display = "none";
   }
-  else if (event.target == modal5) {
-    modal5.style.display = "none";
+  else if (event.target == myModal5) {
+    myModal5.style.display = "none";
   }
-  else if (event.target == modal6) {
-    modal6.style.display = "none";
+  else if (event.target == myModal6) {
+    myModal6.style.display = "none";
   }
-  else if (event.target == modal7) {
-    modal7.style.display = "none";
+  else if (event.target == myModal7) {
+    myModal7.style.display = "none";
   }
-  else if (event.target == modal8) {
-    modal8.style.display = "none";
+  else if (event.target == myModal8) {
+    myModal8.style.display = "none";
   }
-  else if (event.target == modal9) {
-    modal9.style.display = "none";
+  else if (event.target == myModal9) {
+    myModal9.style.display = "none";
   }
-}
+});
