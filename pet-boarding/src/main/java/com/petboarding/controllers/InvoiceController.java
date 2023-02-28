@@ -1,5 +1,6 @@
 package com.petboarding.controllers;
 
+import com.petboarding.controllers.utils.InvoiceUtils;
 import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
@@ -32,6 +33,9 @@ public class InvoiceController extends AppBaseController{
 
     @Autowired
     private InvoiceStatusRepository invoiceStatusRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @Autowired
     private OwnerRepository ownerRepository;
@@ -120,8 +124,21 @@ public class InvoiceController extends AppBaseController{
             return "redirect:/invoices";
         }
         Invoice invoice = optInvoice.get();
-        preparePaymentFormModel(invoice, model);
+        Payment payment = new Payment();
+        payment.setInvoice(invoice);
+        preparePaymentFormModel(payment, model);
         return "invoices/payment";
+    }
+
+    @PostMapping("{id}/pay")
+    public String processInvoicePaymentForm(@Valid Payment payment, Errors validation, Model model, RedirectAttributes redirectAttributes) {
+        if(validation.hasErrors()) {
+            preparePaymentFormModel(payment, model);
+            return "invoices/payment";
+        }
+        paymentRepository.save(payment);
+        redirectAttributes.addFlashAttribute("infoMessage", "The payment process was completed.");
+        return "redirect:/invoices/update/" + payment.getInvoice().getId();
     }
 
     @GetMapping("paymentComplete")
@@ -175,7 +192,11 @@ public class InvoiceController extends AppBaseController{
         prepareCommonFormModel(invoice, model);
     }
 
-    private void preparePaymentFormModel(Invoice invoice, Model model) {
+    private void preparePaymentFormModel(Payment payment, Model model) {
+        Invoice invoice = payment.getInvoice();
+        payment.setCashPayment(true);
+        payment.setCardConfirmation(null);
+        payment.setAmount(InvoiceUtils.round(invoice.getToPayTotal(), 2));
         List<Owner> owners = ownerRepository.findByActive(true);
         if(!invoice.getOwner().getActive() && !owners.contains(invoice.getOwner()))
             owners.add(invoice.getOwner());
@@ -183,6 +204,7 @@ public class InvoiceController extends AppBaseController{
         model.addAttribute("invoice", invoice);
         model.addAttribute("submitURL", "/invoices/update/" + invoice.getId());
         model.addAttribute("owners", owners);
+        model.addAttribute("payment", payment);
         addLocation("pay/" + invoice.getFullNumber() , model);
         prepareCommonFormModel(invoice, model);
     }

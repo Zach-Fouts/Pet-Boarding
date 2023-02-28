@@ -158,9 +158,19 @@ public class Invoice extends AbstractEntity{
         return getSubTotal() + getTaxTotal() - getDiscountTotal();
     }
 
+    public Double getTotalPaid() {
+        processAggregated();
+        return aggregatedInformation.getTotalPaid();
+    }
+
+    public Double getToPayTotal() {
+        return getTotal() - getTotalPaid();
+    }
+
     private void processAggregated() {
         if(aggregatedInformation != null) return;
         aggregatedInformation = new InvoiceAggregatedInformation(details);
+        aggregatedInformation.processPayments(payments);
     }
 
 

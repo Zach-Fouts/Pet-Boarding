@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-public class PaymentController extends AppBaseController {
+public class PaymentController{
 
 //    successful payment 4242424242424242
 //    Generic decline	4000000000000002	card_declined
@@ -25,9 +25,13 @@ public class PaymentController extends AppBaseController {
 //    Incorrect CVC decline	4000000000000127
 //    Processing error decline	4000000000000119
 //    Incorrect number decline	4242424242424241
+
+    @Value("${stripe.api.secureKey}")
+    private String stripeApiKey;
+
     @PostMapping("/create-payment-intent")
     public CreatePaymentResponse createPaymentIntent(@RequestBody CreatePayment createPayment) throws StripeException {
-        Stripe.apiKey = "sk_test_51MYex8AVgyan8JxQcbStGLELy2iB7XIVgLnGfoWiKwqA5v2oY2DXDffQGUA0HTSusy1gH9tQrsUAhjbdwCjOAGLt00ip3tBW6D";
+        Stripe.apiKey = stripeApiKey;//"sk_test_51MYex8AVgyan8JxQcbStGLELy2iB7XIVgLnGfoWiKwqA5v2oY2DXDffQGUA0HTSusy1gH9tQrsUAhjbdwCjOAGLt00ip3tBW6D";
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                     .setCurrency("usd")
                     .setAmount(100 * 100L) //product amount
@@ -38,10 +42,5 @@ public class PaymentController extends AppBaseController {
 
             return new CreatePaymentResponse(paymentIntent.getClientSecret());
 
-        }
-
-    @ModelAttribute
-    public void addActiveModule(Model model) {
-        setActiveModule("home", model);
     }
 }

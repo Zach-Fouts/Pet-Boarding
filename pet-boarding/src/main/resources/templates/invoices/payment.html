@@ -24,14 +24,14 @@
     </th:block>
 </head>
 <body>
-<div id="content" class="col-md-12 col-lg-10 col-xl-8  col-xxl-6">
+<div id="content" class="col-md-12 col-lg-10 col-xl-8 col-xxl-7">
     <div class="d-flex align-items-center col-12 border-bottom pb-2 mb-3">
         <a class="btn btn-secondary" th:href="@{/invoices/update/{id} (id=*{id})}" title="Go back invoice">
             <i class="bi bi-box-arrow-in-left"></i>
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">Pay invoice</span>
     </div>
-    <form id="mainForm" class="row g-3 " th:Object="${invoice}" onsubmit="() => false">
+    <div id="mainForm" class="row g-3 " th:Object="${invoice}" onsubmit="() => false">
         <input type="hidden" id="id" th:field="*{id}">
         <!--v Stay v-->
         <th:block th:if="*{stay}">
@@ -170,17 +170,40 @@
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed p-2" type="button"
                                 data-bs-toggle="collapse"
-                                data-bs-target="#cashPayment"
+                                data-bs-target="#cashPaymentMethod"
                                 aria-expanded="false"
-                                aria-controls="cashPayment">
+                                aria-controls="cashPaymentMethod">
                            <i class="bi bi-cash-coin fs-2 my-1 mx-2 text-primary"></i> Cash payment
                         </button>
                     </h2>
-                    <div class="accordion-collapse collapse" id="cashPayment"
-                         aria-labelledby="cashPayment"
+                    <div class="accordion-collapse collapse" id="cashPaymentMethod"
+                         aria-labelledby="cashPaymentMethod"
                          data-bs-parent="#paymentMethodsAccordion">
                         <div class="accordion-body">
-                            Cash
+                            <form id="cashPaymentForm" method="POST" class="row g-3 justify-content-center">
+                                <input type="hidden" th:field="${payment.invoice}">
+                                <input type="hidden" th:field="${payment.cashPayment}">
+                                <input type="hidden" th:field="${payment.cardConfirmation}">
+                                <div class="col-12 d-flex justify-content-center">
+                                    <div class="col-5">
+                                    <label for="cashAmount" class="form-label">Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" id="cashAmount" class="form-control text-end px-2"
+                                               th:field="${payment.amount}" th:max="${#numbers.formatDecimal(invoice.getToPayTotal(), 1, 2)}" min="1" step="0.01" required>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-5 hstack gap-2">
+                                    <a type="button" class="btn btn-secondary mx-1 ms-auto" th:href="@{/invoices/update/{id} (id=*{id})}" title="Cancel and go back to invoice">
+                                        Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-primary mx-1" title="Make a payment">
+                                        <i class="bi bi-cash-coin"></i>
+                                        Make a payment
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -194,16 +217,16 @@
                            <i class="bi bi-stripe fs-2 my-1 mx-2 text-primary"></i> Card payment
                         </button>
                     </h2>
-                    <div class="accordion-collapse collapse" id="stripePayment"
+                    <div class="accordion-collapse collapse " id="stripePayment"
                          aria-labelledby="stripePayment"
                          data-bs-parent="#paymentMethodsAccordion">
-                        <div class="accordion-body">
+                        <div class="accordion-body d-flex justify-content-center">
                             <form id="payment-form">
                                 <input type="text" id="email" placeholder="Email address" required/>
                                 <div id="payment-element">
                                     <!--Stripe.js injects the Payment Element-->
                                 </div>
-                                <button id="submitStripePayment">
+                                <button id="submit">
                                     <div class="spinner hidden" id="spinner"></div>
                                     <span id="button-text">Pay $100</span>
                                 </button>
@@ -214,16 +237,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 hstack gap-2">
-            <a type="button" class="btn btn-secondary mx-1 ms-auto" th:href="@{/invoices/update/{id} (id=*{id})}" title="Cancel and go back">
-                Cancel
-            </a>
-            <button type="submit" class="btn btn-primary mx-1" title="Make a payment">
-                <i class="bi bi-cash-coin"></i>
-                Pay
-            </button>
-        </div>
-    </form>
+
+    </div>
 </div>
 </body>
 </html>
