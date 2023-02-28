@@ -24,12 +24,12 @@ import java.util.Optional;
 
 @Controller
 
-//@CrossOrigin(origins = "http://localhost:3000") for ReactJs
+
 public class PetController extends AppBaseController {
 
     @Autowired
     private PetService petService;
-    //private PetRepository petRepository;
+
 
     @Autowired   // Needed to grab owners
     private OwnerRepository ownerRepository;
@@ -153,39 +153,6 @@ public class PetController extends AppBaseController {
     public Module addActiveModule() {
         return getActiveModule("pets");
     }
-    // create pet api
-//    @PostMapping("/pets")
-//    public Pet createPet(@RequestBody Pet pet) {
-//        return petRepository.save(pet);
-//    }
-//
-//    // get all pets api
-//    @GetMapping("/pets")
-//    public List<Pet> getAllPets() {
-//        return petRepository.findAll();
-//    }
-//
-//    // get pet by id
-//    @GetMapping("/pets/{id}")
-//    public ResponseEntity<Pet> getPetById(@PathVariable Integer id) {
-//        Pet pet = petRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Pet with id : " + id + "does not exist"));
-//        return ResponseEntity.ok(pet);
-//    }
-//
-//    // update pet api
-//    @PutMapping("/pets/{id}")
-//    public ResponseEntity<Pet> updatePet(@PathVariable Integer id, @RequestBody Pet petDetails) {
-//        Pet pet = petRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Pet with id : " + id + "does not exist"));
-//
-//        pet.setPetName(petDetails.getPetName());
-//        pet.setParents(pet.getParents());
-//        pet.setBreed(pet.getBreed());
-//        pet.setNotes(pet.getNotes());
-//
-//        Pet updatedPet = petRepository.save(pet);
-//        return ResponseEntity.ok(updatedPet);
-//    }
+
 
 }
