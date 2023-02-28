@@ -1,9 +1,10 @@
 package com.petboarding.controllers.utils;
 
+import com.petboarding.models.AbstractDetailEntity;
 import com.petboarding.models.StayService;
-import com.petboarding.models.data.StayServiceRepository;
+import org.hibernate.cache.spi.support.AbstractEntityDataAccess;
 
-public class JsonStayService {
+public class JsonService {
     private Integer id;
     private Float quantity;
     private Integer serviceId;
@@ -11,10 +12,10 @@ public class JsonStayService {
     private String description;
     private Double subTotal;
 
-    public JsonStayService() {
+    public JsonService() {
     }
 
-    public JsonStayService(StayService service) {
+    public JsonService(AbstractDetailEntity service) {
         this.id = service.getId();
         this.quantity = service.getQuantity();
         this.serviceId = service.getService().getId();

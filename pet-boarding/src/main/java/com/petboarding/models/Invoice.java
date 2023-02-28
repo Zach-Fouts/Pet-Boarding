@@ -2,16 +2,19 @@ package com.petboarding.models;
 
 import com.petboarding.controllers.utils.DateUtils;
 import com.petboarding.models.data.InvoiceRepository;
+import com.petboarding.models.utils.InvoiceAggregatedInformation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Invoice extends AbstractEntity{
+
+    @Transient
+    private InvoiceAggregatedInformation aggregatedInformation;
+
     @Column(nullable = false, updatable = false)
     private Date date;
 
@@ -31,7 +34,18 @@ public class Invoice extends AbstractEntity{
     private InvoiceStatus status;
 
     @OneToMany(mappedBy = "invoice")
-    private Set<InvoiceDetail> details;
+    @OrderBy("id ASC")
+    private List<InvoiceDetail> details = new ArrayList<>();
+
+    @Column(columnDefinition = "float(5,2) default 0.0")
+    private Float discountPercent = 0.0f;
+
+    @Column(columnDefinition = "float(5,2) default 0.0")
+    private Float taxPercent = 0.0f;
+
+    @OneToMany(mappedBy = "invoice")
+    @OrderBy("datetime ASC")
+    private List<Payment> payments = new ArrayList<>();
 
     public Invoice() {}
 
@@ -52,6 +66,7 @@ public class Invoice extends AbstractEntity{
     }
 
     public String getFullNumber() {
+        if(date == null || number == null) return "";
         return DateUtils.format(this.date, "yyyy") + "." + this.number;
     }
 
@@ -61,6 +76,7 @@ public class Invoice extends AbstractEntity{
 
     public void setStay(Stay stay) {
         this.stay = stay;
+        this.owner = stay.getReservation().getPet().getOwner();
     }
 
     public Owner getOwner() {
@@ -79,20 +95,73 @@ public class Invoice extends AbstractEntity{
         this.status = status;
     }
 
-    public Set<InvoiceDetail> getDetails() {
+    public List<InvoiceDetail> getDetails() {
         return details;
     }
 
-    public void setDetails(Set<InvoiceDetail> details) {
+    public void setDetails(List<InvoiceDetail> details) {
         this.details = details;
+        processAggregated();
+        aggregatedInformation.processDetails(details);
+    }
+
+    public Float getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(Float discountPercent) {
+        this.discountPercent = discountPercent;
+    }
+
+    public Double getDiscountTotal() {
+        return getSubTotal() * (discountPercent/100);
+    }
+
+    public Float getTaxPercent() {
+        return taxPercent;
+    }
+
+    public void setTaxPercent(Float taxPercent) {
+        this.taxPercent = taxPercent;
+    }
+
+    public Double getTaxTotal() {
+        return getSubTotal() * (taxPercent/100);
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
     }
 
     public String getServicesList() {
-        return "Services_list";
+        processAggregated();
+        return aggregatedInformation.getServicesList();
+    }
+
+    public String getCondensedServicesList() {
+        String condensedList = "";
+        if(details.size() > 0) condensedList = details.get(0).getService().getName();
+        if(details.size() > 1) condensedList += " ...";
+        return condensedList;
+    }
+
+    public Double getSubTotal() {
+        processAggregated();
+        return aggregatedInformation.getSubTotal();
     }
 
     public Double getTotal() {
-        return 100.00;
+        return getSubTotal() + getTaxTotal() - getDiscountTotal();
     }
+
+    private void processAggregated() {
+        if(aggregatedInformation != null) return;
+        aggregatedInformation = new InvoiceAggregatedInformation(details);
+    }
+
 
 }

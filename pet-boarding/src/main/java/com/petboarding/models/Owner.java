@@ -11,7 +11,6 @@ import java.util.Objects;
 // Just a name for now
 @Entity
 public class Owner extends AbstractEntity{
-
     @NotBlank(message = "First name cannot be empty.")
     @Size(max = 50, message = "First name cannot be longer than 50 characters.")
     private String firstName;
@@ -148,5 +147,14 @@ public class Owner extends AbstractEntity{
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getContactInformation() {
+        String information = "";
+        information += "<strong>Address: </strong>" + this.address;
+        information += (this.address2 != null && this.address2 != "" ? " , " + this.address2 : "");
+        information += (this.phoneNumber != null ? "<br><strong>Phone number</strong>: " + this.phoneNumber : "");
+        information += (this.email != null ? "<br><strong>Email</strong>: " + this.email : "");
+        return information;
     }
 }

@@ -1,11 +1,16 @@
 package com.petboarding.controllers.utils;
 
 import net.bytebuddy.TypeCache;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
 
@@ -26,5 +31,11 @@ public class DateUtils {
             //TODO handle the exception
         }
         return date;
+    }
+
+    public static Long getDaysDifference(Date fromDate, Date toDate) {
+        LocalDate from = fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate to = toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return ChronoUnit.DAYS.between(from, to);
     }
 }

@@ -1,8 +1,9 @@
 package com.petboarding.controllers;
 
 import com.petboarding.controllers.utils.DateUtils;
+import com.petboarding.controllers.utils.InvoiceUtils;
 import com.petboarding.models.*;
-import com.petboarding.controllers.utils.JsonStayService;
+import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Controller
@@ -42,6 +46,15 @@ public class StayController extends AppBaseController {
 
     @Autowired
     private StayStatusRepository stayStatusRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private InvoiceDetailRepository invoiceDetailRepository;
+
+    @Autowired
+    private ConfigurationRepository configurationRepository;
 
     @GetMapping
     public String displayStaysCalendar(Model model) {
@@ -130,11 +143,48 @@ public class StayController extends AppBaseController {
         return "redirect:/stays/grid";
     }
 
+    @Transactional
     @GetMapping("checkout/{id}")
     public String processCheckoutAndShowInvoice(@PathVariable Integer id,
                                                 Model model,
                                                 RedirectAttributes redirectAttributes) {
-        return "redirect: /invoices/update/"; // add invoice id
+        Optional<Stay> optStay = stayRepository.findById(id);
+        if(optStay.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The stay wasn't found.");
+            return "redirect: /stays";
+        }
+
+        Stay stay = optStay.get();
+        Invoice invoice = new Invoice();
+        invoice.setDate(new Date());
+        BigDecimal nextNumber = invoiceRepository.findNextNumberByDate(invoice.getDate());
+        invoice.setNumber(nextNumber == null ? 1 : nextNumber.intValue());
+        invoice.setStatus(InvoiceUtils.getActiveStatus());
+        stay.setCheckOutTime(new Timestamp(invoice.getDate().getTime()));
+        stay.setStatus(getStayStatus("COMPLETED_STAY"));
+        stayRepository.save(stay);
+        stay.getReservation().setStatus(getReservationStatus("COMPLETED_RESERVATION"));
+        reservationRepository.save(stay.getReservation());
+        invoice.setStay(stay);
+        invoiceRepository.save(invoice);
+        // generating detail
+        Long daysStay = DateUtils.getDaysDifference(stay.getCheckInTime(), stay.getCheckOutTime());
+        InvoiceDetail stayDetail = new InvoiceDetail();
+        stayDetail.setInvoice(invoice);
+        stayDetail.setQuantity(daysStay.floatValue());
+        stayDetail.setService(stay.getReservation().getService());
+        stayDetail.setPricePerUnit(stay.getReservation().getService().getPricePerUnit());
+        stayDetail.setDescription("Stay from " +
+                DateUtils.format(stay.getCheckInTime(), "MM/dd/yyyy") +
+                " to " +
+                DateUtils.format(stay.getCheckOutTime(), "MM/dd/yyyy"));
+        invoiceDetailRepository.save(stayDetail);
+        for(StayService service: stay.getAdditionalServices()) {
+            InvoiceDetail detail = new InvoiceDetail(service);
+            detail.setInvoice(invoice);
+            invoiceDetailRepository.save(detail);
+        }
+        return "redirect:/invoices/update/" + invoice.getId();
     }
 
     private void updateAdditionalServices(Stay stay) {
@@ -154,10 +204,10 @@ public class StayController extends AppBaseController {
         model.addAttribute("statuses", stayStatusRepository.findAll());
         model.addAttribute("caretakers", employeeRepository.findByPositionName("caretaker"));
         model.addAttribute("additionalServices", serviceRepository.findByStayService(false));
-        HashMap<Integer, JsonStayService> mapJsonStayServices = new HashMap<>();
+        HashMap<Integer, JsonService> mapJsonStayServices = new HashMap<>();
         for(StayService service: stay.getAdditionalServices()) {
             mapJsonStayServices.put(service.getId(),
-                    new JsonStayService(service));
+                    new JsonService(service));
         }
         model.addAttribute("mapStaysAdditionalServices", mapJsonStayServices);
     }
@@ -176,6 +226,16 @@ public class StayController extends AppBaseController {
         model.addAttribute("submitURL", "/stays/update/" + stay.getId());
         addLocation("Update", model);
         prepareCommonFormModel(stay, model);
+    }
+
+    private ReservationStatus getReservationStatus(String name) {
+        Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
+        return new ReservationStatus(statusId);
+    }
+
+    private StayStatus getStayStatus(String name) {
+        Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
+        return new StayStatus(statusId);
     }
 
     private boolean processDateValidation(Stay stay, Model model) {

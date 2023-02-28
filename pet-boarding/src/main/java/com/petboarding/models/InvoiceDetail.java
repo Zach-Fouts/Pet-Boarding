@@ -16,6 +16,14 @@ public class InvoiceDetail extends AbstractDetailEntity{
     public InvoiceDetail() {
     }
 
+    public InvoiceDetail(StayService service) {
+        setService(service.getService());
+        setQuantity(service.getQuantity());
+        setPricePerUnit(service.getPricePerUnit());
+        setDescription(service.getDescription());
+        setActive(service.getActive());
+    }
+
     public Invoice getInvoice() {
         return invoice;
     }

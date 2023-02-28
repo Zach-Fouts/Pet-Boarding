@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 @Repository
-public interface OwnerRepository extends CrudRepository<Owner, Integer> {
+public interface OwnerRepository extends JPARepositoryActiveFiltering<Owner, Integer> {
 }
