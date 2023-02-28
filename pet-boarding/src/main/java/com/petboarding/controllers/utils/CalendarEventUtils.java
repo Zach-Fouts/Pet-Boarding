@@ -39,19 +39,21 @@ public class CalendarEventUtils {
                 reservation -> reservation,
                 getTitle,
                 "/reservations/detail?reservationId=",
-                null
+                "#3995d6"
+
         );
     }
 
-    static public List<CalendarEvent> parseEventsFromStays(List<Stay> stays) {
+    static public List<CalendarEvent> parseEventsFromStays(List<Stay> stays, Function<Stay, String> getTitle) {
         Function<Stay, Reservation> getReservation = stay -> stay.getReservation();
-        Function<Stay, String> getTitle = stay -> stay.getReservation().getComments();
+//        Function<Stay, String> getTitle = stay -> stay.getReservation().getComments();
+
         return parseEventsList(
                 stays,
                 getReservation,
                 getTitle,
                 "/stays/update/",
-                null
+                "#6adddd"
         );
     }
     //TODO: trying to fool git

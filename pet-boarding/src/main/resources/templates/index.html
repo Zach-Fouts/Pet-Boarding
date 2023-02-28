@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <th:block id="otherResources">
-        <!-- comment from test -->
+        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.1/index.global.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.1/index.global.min.js'></script>
+        <script th:src="@{/js/uiWeek.js}"></script>
+
+        <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded',function(){
+                    uiCalendar([[${events}]]);
+        });
+         </script>
     </th:block>
 </head>
 <body>
     <th:block id="content">
-        Home WIP
+        <div id='calendar'></div>
     </th:block>
 </body>
 </html>
