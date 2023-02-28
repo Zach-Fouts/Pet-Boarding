@@ -49,6 +49,7 @@ public class DashboardController extends AppBaseController {
         events.addAll(stayEvents);
         model.addAttribute("events", events);
         return "index";
+
     }
 
     @GetMapping("/testError")
