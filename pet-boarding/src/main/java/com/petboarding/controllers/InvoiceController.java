@@ -124,6 +124,12 @@ public class InvoiceController extends AppBaseController{
         return "invoices/payment";
     }
 
+    @GetMapping("paymentComplete")
+    public String processStripePaymentCompleted(@RequestParam(defaultValue = "null") Integer id, Model model) {
+        model.addAttribute("infoMessage", "Id: " + id);
+        return "index";
+    }
+
     private void updateDetailServices(Invoice invoice) {
         for(InvoiceDetail service: invoice.getDetails()) {
             if(service.getService() == null) {

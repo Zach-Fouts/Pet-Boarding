@@ -6,9 +6,13 @@
     <th:block id="otherResources">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
         <link rel="stylesheet" href="/css/stay.css">
+        <link rel="stylesheet" href="/css/stripePayment.css" />
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
         <script src="/js/uiUtils.js"></script>
         <script src="/js/invoices.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+        <script th:src="@{/js/checkout.js}" defer></script>
         <script th:inline="javascript" >
             $(function() {
              ammounts.subTotal= [[${invoice.getSubTotal()}]];
@@ -27,13 +31,13 @@
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">Pay invoice</span>
     </div>
-    <form id="mainForm" class="row g-3 " th:Object="${invoice}" method="POST" th:action="@{${submitURL}}">
+    <form id="mainForm" class="row g-3 " th:Object="${invoice}" onsubmit="() => false">
         <input type="hidden" id="id" th:field="*{id}">
         <!--v Stay v-->
         <th:block th:if="*{stay}">
             <input type="hidden" id="stayId" th:field="*{stay}">
             <div class="row bg-light shadow-sm mx-0 mt-1 py-1">
-                <label for="confirmationCode" class="col-sm-2 col-form-label">Confirmation #</label>
+                <label for="confirmationCode" class="col-sm-2 col-form-label text-no-wrap">Confirmation #</label>
                 <div class="col-sm-10">
                     <a class="link-primary form-control-plaintext fw-bold text-lg" id="confirmationCode"
                        th:text="*{stay.reservation.confirmation}"
@@ -95,15 +99,14 @@
                         <div class="accordion-body">
                             <table
                                     id="additionalServicesTable"
-                                    data-toggle="table"
-                                    class="striped-table">
+                                    class="table striped-table">
                                 <thead>
                                 <tr>
-                                    <th data-halign="center">Qty</th>
-                                    <th data-halign="center">Service</th>
-                                    <th data-halign="center">Unit price</th>
-                                    <th data-halign="center">Description</th>
-                                    <th data-halign="center">Subtotal</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-center">Service</th>
+                                    <th class="text-center">Unit price</th>
+                                    <th class="text-center">Description</th>
+                                    <th class="text-center">Subtotal</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -170,7 +173,7 @@
                                 data-bs-target="#cashPayment"
                                 aria-expanded="false"
                                 aria-controls="cashPayment">
-                            Cash payment
+                           <i class="bi bi-cash-coin fs-2 my-1 mx-2 text-primary"></i> Cash payment
                         </button>
                     </h2>
                     <div class="accordion-collapse collapse" id="cashPayment"
@@ -185,17 +188,27 @@
                     <h2 class="accordion-header">
                         <button class="accordion-button collapsed p-2" type="button"
                                 data-bs-toggle="collapse"
-                                data-bs-target="#cashPayment"
+                                data-bs-target="#stripePayment"
                                 aria-expanded="false"
-                                aria-controls="cashPayment">
-                            Card payment
+                                aria-controls="stripePayment">
+                           <i class="bi bi-stripe fs-2 my-1 mx-2 text-primary"></i> Card payment
                         </button>
                     </h2>
                     <div class="accordion-collapse collapse" id="stripePayment"
                          aria-labelledby="stripePayment"
                          data-bs-parent="#paymentMethodsAccordion">
                         <div class="accordion-body">
-                            Stripe cash
+                            <form id="payment-form">
+                                <input type="text" id="email" placeholder="Email address" required/>
+                                <div id="payment-element">
+                                    <!--Stripe.js injects the Payment Element-->
+                                </div>
+                                <button id="submitStripePayment">
+                                    <div class="spinner hidden" id="spinner"></div>
+                                    <span id="button-text">Pay $100</span>
+                                </button>
+                                <div id="payment-message" class="hidden"></div>
+                            </form>
                         </div>
                     </div>
                 </div>

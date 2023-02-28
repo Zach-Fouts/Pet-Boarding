@@ -43,6 +43,10 @@ public class Invoice extends AbstractEntity{
     @Column(columnDefinition = "float(5,2) default 0.0")
     private Float taxPercent = 0.0f;
 
+    @OneToMany(mappedBy = "invoice")
+    @OrderBy("datetime ASC")
+    private List<Payment> payments = new ArrayList<>();
+
     public Invoice() {}
 
     public Date getDate() {
@@ -125,6 +129,14 @@ public class Invoice extends AbstractEntity{
         return getSubTotal() * (taxPercent/100);
     }
 
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+
     public String getServicesList() {
         processAggregated();
         return aggregatedInformation.getServicesList();
@@ -150,4 +162,6 @@ public class Invoice extends AbstractEntity{
         if(aggregatedInformation != null) return;
         aggregatedInformation = new InvoiceAggregatedInformation(details);
     }
+
+
 }

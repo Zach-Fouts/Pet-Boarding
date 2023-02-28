@@ -154,6 +154,7 @@ public class Owner extends AbstractEntity{
         information += "<strong>Address: </strong>" + this.address;
         information += (this.address2 != null && this.address2 != "" ? " , " + this.address2 : "");
         information += (this.phoneNumber != null ? "<br><strong>Phone number</strong>: " + this.phoneNumber : "");
+        information += (this.email != null ? "<br><strong>Email</strong>: " + this.email : "");
         return information;
     }
 }
