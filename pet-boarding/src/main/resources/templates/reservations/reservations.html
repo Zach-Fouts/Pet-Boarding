@@ -60,10 +60,10 @@
                     <td th:text="${reservation.comments}"></td>
                     <td><span class="status-indicator bg-gradient" th:title="${reservation.status.name}" th:style="|background-color: ${reservation.status.color}|"></span></td>
                     <td>
-                        <a class="btn btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
-                        <a class="btn btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>
-                        <a class="btn btn-danger" title="delete" th:href="@{'/reservations/delete?reservationId=' + ${reservation.id}}"><i class="bi bi-trash"></i></a>
-                        <a class="btn btn-primary" title="check in" th:href="@{'/stays/add?reservationId=' + ${reservation.id}}"><i class="bi bi-calendar-check"></i></a>
+                        <a class="btn btn-sm btn-primary" title="detail" th:href="@{'/reservations/detail?reservationId=' + ${reservation.id}}"><i class="bi bi-archive-fill"></i></a>
+                        <a class="btn btn-sm btn-primary" title="update" th:href="@{'/reservations/update?reservationId=' + ${reservation.id}}"><i class="bi bi-pen"></i></a>
+                        <a class="btn btn-sm btn-danger" title="delete" th:href="@{'/reservations/delete?reservationId=' + ${reservation.id}}"><i class="bi bi-trash"></i></a>
+                        <a class="btn btn-sm btn-primary" title="check in" th:href="@{'/stays/add?reservationId=' + ${reservation.id}}"><i class="bi bi-calendar-check"></i></a>
                     </td>
                 </tr>
             </tbody>
