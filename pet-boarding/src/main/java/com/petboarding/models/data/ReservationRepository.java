@@ -7,8 +7,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JPARepositoryActiveFiltering<Reservation, Integer> {
-    public Collection<Reservation> findByPetId(Integer petId);
+    public List<Reservation> findByPetId(Integer petId);
+    public List<Reservation> findByStayIsNull();
+
 }

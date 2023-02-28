@@ -57,7 +57,7 @@ public class ReservationController extends AppBaseController{
         return "reservations/calendarView";
     }
 //
-//    @GetMapping
+//    @GetMapping("home")
 //    public String displayWeek(Model model) {
 //        Function<Reservation, String> getTitle = reservation ->
 //                "#" + reservation.getConfirmation() + " | " +
@@ -67,7 +67,7 @@ public class ReservationController extends AppBaseController{
 //                reservationRepository.findAll(),
 //                getTitle);
 //        model.addAttribute("reservations", events);
-//        return "reservations/calendarView";
+//        return "index";
 //    }
 
     private void addCommonAttributes(Integer ownerId, Model model) {
