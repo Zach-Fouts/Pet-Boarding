@@ -34,9 +34,6 @@ public class InvoiceUtils {
         return detailsList;
     }
 
-    public static InvoiceStatus getActiveStatus() {
-        return new InvoiceStatus(1);
-    }
 
     public static Double round(double value, int places) {
         if(places < 0) return null;

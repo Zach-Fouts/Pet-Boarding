@@ -12,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 public class PaymentController{
@@ -30,17 +34,21 @@ public class PaymentController{
     private String stripeApiKey;
 
     @PostMapping("/create-payment-intent")
-    public CreatePaymentResponse createPaymentIntent(@RequestBody CreatePayment createPayment) throws StripeException {
-        Stripe.apiKey = stripeApiKey;//"sk_test_51MYex8AVgyan8JxQcbStGLELy2iB7XIVgLnGfoWiKwqA5v2oY2DXDffQGUA0HTSusy1gH9tQrsUAhjbdwCjOAGLt00ip3tBW6D";
-            PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                    .setCurrency("usd")
-                    .setAmount(100 * 100L) //product amount
-                    .build();
+    public CreatePaymentResponse createPaymentIntent(@RequestBody CreatePayment createPayment, HttpSession session) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
 
-            // Create a PaymentIntent with the order amount and currency
-            PaymentIntent paymentIntent = PaymentIntent.create(params);
+        PaymentIntentCreateParams paymentParams = new PaymentIntentCreateParams.Builder()
+                .setAmount(createPayment.getAmount())
+                .setCurrency("usd")
+                .setReceiptEmail(createPayment.getEmail())
+                .putMetadata("invoiceId", createPayment.getInvoiceId())
+                .build();
+        PaymentIntent paymentIntent = PaymentIntent.create(paymentParams);
 
-            return new CreatePaymentResponse(paymentIntent.getClientSecret());
+        session.setAttribute("stripe.clientSecret", paymentIntent.getClientSecret()); // save last payment intent
+        session.setAttribute("stripe.invoiceId", createPayment.getInvoiceId());
+        session.setAttribute("stripe.amount",(double) createPayment.getAmount() / 100);
 
+        return new CreatePaymentResponse(paymentIntent.getClientSecret());
     }
 }

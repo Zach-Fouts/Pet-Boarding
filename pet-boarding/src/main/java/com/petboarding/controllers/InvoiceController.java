@@ -5,13 +5,17 @@ import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.*;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
+import com.petboarding.models.dto.CreatePayment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -20,6 +24,9 @@ import java.util.*;
 @Controller
 @RequestMapping("invoices")
 public class InvoiceController extends AppBaseController{
+
+    @Value("${stripe.api.key}")
+    private String stripePublishableKey;
 
     private final String FORM_NEW_TITLE = "New Invoice";
     private final String FORM_UPDATE_TITLE = "Update #${number}";
@@ -130,6 +137,7 @@ public class InvoiceController extends AppBaseController{
         return "invoices/payment";
     }
 
+    @Transactional
     @PostMapping("{id}/pay")
     public String processInvoicePaymentForm(@Valid Payment payment, Errors validation, Model model, RedirectAttributes redirectAttributes) {
         if(validation.hasErrors()) {
@@ -137,14 +145,40 @@ public class InvoiceController extends AppBaseController{
             return "invoices/payment";
         }
         paymentRepository.save(payment);
+        setInvoiceToPaid(payment.getInvoice());
         redirectAttributes.addFlashAttribute("infoMessage", "The payment process was completed.");
         return "redirect:/invoices/update/" + payment.getInvoice().getId();
     }
 
-    @GetMapping("paymentComplete")
-    public String processStripePaymentCompleted(@RequestParam(defaultValue = "null") Integer id, Model model) {
-        model.addAttribute("infoMessage", "Id: " + id);
-        return "index";
+    @Transactional
+    @GetMapping("{id}/pay/stripe/{clientSecret}")
+    public String processStripePaymentCompleted(@PathVariable Integer id,
+                                                @PathVariable String clientSecret,
+                                                HttpSession session,
+                                                RedirectAttributes redirectAttributes) {
+        Optional<Invoice> optInvoice = invoiceRepository.findById(id);
+        if(optInvoice.isEmpty() || Integer.parseInt((String)session.getAttribute("stripe.invoiceId")) != id) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The invoice couldn't be found.");
+            return "redirect:/invoices";
+        }
+        if(!clientSecret.equals((String)session.getAttribute("stripe.clientSecret"))) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The payment information for stripe couldn't be confirmed.");
+            return "redirect:/invoices/" + id + "/pay";
+        }
+        Invoice invoice = optInvoice.get();
+        Payment payment = new Payment();
+        payment.setInvoice(invoice);
+        payment.setAmount((Double)session.getAttribute("stripe.amount"));
+        payment.setCashPayment(false);
+        payment.setCardConfirmation(clientSecret);
+        paymentRepository.save(payment);
+        setInvoiceToPaid(invoice);
+        //clean session attributes
+        session.removeAttribute("stripe.clientSecret");
+        session.removeAttribute("stripe.invoiceId");
+        session.removeAttribute("stripe.amount");
+        redirectAttributes.addFlashAttribute("infoMessage", "The payment process was completed.");
+        return "redirect:/invoices/update/" + invoice.getId();
     }
 
     private void updateDetailServices(Invoice invoice) {
@@ -156,6 +190,11 @@ public class InvoiceController extends AppBaseController{
                 invoiceDetailRepository.save(service);
             }
         }
+    }
+
+    private void setInvoiceToPaid(Invoice invoice) {
+        invoice.setStatus(getInvoiceStatus("PAID_INVOICE"));
+        invoiceRepository.save(invoice);
     }
 
     private void prepareCommonFormModel(Invoice invoice, Model model) {
@@ -197,6 +236,10 @@ public class InvoiceController extends AppBaseController{
         payment.setCashPayment(true);
         payment.setCardConfirmation(null);
         payment.setAmount(InvoiceUtils.round(invoice.getToPayTotal(), 2));
+        CreatePayment createPayment = new CreatePayment();
+        createPayment.setEmail(invoice.getOwner().getEmail());
+        createPayment.setAmount((long)(payment.getAmount() * 100L));
+        createPayment.setInvoiceId(invoice.getId().toString());
         List<Owner> owners = ownerRepository.findByActive(true);
         if(!invoice.getOwner().getActive() && !owners.contains(invoice.getOwner()))
             owners.add(invoice.getOwner());
@@ -205,6 +248,8 @@ public class InvoiceController extends AppBaseController{
         model.addAttribute("submitURL", "/invoices/update/" + invoice.getId());
         model.addAttribute("owners", owners);
         model.addAttribute("payment", payment);
+        model.addAttribute("createPayment", createPayment);
+        model.addAttribute("stripePublishableKey", stripePublishableKey);
         addLocation("pay/" + invoice.getFullNumber() , model);
         prepareCommonFormModel(invoice, model);
     }

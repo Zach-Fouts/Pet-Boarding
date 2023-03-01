@@ -159,7 +159,8 @@ public class StayController extends AppBaseController {
         invoice.setDate(new Date());
         BigDecimal nextNumber = invoiceRepository.findNextNumberByDate(invoice.getDate());
         invoice.setNumber(nextNumber == null ? 1 : nextNumber.intValue());
-        invoice.setStatus(InvoiceUtils.getActiveStatus());
+        invoice.setStatus(getInvoiceStatus("OPEN_INVOICE"));
+        invoice.setTaxPercent(Float.parseFloat(configurationRepository.findByName("SALES_TAX").getValue()));
         stay.setCheckOutTime(new Timestamp(invoice.getDate().getTime()));
         stay.setStatus(getStayStatus("COMPLETED_STAY"));
         stayRepository.save(stay);
@@ -237,6 +238,12 @@ public class StayController extends AppBaseController {
         Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
         return new StayStatus(statusId);
     }
+
+    private InvoiceStatus getInvoiceStatus(String name) {
+        Integer statusId = Integer.parseInt(configurationRepository.findByName(name).getValue());
+        return new InvoiceStatus(statusId);
+    }
+
 
     private boolean processDateValidation(Stay stay, Model model) {
         boolean hasErrors = false;

@@ -14,16 +14,10 @@ form#payment-form {
   display: none;
 }
 
-#email {
-  border-radius: 6px;
-  margin-bottom: 16px;
+#email, #amount {
   padding: 12px;
-  border: 1px solid rgba(50, 50, 93, 0.1);
   max-height: 44px;
-  font-size: 16px;
-  width: 100%;
-  background: white;
-  box-sizing: border-box;
+
 }
 
 #payment-message {
@@ -39,7 +33,7 @@ form#payment-form {
 }
 
 /* Buttons and links */
-#payment-form button#submit {
+#payment-form button#submit_ {
   background: #5469d4;
   font-family: Arial, sans-serif;
   color: #ffffff;
@@ -54,10 +48,10 @@ form#payment-form {
   box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
   width: 100%;
 }
-#payment-form  button:hover {
+#payment-form_  button:hover {
   filter: contrast(115%);
 }
-#payment-form  button:disabled {
+#payment-form_  button:disabled {
   opacity: 0.5;
   cursor: default;
 }
@@ -138,3 +132,4 @@ form#payment-form {
     min-width: initial;
   }
 }
+
