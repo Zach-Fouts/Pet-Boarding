@@ -227,6 +227,7 @@ public class InvoiceController extends AppBaseController{
         model.addAttribute("invoice", invoice);
         model.addAttribute("submitURL", "/invoices/update/" + invoice.getId());
         model.addAttribute("owners", owners);
+        model.addAttribute("payment", invoice.getPayment());
         addLocation("Update", model);
         prepareCommonFormModel(invoice, model);
     }

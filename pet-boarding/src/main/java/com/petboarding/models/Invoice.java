@@ -133,6 +133,11 @@ public class Invoice extends AbstractEntity{
         return payments;
     }
 
+    public Payment getPayment() {
+        if(payments.isEmpty()) return null;
+        return payments.get(0);
+    }
+
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
