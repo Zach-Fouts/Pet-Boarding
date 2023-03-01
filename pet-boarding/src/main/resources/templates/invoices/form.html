@@ -6,6 +6,23 @@
     <th:block id="otherResources">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
         <link rel="stylesheet" href="/css/stay.css">
+        <style>
+            .paidText {
+               animation: animatePaidText 3s linear infinite;
+             }
+
+             @keyframes animatePaidText{
+               0%{
+                 opacity: 0;
+               }
+               50%{
+                 opacity: 1.5;
+               }
+               100%{
+                 opacity: 0;
+               }
+             }
+        </style>
         <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
         <script src="/js/uiUtils.js"></script>
         <script src="/js/invoices.js"></script>
@@ -23,19 +40,23 @@
     </th:block>
 </head>
 <body>
-<div id="content" class="col-md-12 col-lg-10 col-xl-8  col-xxl-6">
+<div id="content" class="col-md-12 col-lg-10 col-xl-8  col-xxl-6" th:with="isPaid=${!invoice.payments.isEmpty()}">
     <div class="d-flex align-items-center col-12 border-bottom pb-2 mb-3">
         <a class="btn btn-secondary" href="/invoices" title="Go back to Invoices">
             <i class="bi bi-box-arrow-in-left"></i>
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Invoice</span>
         <div th:if="${invoice.id}" class="form-toolbar d-flex ms-auto">
-            <a class="btn btn-primary ms-auto" title="Make a payment" th:href="@{/invoices/{id}/pay (id=${invoice.id})}">
+            <a class="btn btn-primary ms-auto" title="Make a payment"
+               th:href="@{/invoices/{id}/pay (id=${invoice.id})}"
+               th:classappend="${isPaid} ? 'disabled' : null" >
                 <i class="bi bi-cash-coin"></i>
                 <span class="d-none d-sm-inline">Pay</span>
             </a>
             <div class="vr mx-2"></div>
-            <a class="btn btn-danger" title="Cancel this invoice" th:href="|javascript:openCancelDialog('${invoice.getFullNumber()}','/invoices', ${invoice.id});|">
+            <a class="btn btn-danger" title="Cancel this invoice"
+               th:href="|javascript:openCancelDialog('${invoice.getFullNumber()}','/invoices', ${invoice.id});|"
+               th:classappend="${isPaid} ? 'disabled' : null" >
                 <i class="bi-x-circle"></i>
                 <span class="d-none d-sm-inline">Cancel</span>
             </a>
@@ -82,7 +103,8 @@
         <div class="col-12">
             <label for="billTo" class="form-label">Bill to</label>
             <div class="input-group has-validation">
-                <select id="billTo" class="form-select" th:field="*{owner}" tabindex="1" autofocus onclick="updateContactInformation($(this))">
+                <select id="billTo" class="form-select" th:field="*{owner}" tabindex="1" autofocus onclick="updateContactInformation($(this))"
+                        th:disabled="${isPaid}" th:classappend="${isPaid} ? 'bg-light' : null">
                     <option selected value="" data-contact="">Select one...</option>
                     <option th:each="owner: ${owners}"
                             th:value="${owner.id}"
@@ -100,9 +122,18 @@
                  th:utext="*{owner != null ? owner.getContactInformation()  : ''}">
             </div>
         </div>
-        <div class="col-12 d-grid">
+        <div class="col-12 text-center fw-semibold mt-1 p-2 mb-0 bg-primary bg-opacity-10 hstack" th:if="${isPaid}">
+            <i class="col fs-1" th:classappend="${payment.cashPayment} ? 'bi-cash-coin' : 'bi-credit-card'"></i>
+            <span class="col" th:text="${#dates.format(payment.datetime, 'MM/dd/yyyy HH:mm:ss')}"></span>
+            <span class="col" th:text="${#numbers.formatCurrency(payment.amount)}"></span>
+            <span class="col bi bi-check-lg fs-1 d-flex align-items-center">
+                <span class="text-center fw-bold fs-4 paidText">PAID</span>
+            </span>
+        </div>
+        <div class="col-12 d-grid" th:classappend="${isPaid} ? 'mt-0' : null">
             <button id="btnAddService" class="btn btn-outline-primary" type="button"
-                    onclick="addAdditionalService()">
+                    onclick="addAdditionalService()"
+                    th:if="${!isPaid}">
                 <span >Add Service</span>
                 <i class="bi-plus-lg"></i>
             </button>
@@ -117,7 +148,7 @@
                         <th data-halign="center">Unit price</th>
                         <th data-halign="center">Description</th>
                         <th data-halign="center">Subtotal</th>
-                        <th></th>
+                        <th th:if="${!isPaid}"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -127,7 +158,7 @@
                         <td data-field="_pricePerUnit" class="px-2 text-end" th:text="${service.pricePerUnit}"></td>
                         <td data-field="_description" th:text="${service.description}"></td>
                         <td data-field="_subTotal" class="fw-semibold px-2 text-end" th:text="${#numbers.formatCurrency(service.getSubTotal())}"></td>
-                        <td class="text-center">
+                        <td class="text-center" th:if="${!isPaid}">
                             <button type="button" class="btn btn-sm btn-outline-primary" title="Update/View" th:onclick="|openAdditionalServicesDialog(${service.id}, ${stat.index})|"><i class="bi-pen"></i></button>
                             <button type="button" class="btn btn-sm btn-outline-danger"  title="Remove" th:onclick="|openConfirmRemoveDialog(${service.id}, ${stat.index})|"><i class="bi-dash-lg"></i></button>
                             <input data-field="_id" type="hidden" th:field="*{details[__${stat.index}__].id}">
@@ -153,6 +184,7 @@
                     <div class="col-sm-5">
                         <div class="input-group">
                             <input type="number" id="discountPercent" class="form-control text-end px-1"
+                                   th:disabled="${isPaid}" th:classappend="${isPaid} ? 'bg-light' : null"
                                    th:field="*{discountPercent}" step="0.01" max="100" min="0" onchange="updateDiscountTotal()">
                             <span class="input-group-text">%</span>
                         </div>
@@ -163,9 +195,9 @@
                 <label for="taxTotal" class="col-form-label col-sm-4">Sale Taxes</label>
                 <div class="col-sm-8 hstack">
                     <div class="col-sm-5">
+                        <input type="hidden" th:field="*{taxPercent}">
                         <div class="input-group">
-                            <input type="hidden" th:field="*{taxPercent}">
-                            <input type="text" id="taxPercent" class="form-control text-end px-2 bg-light"
+                            <input type="text" id="taxPercent" class="form-control text-end px-1 bg-light"
                                    th:value="*{taxPercent}" step="0.01" max="100" min="0" onchange="updateTaxTotal()" disabled>
                             <span class="input-group-text">%</span>
                         </div>
@@ -183,7 +215,8 @@
         <div class="col-3">
             <label for="status" class="form-label">Status</label>
             <div class="input-group has-validation">
-                <select id="status" th:field="*{status}" class="form-select" th:errorclass="is-invalid" required>
+                <select id="status" th:field="*{status}" class="form-select" th:errorclass="is-invalid"
+                        th:disabled="${isPaid}" th:classappend="${isPaid} ? 'bg-light' : null" required>
                     <option th:each="status: ${statuses}"
                             th:value="${status.id}"
                             th:text="${status.name}">
@@ -194,7 +227,8 @@
         </div>
         <div class="col-12" th:if="*{id}">
             <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="active" th:field="*{active}">
+                <input class="form-check-input" type="checkbox" role="switch" id="active"
+                       th:disabled="${isPaid}"  th:field="*{active}">
                 <label class="form-check-label" for="active">Active</label>
             </div>
         </div>
@@ -205,7 +239,8 @@
             <a type="button" class="btn btn-secondary mx-1 ms-auto" href="/invoices" title="Cancel and go back">
                 Cancel
             </a>
-            <button type="submit" class="btn btn-primary mx-1" title="Save changes">
+            <button type="submit" class="btn btn-primary mx-1" title="Save changes"
+                    th:classappend="${isPaid} ? 'disabled' : null">
                 <i class="bi bi-save"></i>
                 Save
             </button>
