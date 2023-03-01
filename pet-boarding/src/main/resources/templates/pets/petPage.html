@@ -53,8 +53,8 @@
                      <td th:text="${pet.breed}"></td>
                      <td th:text="${pet.notes}"></td>
                      <td>
-                        <a th:href="@{/showFormForUpdate/{id}(id=*{id})}" class="btn btn-primary" ><i class="bi-pen"></i></a>
-                        <a th:href="@{/deletePet/{id}(id=${pet.id})}" class="btn btn-danger" ><i class="bi-trash"></i></a>
+                        <a th:href="@{/showFormForUpdate/{id}(id=*{id})}" class="btn btn-sm btn-primary" ><i class="bi-pen"></i></a>
+                        <a th:href="@{/deletePet/{id}(id=${pet.id})}" class="btn btn-sm btn-danger" ><i class="bi-trash"></i></a>
                      </td>
                   </tr>
                   </tbody>
