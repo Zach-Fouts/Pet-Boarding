@@ -1,6 +1,7 @@
 package com.petboarding.models.utils;
 
 import com.petboarding.models.InvoiceDetail;
+import com.petboarding.models.Payment;
 
 import java.util.List;
 import java.util.Set;
@@ -9,6 +10,8 @@ public class InvoiceAggregatedInformation {
 
     private String servicesList;
     private double subTotal;
+
+    private double totalPaid;
 
     public InvoiceAggregatedInformation(){}
 
@@ -26,6 +29,13 @@ public class InvoiceAggregatedInformation {
         servicesList += "</ul>";
     }
 
+    public void processPayments(List<Payment> payments) {
+        totalPaid = 0;
+        for(Payment payment: payments) {
+            totalPaid += payment.getAmount();
+        }
+    }
+
     public String getServicesList() {
         return servicesList;
     }
@@ -34,4 +44,7 @@ public class InvoiceAggregatedInformation {
         return subTotal;
     }
 
+    public double getTotalPaid() {
+        return totalPaid;
+    }
 }

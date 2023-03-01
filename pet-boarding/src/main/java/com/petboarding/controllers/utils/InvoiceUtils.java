@@ -5,6 +5,8 @@ import com.petboarding.models.data.InvoiceDetailRepository;
 import com.petboarding.models.data.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,11 @@ public class InvoiceUtils {
         return detailsList;
     }
 
-    public static InvoiceStatus getActiveStatus() {
-        return new InvoiceStatus(1);
+
+    public static Double round(double value, int places) {
+        if(places < 0) return null;
+        BigDecimal number = new BigDecimal(Double.toString(value));
+        number = number.setScale(places, RoundingMode.HALF_UP);
+        return number.doubleValue();
     }
 }

@@ -23,8 +23,10 @@ public class Payment extends AbstractEntity{
     @Column(nullable = false)
     private Double amount;
 
+    @Column(columnDefinition = "boolean default true")
     private Boolean cashPayment;
 
+    @Column(columnDefinition = "varchar(100) default null")
     private String cardConfirmation;
 
     public Payment() {
