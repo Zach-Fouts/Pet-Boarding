@@ -134,7 +134,7 @@ public class Invoice extends AbstractEntity{
     }
 
     public Payment getPayment() {
-        if(payments.isEmpty()) return null;
+        if(payments.isEmpty()) return new Payment();
         return payments.get(0);
     }
 

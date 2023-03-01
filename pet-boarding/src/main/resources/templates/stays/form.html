@@ -23,7 +23,7 @@
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Stay</span>
         <div th:if="${stay.id}" class="form-toolbar d-flex ms-auto">
-            <button class="btn btn-primary ms-auto" title="Start check-out" th:onclick="|openConfirmationDialog('Do you wish to start the check-out process?', '/stays/checkout/${stay.id}')|">
+            <button class="btn btn-primary ms-auto" th:classappend="${stay.invoice} ? 'disabled' : null" title="Start check-out" th:onclick="|openConfirmationDialog('Do you wish to start the check-out process?', '/stays/checkout/${stay.id}')|">
                 <i class="bi bi-receipt"></i>
                 <span class="d-none d-sm-inline">Check-Out</span>
             </button>
@@ -191,7 +191,7 @@
             <a type="button" class="btn btn-secondary mx-1 ms-auto" href="/stays/grid" title="Cancel register and go back">
                 Cancel
             </a>
-            <button type="submit" class="btn btn-primary mx-1" title="Save changes">
+            <button type="submit" th:classappend="*{invoice} ? 'disabled' : null" class="btn btn-primary mx-1" title="Save changes">
                 <i class="bi bi-save"></i>
                 Save
             </button>

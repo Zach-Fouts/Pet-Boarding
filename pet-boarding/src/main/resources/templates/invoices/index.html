@@ -41,6 +41,8 @@
                 <th data-halign="center" data-align="center" data-sortable="true">Stay</th>
                 <th data-halign="center" data-sortable="true">Services</th>
                 <th data-halign="center" data-align="right" data-sortable="true">Total</th>
+                <th data-halign="center" data-align="center" data-sortable="true" data-visible="false">Paid with</th>
+                <th data-halign="center" data-align="center" data-sortable="true">Paid on</th>
                 <th data-halign="center" data-align="center" data-sortable="true">Status</th>
                 <th data-halign="center" data-align="center">Actions</th>
             </tr>
@@ -61,8 +63,18 @@
                 </td>
                 <td th:utext="*{getCondensedServicesList()}"></td>
                 <td class="fw-semibold" th:text="*{#numbers.formatCurrency(getTotal())}"></td>
+                <td>
+                    <th:block th:if="*{!payments.isEmpty()}">
+                        <i class="bi-cash-coin" th:if="*{getPayment().getCashPayment()}" title="Cash"></i>
+                        <i class="bi-credit-card" th:unless="*{getPayment().getCashPayment()}" title="Credit card"></i>
+                    </th:block>
+                </td>
+                <td th:text="*{#dates.format(getPayment().getDatetime(), 'MM/dd/yyyy HH:mm:ss')}"></td>
                 <td><span class="status-indicator bg-gradient" th:title="*{status.name}" th:style="|background-color: *{status.color}|"></span></td>
                 <td>
+                    <a class="btn btn-sm btn-primary" th:href="@{/invoices/{id}/pay(id=*{id})}"
+                       th:classappend="*{!payments.isEmpty()} ? 'disabled' : null"
+                       title="Pay"><i class="bi-cash-coin"></i></a>
                     <a class="btn btn-sm btn-primary" th:href="@{/invoices/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
                     <a class="btn btn-sm btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{getFullNumber()}','/invoices', *{id});|"><i class="bi-trash"></i></a>
                 </td>
