@@ -8,6 +8,7 @@ import com.petboarding.models.data.*;
 import com.petboarding.models.dto.CreatePayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -55,7 +56,8 @@ public class InvoiceController extends AppBaseController{
 
     @GetMapping
     public String displayStaysGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
-        model.addAttribute("invoices", showAll ? invoiceRepository.findAll() : invoiceRepository.findByActive(true));
+        Sort sortDescDate = Sort.by(Sort.Direction.DESC, "date");
+        model.addAttribute("invoices", showAll ? invoiceRepository.findAll(sortDescDate) : invoiceRepository.findByActive(true, sortDescDate));
         model.addAttribute("showAll", showAll);
         return "invoices/index";
     }

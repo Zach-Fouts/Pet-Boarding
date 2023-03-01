@@ -68,7 +68,9 @@
                        th:text="*{employee.getFullName()}"></a></td>
                 <td><span class="status-indicator bg-gradient" th:title="*{status.name}" th:style="|background-color: *{status.color}|"></span></td>
                 <td>
-                    <a class="btn btn-sm btn-primary" th:classappend="*{invoice} ? 'disabled' : null" th:href="@{/stays/checkout/{id}(id=*{id})}" title="Checkout"><i class="bi-receipt"></i></a>
+                    <a class="btn btn-sm btn-primary" th:classappend="*{invoice} ? 'disabled' : null"
+                       th:href="|javascript:openConfirmationDialog('Do you wish to start the check-out process for #<strong>${stay.reservation.confirmation}</strong>?', '/stays/checkout/${stay.id}')|"
+                       title="Checkout"><i class="bi-receipt"></i></a>
                     <a class="btn btn-sm btn-primary" th:href="@{/stays/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
                     <a class="btn btn-sm btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{reservation.confirmation}','/stays', *{id});|"><i class="bi-trash"></i></a>
                 </td>
