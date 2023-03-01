@@ -28,7 +28,7 @@ public class User extends AbstractEntity{
     @OneToOne
     private Employee employee;
 
-
+//  TODO: remove active; getter and setter
     @Column(columnDefinition = "boolean default true")
     private Boolean active = true;
 

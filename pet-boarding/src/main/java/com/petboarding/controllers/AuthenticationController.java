@@ -166,7 +166,6 @@ public class AuthenticationController {
         } catch (UnsupportedEncodingException | MessagingException e) {
             model.addAttribute("error", "Error while sending email");
         }
-
         return "/sign-in/forgotPassword";
     }
 
@@ -181,7 +180,7 @@ public class AuthenticationController {
             return "/sign-in/login";
         }
 
-        return "/sign-in/resetPassword";
+        return "sign-in/resetPassword";
     }
 
     @PostMapping("resetPassword")
@@ -197,5 +196,4 @@ public class AuthenticationController {
         model.addAttribute("infoMessage", "Your password has been reset.");
         return "/sign-in/login";
     }
-
 }

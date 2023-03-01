@@ -1,30 +1,25 @@
-<!--TODO: redo login page-->
-
-
-<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
-<body class="container">
-<div th:replace="fragments :: page-header"></div>
-<div class="container body-content">
-    <form method="post" th:object="${loginFormDTO}">
-        <div class="form-group">
-            <label th:for="username">Username
-                <input class="form-control" th:field="*{username}"/>
-            </label>
-            <p class="error" th:errors="*{username}"></p>
-        </div>
-        <div class="form-group">
-            <label>Password
-                <input class="form-control" th:field="*{password}" type="password" />
-            </label>
-            <p class="error" th:errors="*{password}"></p>
-        </div>
-        <input type="submit" class="btn btn-primary" value="Log In" />
-    </form>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
 
-    <a th:href="@{/sign-in/forgotPassword}">Forgot your password?</a>
-<!--<p>Don't have an account? <a href="/sign-in/register">Register for one.</a></p>-->
+<body>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <div class="fadeIn first">
+            <img src="/img/logo.svg" class="img-fluid p-3 app-logo" alt="Application Logo" />
+        </div>
+        <form method="post" th:object="${loginFormDTO}">
+            <input th:field="*{username}" id="login" class="fadeIn second" name="login" placeholder="Username" required>
+            <input th:field="*{password}" type="password" id="password" class="fadeIn third" name="login" placeholder="Password" required>
+            <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
+        <div id="formFooter">
+            <span>Forgot your password?<br>Contact your Manager<br>or <a class="underlineHover" th:href="@{/sign-in/forgotPassword}" >click here.</a></span>
+        </div>
+    </div>
 </div>
 </body>
-</html>
