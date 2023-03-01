@@ -7,6 +7,7 @@ import com.petboarding.controllers.utils.JsonService;
 import com.petboarding.models.app.Module;
 import com.petboarding.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,6 +19,8 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
+
+import static javax.swing.text.html.HTML.Tag.S;
 
 @Controller
 @RequestMapping("stays")
@@ -58,13 +61,13 @@ public class StayController extends AppBaseController {
 
     @GetMapping
     public String displayStaysCalendar(Model model) {
-        model.addAttribute("stays", stayRepository.findAll());
-        return "stays/indexCalendar";
+        return "redirect:/stays/grid";
     }
 
     @GetMapping("grid")
     public String displayStaysGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
-        model.addAttribute("stays", showAll ? stayRepository.findAll() : stayRepository.findByActive(true));
+        Sort sortDescCheckInTime = Sort.by(Sort.Direction.DESC, "checkInTime");
+        model.addAttribute("stays", showAll ? stayRepository.findAll(sortDescCheckInTime) : stayRepository.findByActive(true, sortDescCheckInTime));
         model.addAttribute("showAll", showAll);
         return "stays/indexGrid";
     }
