@@ -170,33 +170,63 @@ public class AuthenticationController {
         return "/sign-in/forgotPassword";
     }
 
-    @GetMapping("resetPassword/{token}")
-    public String resetPasswordFrom(@PathVariable("token") String token, Model model) {
-        Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
-        if (!user.isPresent()) {
+    @GetMapping("resetPassword")
+    public String resetPasswordFrom(@Param(value = "token") String token, Model model) {
+
+        User user = passwordResetService.getByResetPasswordToken(token);
+        model.addAttribute("token", token);
+
+        if (user == null) {
             model.addAttribute("errorMessage", "Link has expired");
             return "/sign-in/login";
         }
-        model.addAttribute("user", user);
-        return "/sign-in/resetPassword";
-    }
-// TODO: refactor reset password get and post to use @PathVariable
-    @PostMapping("resetPassword/{token}")
-    public String processResetPasswordForm(@PathVariable(value = "token") @RequestParam String token, @RequestParam(value = "password") String password, @RequestParam(value = "verifyPassword") String verifyPassword, Model model) {
 
+        return "sign-in/resetPassword";
+    }
+
+//    @GetMapping("resetPassword")
+//    public String resetPasswordFrom(@Param(value = "token") String token, Model model) {
+//        Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
+//        model.addAttribute("token", token);
+//        if (!user.isPresent()) {
+//            model.addAttribute("errorMessage", "Link has expired");
+//            return "/sign-in/login";
+//        }
+//        model.addAttribute("user", user);
+//        return "/sign-in/resetPassword";
+//    }
+// TODO: refactor reset password get and post to use @PathVariable
+
+    @PostMapping("resetPassword")
+    public String processResetPasswordForm(@RequestParam String password, @RequestParam String token, Model model){
         Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
+
         if (!user.isPresent()) {
             model.addAttribute("errorMessage", "Unable to reset Password. Please try again.");
-            return "redirect:/sign-in/forgotPassword";
-        }
-        if (!password.equals(verifyPassword)) {
-            model.addAttribute("errorMessage", "Passwords do not match");
-            model.addAttribute("token", token);
-            return "redirect:/sign-in/resetPassword" + "?token=" + token;
+            return "/sign-in/forgotPassword";
         }
         passwordResetService.updatePassword(user.get(), password);
         model.addAttribute(new LoginFormDTO());
         model.addAttribute("infoMessage", "Your password has been reset.");
         return "/sign-in/login";
     }
+
+//
+//    @PostMapping("resetPassword/{token}")
+//    public String processResetPasswordForm(@PathVariable(value = "token") @RequestParam String token, @RequestParam(value = "password") String password, @RequestParam(value = "verifyPassword") String verifyPassword, Model model) {
+//        Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
+//        if (!user.isPresent()) {
+//            model.addAttribute("errorMessage", "Unable to reset Password. Please try again.");
+//            return "redirect:/sign-in/forgotPassword";
+//        }
+//        if (!password.equals(verifyPassword)) {
+//            model.addAttribute("errorMessage", "Passwords do not match");
+//            model.addAttribute("token", token);
+//            return "redirect:/sign-in/resetPassword" + "?token=" + token;
+//        }
+//        passwordResetService.updatePassword(user.get(), password);
+//        model.addAttribute(new LoginFormDTO());
+//        model.addAttribute("infoMessage", "Your password has been reset.");
+//        return "/sign-in/login";
+//    }
 }
