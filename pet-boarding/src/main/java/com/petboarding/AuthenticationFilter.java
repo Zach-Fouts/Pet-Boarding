@@ -21,17 +21,19 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     @Autowired
     AuthenticationController authenticationController;
 
-//    TODO: add password reset to whitelist
-    private static final List<String> whitelist = Arrays.asList("/sign-in/login");
+    //    TODO: add password reset to whitelist
+    private static final List<String> whitelist = Arrays.asList("/css/login.css", "/img/logo.svg");
     private static final List<String> EMPLOYEE_WHITELIST = Arrays.asList("/users", "/employees");
+
+//    TODO: allow employees to edit their own profile
 
     private static boolean isWhitelisted(String path, User user) {
 //        if (user != null) {
-//                return !EMPLOYEE_WHITELIST.contains(path);
+//                return !path.startsWith("/users") && !path.startsWith("/employees");
 //            }
 //        return whitelist.contains(path);
-        //TODO: uncomment and remove 'return true' to enable security
         return true;
+        //TODO: uncomment and remove 'return true' to enable security
     }
 
     private static boolean isWhitelisted(String path) {
@@ -42,39 +44,43 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
         }
         return false;
     }
-@Override
-public boolean preHandle(HttpServletRequest request,
-                         HttpServletResponse response,
-                         Object handler) throws IOException {
+    @Override
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws IOException {
 
-    String path = request.getRequestURI();
-    HttpSession session = request.getSession();
-    User user = authenticationController.getUserFromSession(session);
+        String path = request.getRequestURI();
+        HttpSession session = request.getSession();
+        User user = authenticationController.getUserFromSession(session);
 
-    if (isWhitelisted(path, user)) {
-        return true;
-    }
-
-    // Check if user is logged
-    if (user != null) {
-        if (user.isAdmin()) {
-            // allows admins to access any non-whitelisted path
+        if (isWhitelisted(path, user)) {
             return true;
-        } else {
-            // allows employees to only access other paths
-            if (!path.startsWith("/users")  && !path.startsWith("/employees")) {
+        }
+
+        if (path.startsWith("/sign-in")){
+            return true;
+        }
+
+        // Check if user is logged
+        if (user != null) {
+            if (user.isAdmin()) {
+                // allows admins to access any non-whitelisted path
                 return true;
             } else {
-                //redirects to home page if trying to access different paths
-                response.sendRedirect("/");
-                return false;
+                // allows employees to only access other paths
+                if (!path.startsWith("/users")  && !path.startsWith("/employees")) {
+                    return true;
+                } else {
+                    //redirects to home page if trying to access different paths
+                    response.sendRedirect("/");
+                    return false;
+                }
             }
         }
-    }
 
-    // Redirect to login page
-    response.sendRedirect("/sign-in/login");
-    return false;
-}
+        // Redirect to login page
+        response.sendRedirect("/sign-in/login");
+        return false;
+    }
 
 }
