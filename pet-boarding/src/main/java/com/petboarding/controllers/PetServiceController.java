@@ -24,9 +24,10 @@ public class PetServiceController extends AppBaseController{
     private PetServiceRepository petServiceRepository;
 
     @GetMapping("")
-    public String listServices(Model model) {
+    public String listServices(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
         List<PetService> services = petServiceRepository.findAll();
-        model.addAttribute("listServices", services);
+        model.addAttribute("listServices",  showAll ? services : petServiceRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         addLocation("services", model);
         return "petServices/index";
     }
