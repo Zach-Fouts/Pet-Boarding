@@ -7,6 +7,7 @@ import com.petboarding.models.data.PositionRepository;
 import com.petboarding.models.data.UserRepository;
 import com.petboarding.controllers.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,7 +39,8 @@ public class EmployeeController extends AppBaseController {
 
     @GetMapping
     public String displayEmployeesGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
-        model.addAttribute("employees", showAll ? employeeRepository.findAll() : employeeRepository.findByActive(true));
+        Sort sortAscNames = Sort.by("lastName").ascending().and(Sort.by("firstName").ascending());
+        model.addAttribute("employees", showAll ? employeeRepository.findAll(sortAscNames) : employeeRepository.findByActive(true, sortAscNames));
         model.addAttribute("showAll", showAll);
         return "employees/index";
     }

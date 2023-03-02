@@ -5,6 +5,7 @@ import com.petboarding.models.app.Module;
 import com.petboarding.models.data.EmployeeRepository;
 import com.petboarding.models.data.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,8 +30,10 @@ public class PositionController extends AppBaseController {
     private final String FORM_UPDATE_TITLE = "Update: ${name}";
 
     @GetMapping
-    public String displayEmployeesGrid(Model model) {
-        model.addAttribute("positions", positionRepository.findAll());
+    public String displayEmployeesGrid(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        Sort sortAscName = Sort.by(Sort.Direction.ASC, "name");
+        model.addAttribute("positions", showAll ? positionRepository.findAll(sortAscName) : positionRepository.findByActive(true, sortAscName));
+        model.addAttribute("showAll", showAll);
         return VIEW_BASE_PATH + "/index";
     }
 
@@ -62,7 +65,7 @@ public class PositionController extends AppBaseController {
     }
 
     @PostMapping("update/{id}")
-    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid @ModelAttribute Position position, Errors errors, Model model, RedirectAttributes redirectAttributes) {
+    public String processUpdateEmployeeRequest(@PathVariable Integer id, @Valid Position position, Errors errors, Model model, RedirectAttributes redirectAttributes) {
         if(errors.hasErrors()) {
             return VIEW_BASE_PATH + "/form";
         }

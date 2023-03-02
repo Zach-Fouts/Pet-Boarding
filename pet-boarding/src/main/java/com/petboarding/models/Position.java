@@ -19,9 +19,6 @@ public class Position extends AbstractEntity{
     @JoinColumn(name = "position_id")
     private List<Employee> employees = new ArrayList<>();
 
-    @Column(columnDefinition = "boolean default true")
-    private Boolean active = true;
-
     public Position() {}
 
     public Position(@Size(max = 50, message = "Name cannot be longer than 100 characters.") String name) {
@@ -36,14 +33,6 @@ public class Position extends AbstractEntity{
     }
 
     public List<Employee> getEmployees() { return employees; }
-
-    public Boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
 
     @Override
     public String toString() {
