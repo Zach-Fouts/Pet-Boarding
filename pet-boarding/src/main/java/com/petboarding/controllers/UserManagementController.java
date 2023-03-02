@@ -109,25 +109,18 @@ public class UserManagementController extends AppBaseController{
         return "/users/editUserForm";
     }
 
-    @PostMapping("/editUserForm/{id}")
-    public String showEditForm(@RequestParam int id, Model model) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-        model.addAttribute("user", user);
-        }
-        return "/users/editUserForm";
-    }
-
     //Saves user profile changes in editUserForm
     @Transactional
     @PostMapping("/saveUser")
-    public String saveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role,
-                                 @RequestParam(required = false) String password)  {
+    public String saveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role, @RequestParam(required = false) Boolean active, @RequestParam(required = false) String password)  {
 
         Optional<User> optUser = userRepository.findById(id);
             if (optUser.isPresent()) {
                 User user = optUser.get();
 
+                if (active != null){
+                    user.setActive(active);
+                }
                 user.setUsername(username);
                 user.setRole(role);
             }
