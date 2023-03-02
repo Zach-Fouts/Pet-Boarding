@@ -28,10 +28,6 @@ public class User extends AbstractEntity{
     @OneToOne
     private Employee employee;
 
-//  TODO: remove active; getter and setter
-    @Column(columnDefinition = "boolean default true")
-    private Boolean active = true;
-
     @Column(length = 30)
     private String resetPasswordToken = null;
 
@@ -61,12 +57,6 @@ public class User extends AbstractEntity{
     }
 
     //<---------------------------------------------Getters and Setters--------------------------------------------->
-    public Boolean getActive() {
-        return active;
-    }
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
 
     public Role getRole() {
         return role;
