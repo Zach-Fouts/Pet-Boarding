@@ -19,7 +19,7 @@ body.roman {
 body.roman * .btn-primary {
   --bs-btn-color: #fff;
   --bs-btn-bg: var(--base-color) !important;  
-  --bs-btn-border-color: var(--lb-btn-border-color) !important;  
+  --bs-btn-border-color: var(--lb-btn-border-bg) !important;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--base-color) !important;  
   --bs-btn-hover-border-color: var(--lb-btn-active-bg) !important;
