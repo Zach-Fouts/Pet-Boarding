@@ -157,12 +157,12 @@ public class AuthenticationController {
             passwordResetService.updateResetPasswordToken(token, email);
             String resetPasswordLink = PasswordResetService.getSiteURL(request) + "/sign-in/resetPassword/" + token;
             emailService.sendResetPasswordLink(email, resetPasswordLink);
-            model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
+            model.addAttribute("infoMessage", "We have sent a reset password link to your email. Please check.");
 
         } catch (UserNotFoundException ex) {
-            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("errorMessage", "Error while sending email. Please check the email provided and try again.");
         } catch (UnsupportedEncodingException | MessagingException e) {
-            model.addAttribute("error", "Error while sending email");
+            model.addAttribute("errorMessage", "Error while sending email. Please check the email provided and try again.");
         }
         return "/sign-in/forgotPassword";
     }

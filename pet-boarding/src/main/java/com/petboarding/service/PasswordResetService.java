@@ -31,6 +31,8 @@ public class PasswordResetService {
             } else {
                 throw new UserNotFoundException("Could not find any user with the email " + email);
             }
+        } else {
+            throw new UserNotFoundException("Could not find any user with the email " + email);
         }
     }
 
