@@ -1,15 +1,22 @@
 package com.petboarding.controllers;
 
+import com.petboarding.models.Employee;
+import com.petboarding.models.Invoice;
+import com.petboarding.models.InvoiceDetail;
 import com.petboarding.models.PetService;
 import com.petboarding.models.app.Module;
+import com.petboarding.models.data.InvoiceDetailRepository;
 import com.petboarding.models.data.PetServiceRepository;
 
+import com.petboarding.models.data.ReservationRepository;
+import com.petboarding.models.data.StayServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -22,6 +29,15 @@ public class PetServiceController extends AppBaseController{
 
     @Autowired
     private PetServiceRepository petServiceRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
+    private StayServiceRepository stayServiceRepository;
+
+    @Autowired
+    private InvoiceDetailRepository invoiceDetailRepository;
 
     @GetMapping("")
     public String listServices(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
@@ -62,6 +78,27 @@ public class PetServiceController extends AppBaseController{
             return "petServices/update";
         }
         petServiceRepository.save(petService);
+        return "redirect:/invoices/petServices";
+    }
+
+    @PostMapping("delete/{id}")
+    public String processDeletePetServiceRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        Optional<PetService> optPetService = petServiceRepository.findById(id);
+        if(optPetService.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "The pet service couldn't be found.");
+        } else {
+            PetService petService = optPetService.get();
+            if(!reservationRepository.findByService(petService).isEmpty() ||
+                    !stayServiceRepository.findByService(petService).isEmpty() ||
+                        !invoiceDetailRepository.findByService(petService).isEmpty()) {
+                redirectAttributes.addFlashAttribute("infoMessage", "Service <strong>" + petService.getName() + "</strong> is linked to other documents and cannot be deleted. It will be deactivated.");
+                petService.setActive(false);
+                petServiceRepository.save(petService);
+            } else {
+                petServiceRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("infoMessage", "Service was successfully deleted.");
+            }
+        }
         return "redirect:/invoices/petServices";
     }
 
