@@ -21,9 +21,15 @@
                     <div id="validationServerNameFeedback" class="invalid-feedback" th:errors="*{name}"> </div>
                 </div>
             </div>
+            <div class="form-group">
+                <th:block th:unless="*{active}">
+                    <input type="checkbox" name="inactive" id="inactive" th:field="*{active}" value="true">
+                    <label for="inactive">Re-activate role?</label>
+                </th:block>
+            </div>
             <div>
                 <button type="submit" class="btn btn-primary">Update</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='/users/roles/roleList'">Cancel</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/users/roles'">Cancel</button>
             </div>
         </div>
     </form>

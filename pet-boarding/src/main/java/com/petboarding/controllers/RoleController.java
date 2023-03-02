@@ -24,12 +24,6 @@ public class RoleController extends AppBaseController{
         return roleRepository.findAll();
     }
 
-//    @GetMapping
-//    public String roleList(Model model){
-//        model.addAttribute("listRoles", listRoles());
-//        return "/users/roles/roleList";
-//    }
-
     @GetMapping("")
     public String roleList(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
         model.addAttribute("listRoles", showAll ? listRoles() : roleRepository.findByActive(true));
@@ -56,8 +50,11 @@ public class RoleController extends AppBaseController{
 
     @Transactional
     @PostMapping("/saveRole")
-    public String createRole(@ModelAttribute Role role)  {
+    public String createRole(@ModelAttribute Role role, @RequestParam(required = false) Boolean active)  {
             roleRepository.save(role);
+        if (active != null){
+            role.setActive(active);
+        }
         return "redirect:/users/roles";
     }
 
