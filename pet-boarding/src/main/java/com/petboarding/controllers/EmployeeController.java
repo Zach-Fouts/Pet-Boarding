@@ -65,7 +65,7 @@ public class EmployeeController extends AppBaseController {
             return "employees/form";
         }
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        if (!fileName.equals("")){
+        if (!"".equals(fileName)){
             String uploadDir = "uploads/employee-photos/" + newEmployee.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             newEmployee.setPhoto(fileName);
@@ -97,14 +97,14 @@ public class EmployeeController extends AppBaseController {
             return "employees/form";
         }
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        if (!fileName.equals("")){
+        if (!"".equals(fileName)){
             String uploadDir = "uploads/employee-photos/" + employee.getId();
-            if (!employee.getPhoto().equals("") && employee.getPhoto() != null){
+            if (!"".equals(employee.getPhoto()) && employee.getPhoto() != null){
                 FileUploadUtil.deletePhoto(uploadDir, employee.getPhoto());
             }
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             employee.setPhoto(fileName);
-        } else if(employee.getPhoto().equals("")){
+        } else if("".equals(employee.getPhoto())){
             employee.setPhoto(null);
         }
         employeeRepository.save(employee);
