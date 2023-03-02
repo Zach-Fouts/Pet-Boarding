@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface PetServiceRepository extends JpaRepository<PetService, Integer> {
+public interface PetServiceRepository extends JPARepositoryActiveFiltering<PetService, Integer> {
     public Collection<PetService> findByStayService(Boolean isStayService);
 }

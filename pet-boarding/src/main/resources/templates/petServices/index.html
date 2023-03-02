@@ -24,6 +24,7 @@
            data-show-columns="true"
            data-show-toggle="true"
            data-toolbar="#toolbar"
+           th:data-buttons="${showAll} ? 'tableFilterShowActive' : 'tableFilterShowAll'"
            class="table-striped">
         <thead>
         <tr>
@@ -33,7 +34,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="service: ${listServices}" th:object="${service}">
+        <tr th:each="service: ${listServices}" th:object="${service}" th:class="*{active} ? null : 'inactive'">
             <td th:text="*{name}"></td>
             <td th:text="'$' + *{pricePerUnit}"></td>
             <td>
