@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import com.petboarding.models.User;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.*;
@@ -138,6 +139,16 @@ public class UserManagementController extends AppBaseController{
 //        userRepository.delete(user.get());
         }
         return "redirect:/users";
+    }
+
+    @GetMapping("/saveTheme")
+    public String processSaveTheme(@RequestParam String theme, @RequestParam(defaultValue = "null") String origin, HttpSession session) {
+        if(session.getAttribute("user") != null) {
+            User user = (User) session.getAttribute("user");
+            user.setTheme(theme);
+            userRepository.save(user);
+        }
+        return "redirect:" + (origin == null ? "/home" : origin);
     }
 
     @ModelAttribute("activeModule")

@@ -35,6 +35,8 @@ public class User extends AbstractEntity{
     @Column(length = 30)
     private String resetPasswordToken = null;
 
+    @Column(length = 30)
+    private String theme;
 
     //<---------------------------------------------Methods--------------------------------------------->
     public boolean isMatchingPassword(String password) {
@@ -104,4 +106,11 @@ public class User extends AbstractEntity{
         this.pwHash = encoder.encode(password);
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
 }
