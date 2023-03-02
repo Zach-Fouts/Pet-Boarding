@@ -26,11 +26,11 @@
                 id="positionsTable"
                 data-toggle="table"
                 data-search="true"
-                data-show-search-button="true"
                 data-pagination="true"
                 data-show-columns="true"
                 data-show-toggle="true"
                 data-toolbar="#toolbar"
+                th:data-buttons="${showAll} ? 'tableFilterShowActive' : 'tableFilterShowAll'"
                 class="table-striped">
             <thead>
             <tr>
@@ -40,12 +40,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="position: ${positions}" th:Object="${position}">
+            <tr th:each="position: ${positions}" th:Object="${position}" th:class="*{active} ? null : 'inactive'">
                 <td th:text="*{name}"></td>
                 <td th:text="*{employees.size()}"></td>
                 <td>
-                    <a class="btn btn-primary" th:href="@{/employees/positions/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-                    <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}', '/employees/positions', *{id});|"><i class="bi-trash"></i></a>
+                    <a class="btn btn-sm btn-primary" th:href="@{/employees/positions/update/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
+                    <a class="btn btn-sm btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{name}', '/employees/positions', *{id});|"><i class="bi-trash"></i></a>
                 </td>
             </tr>
             </tbody>
