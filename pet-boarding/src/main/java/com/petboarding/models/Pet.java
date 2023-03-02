@@ -4,8 +4,6 @@ package com.petboarding.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-
-//TODO: Discuss int or long, extend abstract
 @Entity
 @Table(name = "pets")
 public class Pet extends AbstractEntity {

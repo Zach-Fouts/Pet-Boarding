@@ -35,7 +35,7 @@
                 <label for="photo" class="form-label">Photo</label>
                 <input type="file" name="image" value="image" class="form-control" id="photo" onchange="displayPhotoPreview(event.target, 'photoPreview')" accept="image/png, image/jpeg">
             </div>
-            <div class="col-12">
+            <div th:if="${session.user} ? ${session.user.isAdmin()} : true" class="col-12">
                 <label for="position" class="form-label">Position</label>
                 <div class="input-group has-validation">
                     <select id="position" th:field="*{position}" class="form-select" th:errorclass="is-invalid" required>
@@ -50,6 +50,15 @@
                     </a>
                     <div id="validationServerPositionFeedback" class="invalid-feedback" th:errors="*{position}"></div>
                 </div>
+            </div>
+            <div th:unless="${session.user} ? ${session.user.isAdmin()} : true" class="col-12">
+                    <select hidden th:field="*{position}" class="form-select" required>
+                        <option selected value="">Select one...</option>
+                        <option th:each="position: ${positions}"
+                                th:value="${position.id}"
+                                th:text="${position.name}">
+                        </option>
+                    </select>
             </div>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-content-center">

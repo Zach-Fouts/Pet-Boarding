@@ -21,11 +21,8 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     @Autowired
     AuthenticationController authenticationController;
 
-    //    TODO: add password reset to whitelist
     private static final List<String> whitelist = Arrays.asList("/css/login.css", "/img/logo.svg");
     private static final List<String> EMPLOYEE_WHITELIST = Arrays.asList("/users", "/employees");
-
-//    TODO: allow employees to edit their own profile
 
     private static boolean isWhitelisted(String path, User user) {
 //        if (user != null) {
