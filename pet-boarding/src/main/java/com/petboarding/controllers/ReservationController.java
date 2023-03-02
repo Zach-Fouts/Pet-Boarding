@@ -37,6 +37,8 @@ public class ReservationController extends AppBaseController{
     private ReservationStatusRepository reservationStatusRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ConfigurationRepository configurationRepository;
 
     @GetMapping("grid")
     public String displayReservations(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
@@ -52,7 +54,8 @@ public class ReservationController extends AppBaseController{
                         reservation.getPet().getPetName();
         List<CalendarEvent> events = CalendarEventUtils.parseEventsFromReservations(
                 reservationRepository.findAll(),
-                getTitle);
+                getTitle,
+                configurationRepository.findByName("RESERVATION_COLOR").getValue());
         model.addAttribute("reservations", events);
         return "reservations/calendarView";
     }

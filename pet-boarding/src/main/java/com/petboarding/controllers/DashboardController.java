@@ -5,6 +5,7 @@ import com.petboarding.controllers.utils.CalendarEventUtils;
 import com.petboarding.models.Reservation;
 import com.petboarding.models.Stay;
 import com.petboarding.models.app.Module;
+import com.petboarding.models.data.ConfigurationRepository;
 import com.petboarding.models.data.ReservationRepository;
 import com.petboarding.models.data.StayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class DashboardController extends AppBaseController {
     private ReservationRepository reservationRepository;
     @Autowired
     private StayRepository stayRepository;
+    @Autowired
+    private ConfigurationRepository configurationRepository;
 
     @GetMapping
     public String showIndex() {
@@ -41,10 +44,12 @@ public class DashboardController extends AppBaseController {
                         reservation.getPet().getPetName();
         List<CalendarEvent> events = CalendarEventUtils.parseEventsFromReservations(
                 reservationRepository.findByStayIsNull(),
-                getTitle);
+                getTitle,
+                configurationRepository.findByName("RESERVATION_COLOR").getValue());
         List<CalendarEvent> stayEvents = CalendarEventUtils.parseEventsFromStays(
                 stayRepository.findAll(),
-                getStayTitle);
+                getStayTitle,
+                configurationRepository.findByName("STAY_COLOR").getValue());
 
         events.addAll(stayEvents);
         model.addAttribute("events", events);
