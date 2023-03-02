@@ -20,7 +20,7 @@
         <form method="post" enctype="multipart/form-data" th:object="${owner}">
             <div class="row">
                 <div class="col-md-4">
-                    <div class="profile-img">
+                    <div th:if="*{photo}" class="profile-img">
                         <img th:src="*{getPhotoPath()}" alt="Owner Photo"/>
                     </div>
                 </div>
