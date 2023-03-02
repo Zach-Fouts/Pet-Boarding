@@ -24,9 +24,16 @@ public class RoleController extends AppBaseController{
         return roleRepository.findAll();
     }
 
-    @GetMapping
-    public String roleList(Model model){
-        model.addAttribute("listRoles", listRoles());
+//    @GetMapping
+//    public String roleList(Model model){
+//        model.addAttribute("listRoles", listRoles());
+//        return "/users/roles/roleList";
+//    }
+
+    @GetMapping("")
+    public String roleList(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("listRoles", showAll ? listRoles() : roleRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "/users/roles/roleList";
     }
 
