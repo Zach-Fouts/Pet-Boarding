@@ -54,19 +54,20 @@ public class RoleController extends AppBaseController{
         return "redirect:/users/roles";
     }
 
+    @Transactional
     @PostMapping("/delete/{id}")
     public String deleteRole(@PathVariable int id, Model model, RedirectAttributes redirectAttributes) {
         Role role = roleRepository.findById(id).get();
         List<User> users = role.getUsers();
         if (!users.isEmpty()) {
-            model.addAttribute("errorMessage", "This role is currently assigned to one or more users and cannot be deleted.");
+            model.addAttribute("errorMessage", "This role is currently assigned to one or more users and cannot be deactivated.");
             model.addAttribute("role", role);
             return "/users/roles/deleteRoleForm";
         }
         else {
             String name = role.getName();
-            redirectAttributes.addFlashAttribute("infoMessage", "User: <strong>" + name + "</strong>  was successfully deleted.");
-            roleRepository.deleteById(role.getId());
+            redirectAttributes.addFlashAttribute("infoMessage", "User: <strong>" + name + "</strong>  was successfully deactivated.");
+            role.setActive(false);
             return "redirect:/users/roles";
         }
     }
