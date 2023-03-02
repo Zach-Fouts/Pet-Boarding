@@ -79,8 +79,12 @@ public class StayController extends AppBaseController {
             redirectAttributes.addFlashAttribute("errorMessage", "The reservation could not be found.");
             return "redirect:/stays";
         }
+        Reservation reservation = optReservation.get();
+        if(reservation.getStay() != null) {
+            return "redirect:/stays/update/" + reservation.getStay().getId();
+        }
         Stay stay = new Stay();
-        stay.setReservation(optReservation.get());
+        stay.setReservation(reservation);
         prepareAddFormModel(stay, model);
         return "stays/form";
     }
