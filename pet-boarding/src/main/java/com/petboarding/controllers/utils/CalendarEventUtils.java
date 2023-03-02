@@ -33,18 +33,18 @@ public class CalendarEventUtils {
 
     static public List<CalendarEvent> parseEventsFromReservations(
             List<Reservation> reservations,
-            Function<Reservation, String> getTitle) {
+            Function<Reservation, String> getTitle, String color) {
         return parseEventsList(
                 reservations,
                 reservation -> reservation,
                 getTitle,
                 "/reservations/detail?reservationId=",
-                "#3995d6"
+                color
 
         );
     }
 
-    static public List<CalendarEvent> parseEventsFromStays(List<Stay> stays, Function<Stay, String> getTitle) {
+    static public List<CalendarEvent> parseEventsFromStays(List<Stay> stays, Function<Stay, String> getTitle, String color) {
         Function<Stay, Reservation> getReservation = stay -> stay.getReservation();
 //        Function<Stay, String> getTitle = stay -> stay.getReservation().getComments();
 
@@ -53,7 +53,7 @@ public class CalendarEventUtils {
                 getReservation,
                 getTitle,
                 "/stays/update/",
-                "#6adddd"
+                color
         );
     }
     //TODO: trying to fool git

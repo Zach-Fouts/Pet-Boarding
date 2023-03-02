@@ -1,18 +1,18 @@
 /* remove if wont use font*/
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
 
 /* do not use variables in this style*/
 div.darkGreen {
-  background-color:  darkgreen; /* same color as --base-color */
+  background-color:  #378937; /* same color as --base-color */
 }
 
 body.darkGreen {
-  --base-color: darkgreen;
-  --lb-btn-border-color: #382a75;
-  --lb-btn-active-bg: #312e69;
-  --lb-btn-active-border-color: #251958;
+  --base-color: #378937;
+  --lb-btn-border-color: #376089;
+  --lb-btn-active-bg: #378989;
+  --lb-btn-active-border-color: #378960;
   --bs-blue: var(--base-color);
-  --bs-body-font-family: 'Roboto', sans-serif; /* remove if wont use font*/
+  --bs-body-font-family: 'Courgette', cursive; /* remove if wont use font*/
 }
 
 
