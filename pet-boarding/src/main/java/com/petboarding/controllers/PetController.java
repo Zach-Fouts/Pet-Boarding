@@ -86,11 +86,11 @@ public class PetController extends AppBaseController {
         Optional<String> photo = Optional.ofNullable(optPet.get().getPhoto());
         if (optPet.isPresent()) {
             if (photo.isPresent()) {
-                if(photo.get().equals("")) {
+                if("".equals(optPet.get().getPhoto())) {
                     optPet.get().setPhoto(null);
                 }
             }
-            if (!fileName.equals("")){
+            if (!"".equals(fileName)){
                 String uploadDir = "uploads/pet-photos/" + pet.getId();
                     if (photo.isPresent()){
                         FileUploadUtil.deletePhoto(uploadDir, photo.get());

@@ -54,7 +54,8 @@
         </div>
         <div class="col-md-6 d-flex justify-content-center align-content-center">
             <input type="hidden" th:field="*{photo}">
-            <img id="photoPreview" alt="Photo preview"  class="preview-photo img-thumbnail" th:style="*{photo} ? '' : 'display: none;'">
+            <img th:unless="*{photo}" id="photoPreview" alt="Photo preview"  class="preview-photo img-thumbnail" th:style="*{photo} ? '' : 'display: none;'">
+            <img th:if="*{photo}" th:src="*{getPhotoPath()}" id="existingPhoto" alt="Photo preview"  class="preview-photo img-thumbnail" th:style="*{photo} ? '' : 'display: none;'">
         </div>
         <div class="col-md-6">
             <label for="firstName" class="form-label">First Name</label>
