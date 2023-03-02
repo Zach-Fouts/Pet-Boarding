@@ -1,5 +1,6 @@
 package com.petboarding.controllers;
 
+import com.petboarding.models.dto.ResetPasswordDTO;
 import com.petboarding.service.PasswordResetService;
 import com.petboarding.exception.UserNotFoundException;
 import com.petboarding.models.User;
@@ -96,7 +97,6 @@ public class AuthenticationController {
         userRepository.save(newUser);
         setUserInSession(request.getSession(), newUser);
 
-
         return "redirect:/home";
     }
 
@@ -132,8 +132,6 @@ public class AuthenticationController {
         setUserInSession(request.getSession(), theUser);
 
         return "redirect:/";
-
-
     }
 
     @GetMapping("/logout")
@@ -154,10 +152,9 @@ public class AuthenticationController {
         String email = request.getParameter("email");
         String token = RandomString.make(30);
 
-
         try {
             passwordResetService.updateResetPasswordToken(token, email);
-            String resetPasswordLink = PasswordResetService.getSiteURL(request) + "/sign-in/resetPassword?token=" + token;
+            String resetPasswordLink = PasswordResetService.getSiteURL(request) + "/sign-in/resetPassword/" + token;
             emailService.sendResetPasswordLink(email, resetPasswordLink);
             model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
@@ -169,11 +166,12 @@ public class AuthenticationController {
         return "/sign-in/forgotPassword";
     }
 
-    @GetMapping("resetPassword")
-    public String resetPasswordFrom(@Param(value = "token") String token, Model model) {
+    @GetMapping("resetPassword/{token}")
+    public String resetPasswordForm(@PathVariable("token") String token, Model model) {
 
         User user = passwordResetService.getByResetPasswordToken(token);
         model.addAttribute("token", token);
+        model.addAttribute("resetPasswordDTO", new ResetPasswordDTO());
 
         if (user == null) {
             model.addAttribute("errorMessage", "Link has expired");
@@ -183,17 +181,22 @@ public class AuthenticationController {
         return "sign-in/resetPassword";
     }
 
-    @PostMapping("resetPassword")
-    public String processResetPasswordForm(@RequestParam String password, @RequestParam String token, Model model){
-        Optional<User> user = Optional.ofNullable(passwordResetService.getByResetPasswordToken(token));
-
-        if (!user.isPresent()) {
-            model.addAttribute("errorMessage", "Unable to reset Password. Please try again.");
-            return "/sign-in/forgotPassword";
+    @PostMapping("resetPassword/{token}")
+    public String resetPasswordSubmit(@ModelAttribute("resetPasswordDTO") ResetPasswordDTO resetPasswordDTO, BindingResult result, Model model, @PathVariable("token") String token) {
+        User user = passwordResetService.getByResetPasswordToken(token);
+        if (user == null) {
+            model.addAttribute("errorMessage", "Link has expired");
+            return "/sign-in/login";
         }
-        passwordResetService.updatePassword(user.get(), password);
+        if (!resetPasswordDTO.getPassword().equals(resetPasswordDTO.getVerifyPassword())) {
+            result.rejectValue("password", "error.password", "Passwords do not match");
+            model.addAttribute("errorMessage", "Passwords do not match");
+            model.addAttribute("token", token);
+            return "/sign-in/resetPassword";
+        }
+        passwordResetService.updatePassword(user, resetPasswordDTO.getPassword());
         model.addAttribute(new LoginFormDTO());
         model.addAttribute("infoMessage", "Your password has been reset.");
-        return "/sign-in/login";
+        return "sign-in/login";
     }
 }
