@@ -118,14 +118,14 @@ public class AuthenticationController {
         User theUser = userRepository.findByUsername(loginFormDTO.getUsername());
 
         if (theUser == null) {
-            errors.rejectValue("username", "user.invalid", "The given username does not exist");
+            errors.rejectValue("username", "user.invalid", "Invalid username and/or password");
             model.addAttribute("title", "Log In");
             return "/sign-in/login";
         }
 
         String password = loginFormDTO.getPassword();
         if (!theUser.isMatchingPassword(password)) {
-            errors.rejectValue("password", "password.invalid", "Invalid password");
+            errors.rejectValue("password", "password.invalid", "Invalid username and/or password");
             model.addAttribute("title", "Log In");
             return "/sign-in/login";
         }
@@ -157,7 +157,7 @@ public class AuthenticationController {
             passwordResetService.updateResetPasswordToken(token, email);
             String resetPasswordLink = PasswordResetService.getSiteURL(request) + "/sign-in/resetPassword/" + token;
             emailService.sendResetPasswordLink(email, resetPasswordLink);
-            model.addAttribute("infoMessage", "We have sent a reset password link to your email. Please check.");
+            model.addAttribute("infoMessage", "We have sent a password reset link to your email. Please check.");
 
         } catch (UserNotFoundException ex) {
             model.addAttribute("errorMessage", "Error while sending email. Please check the email provided and try again.");

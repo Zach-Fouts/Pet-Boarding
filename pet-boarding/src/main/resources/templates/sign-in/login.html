@@ -17,9 +17,11 @@
             <img src="/img/logo.svg" class="img-fluid p-3 app-logo" alt="Application Logo" />
         </div>
         <form method="post" th:object="${loginFormDTO}">
-            <input th:field="*{username}" id="login" class="fadeIn second" name="login" placeholder="Username" required>
-            <input th:field="*{password}" type="password" id="password" class="fadeIn third" name="login" placeholder="Password" required>
+            <input th:field="*{username}" id="login" class="fadeIn second" name="login" placeholder="Username" th:errorclass="is-invalid" required>
+            <input th:field="*{password}" type="password" id="password" class="fadeIn third" name="login" placeholder="Password" th:errorclass="is-invalid" required>
             <input type="submit" class="fadeIn fourth" value="Log In">
+            <div id="validationServerUsernameFeedback" class="invalid-feedback" th:errors="*{username}"></div>
+            <div id="validationServerPasswordFeedback" class="invalid-feedback" th:errors="*{password}"></div>
         </form>
         <div id="formFooter">
             <span>Forgot your password?<br>Contact your Manager<br>or <a class="underlineHover" th:href="@{/sign-in/forgotPassword}" >click here.</a></span>
