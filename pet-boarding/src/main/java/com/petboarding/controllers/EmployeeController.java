@@ -124,6 +124,8 @@ public class EmployeeController extends AppBaseController {
             Employee employee = optEmployee.get();
             if(employee.getUser() != null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Employee <strong>" + employee.getFullName() + "</strong> is linked to an user account and cannot be deleted.");
+                employee.setActive(false);
+                employeeRepository.save(employee);
             } else {
                 employeeRepository.deleteById(id);
                 redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");
