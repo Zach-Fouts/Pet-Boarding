@@ -105,7 +105,7 @@
                 <div id="validationPhoneNumberFeedback" class="invalid-feedback" th:errors="*{phoneNumber}"></div>
             </div>
         </div>
-        <div class="col" th:if="*{id}">
+        <div class="col" th:if="*{id} and ${session.user.isAdmin()}">
             <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="active" th:field="*{active}">
                 <label class="form-check-label" for="active">Active</label>
