@@ -39,7 +39,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="role: ${listRoles}" th:object="${role}">
+        <tr th:each="role: ${listRoles}" th:object="${role}" th:class="*{active} ? null : 'inactive'">
             <td th:text="*{name}"></td>
             <td th:text="*{users.size()}"></td>
             <td>

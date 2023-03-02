@@ -44,7 +44,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user: ${listUsers}" th:object="${user}">
+        <tr th:each="user: ${listUsers}" th:object="${user}" th:class="*{active} ? null : 'inactive'">
             <td th:text="*{id}"></td>
             <td th:text="*{username}"></td>
             <td><a th:href="@{employees/profile/{id} (id=*{employee.id})}" th:text="*{employee.getFullName()}"></a></td>
