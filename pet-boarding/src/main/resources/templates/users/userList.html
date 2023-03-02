@@ -30,6 +30,7 @@
             data-show-columns="true"
             data-show-toggle="true"
             data-toolbar="#toolbar"
+            th:data-buttons="${showAll} ? 'tableFilterShowActive' : 'tableFilterShowAll'"
             class="table-striped">
         <thead>
         <tr>
@@ -53,7 +54,7 @@
 
             <td>
                 <a class="btn btn-primary" th:href="@{users/editUserForm/{id}(id=*{id})}" title="Update/View"><i class="bi-pen"></i></a>
-                <a class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{username}','/users', *{id});|"><i class="bi-trash"></i></a>
+                <a th:if="*{active}" class="btn btn-danger"  title="Delete" th:href="|javascript:openDeleteDialog('*{username}','/users', *{id});|"><i class="bi-trash"></i></a>
             </td>
         </tr>
         </tbody>

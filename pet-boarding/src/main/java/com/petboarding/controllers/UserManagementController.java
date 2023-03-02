@@ -93,8 +93,9 @@ public class UserManagementController extends AppBaseController{
     }
 
     @GetMapping("")
-    public String listUsers(Model model) {
-        model.addAttribute("listUsers", listUsers());
+    public String listUsers(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("listUsers", showAll ? userRepository.findAll() : userRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "/users/userList";
     }
     @GetMapping("/editUserForm/{id}")
@@ -108,40 +109,33 @@ public class UserManagementController extends AppBaseController{
         return "/users/editUserForm";
     }
 
-    @PostMapping("/editUserForm/{id}")
-    public String showEditForm(@RequestParam int id, Model model) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-        model.addAttribute("user", user);
-        }
-        return "/users/editUserForm";
-    }
-
     //Saves user profile changes in editUserForm
     @Transactional
     @PostMapping("/saveUser")
-    public String saveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role,
-                                 @RequestParam(required = false) String password)  {
+    public String saveUser(@RequestParam int id, @RequestParam String username, @RequestParam Role role, @RequestParam(required = false) Boolean active, @RequestParam(required = false) String password)  {
 
         Optional<User> optUser = userRepository.findById(id);
             if (optUser.isPresent()) {
                 User user = optUser.get();
 
+                if (active != null){
+                    user.setActive(active);
+                }
                 user.setUsername(username);
                 user.setRole(role);
             }
             return "redirect:/users";
     }
 
+    @Transactional
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id, RedirectAttributes redirectAttributes) {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
             String username = user.get().getUsername();
-            redirectAttributes.addFlashAttribute("infoMessage", "Role: <strong>" + username + "</strong>  was successfully deleted.");
-//            TODO: set inactive fields, remove delete
-//            user.get().setActive(false);
-        userRepository.delete(user.get());
+            redirectAttributes.addFlashAttribute("infoMessage", "The account for <strong>" + username + "</strong>  was successfully deactivated.");
+            user.get().setActive(false);
+//        userRepository.delete(user.get());
         }
         return "redirect:/users";
     }
