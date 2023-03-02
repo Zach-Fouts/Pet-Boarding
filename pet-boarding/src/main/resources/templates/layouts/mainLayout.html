@@ -9,6 +9,12 @@
         crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <!-- CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/themes/theme.lightblue.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/themes/theme.purple.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/themes/theme.betterPurple.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/themes/theme.darkGreen.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/themes/theme.monochrome.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/themes/theme.roman.css}"/>
   <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
   <!-- Bootstraps JS-->
   <script src="https://code.jquery.com/jquery-3.6.3.min.js" crossorigin="anonymous"></script>
@@ -17,13 +23,17 @@
   <!-- Other CSS/JS -->
   <th:block th:replace="${otherResources}"></th:block>
   <script type="text/javascript">
+    function changeTheme(theme) {
+      $('body').removeClass().addClass(theme);
+    }
+
     $(function () {
       $("[data-bs-toggle='tooltip']").tooltip();
     });
   </script>
 </head>
 
-<body>
+<body class="lightBlue">
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="paw-icon" viewBox="0 0 30 30">
     <path
@@ -55,8 +65,8 @@
   </div>
 </header>
 <div class="d-flex">
-  <nav class="navigation-sidebar d-flex flex-column flex-shrink-0 shadow-sm">
-    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+  <nav class="navigation-sidebar d-flex flex-column flex-shrink-0 shadow-sm mb-auto">
+    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center dropup">
       <div class="navigation-spacer w-100"></div>
       <li th:each="module: ${modules}" th:Object="${module}" th:class="|nav-item ${module == activeModule ? 'active-module py-1' : ''}|">
         <a th:unless="${module == activeModule}" th:href="|/*{path}|" class="nav-link py-1 px-3 border-bottom rounded-0" data-bs-toggle="tooltip"
@@ -66,6 +76,50 @@
         <i th:if="${module == activeModule}" th:class="|bi *{icon}|"></i>
       </li>
     </ul>
+    <hr>
+    <div class="dropup">
+      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle pb-3 pt-2 px-1" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="selectedTheme themeColorPreview shadow-sm bg-gradient"></div>
+      </a>
+      <ul class="dropdown-menu text-small shadow">
+        <li>
+          <a class="dropdown-item" href="javascript:changeTheme('lightBlue')">
+            <div class="themeColorPreview shadow-sm bg-gradient lightBlue" data-theme="lightBlue"></div>
+            <span>Light Blue</span>
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="javascript:changeTheme('purple')">
+            <div class="themeColorPreview shadow-sm bg-gradient purple" data-theme="purple"></div>
+            <span>Purple</span>
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="javascript:changeTheme('betterPurple')">
+            <div class="themeColorPreview shadow-sm bg-gradient betterPurple" data-theme="better-purple"></div>
+            <span>Better Purple</span>
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="javascript:changeTheme('darkGreen')">
+            <div class="themeColorPreview shadow-sm bg-gradient darkGreen" data-theme="dark-green"></div>
+            <span>Dark Green</span>
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="javascript:changeTheme('monochrome')">
+            <div class="themeColorPreview shadow-sm bg-gradient monochrome" data-theme="monochrome"></div>
+            <span>Monochrome</span>
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="javascript:changeTheme('roman')">
+            <div class="themeColorPreview shadow-sm bg-gradient roman" data-theme="roman"></div>
+            <span>Roman</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </nav>
   <div class="d-flex flex-column w-100">
     <div class="module-breadcrumbs py-0 px-4">

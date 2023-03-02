@@ -159,6 +159,19 @@
       color: #777 !important;
     }
 
+    .themeColorPreview {
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px #FFF solid;
+    }
+
+    li a .themeColorPreview {
+        width: 24px;
+        height: 24px;
+    }
+
     /*Remove arror inputs to [number]*/
     /* Chrome, Safari, Edge, Opera */
     input::-webkit-outer-spin-button,
@@ -171,3 +184,4 @@
     input[type=number] {
       -moz-appearance: textfield;
     }
+
