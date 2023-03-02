@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -182,7 +183,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("resetPassword/{token}")
-    public String resetPasswordSubmit(@ModelAttribute("resetPasswordDTO") ResetPasswordDTO resetPasswordDTO, BindingResult result, Model model, @PathVariable("token") String token) {
+    public String resetPasswordSubmit(@ModelAttribute("resetPasswordDTO") ResetPasswordDTO resetPasswordDTO, BindingResult result, Model model, @PathVariable("token") String token, RedirectAttributes redirectAttributes) {
         User user = passwordResetService.getByResetPasswordToken(token);
         if (user == null) {
             model.addAttribute("errorMessage", "Link has expired");
@@ -196,7 +197,7 @@ public class AuthenticationController {
         }
         passwordResetService.updatePassword(user, resetPasswordDTO.getPassword());
         model.addAttribute(new LoginFormDTO());
-        model.addAttribute("infoMessage", "Your password has been reset.");
-        return "sign-in/login";
+        redirectAttributes.addFlashAttribute("infoMessage", "Your password has been reset.");
+        return "redirect:/sign-in/login";
     }
 }

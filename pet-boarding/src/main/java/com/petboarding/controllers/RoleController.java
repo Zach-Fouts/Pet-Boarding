@@ -24,9 +24,10 @@ public class RoleController extends AppBaseController{
         return roleRepository.findAll();
     }
 
-    @GetMapping
-    public String roleList(Model model){
-        model.addAttribute("listRoles", listRoles());
+    @GetMapping("")
+    public String roleList(@RequestParam(required = false, defaultValue = "false") Boolean showAll, Model model) {
+        model.addAttribute("listRoles", showAll ? listRoles() : roleRepository.findByActive(true));
+        model.addAttribute("showAll", showAll);
         return "/users/roles/roleList";
     }
 
@@ -49,24 +50,28 @@ public class RoleController extends AppBaseController{
 
     @Transactional
     @PostMapping("/saveRole")
-    public String createRole(@ModelAttribute Role role)  {
+    public String createRole(@ModelAttribute Role role, @RequestParam(required = false) Boolean active)  {
             roleRepository.save(role);
+        if (active != null){
+            role.setActive(active);
+        }
         return "redirect:/users/roles";
     }
 
+    @Transactional
     @PostMapping("/delete/{id}")
     public String deleteRole(@PathVariable int id, Model model, RedirectAttributes redirectAttributes) {
         Role role = roleRepository.findById(id).get();
         List<User> users = role.getUsers();
         if (!users.isEmpty()) {
-            model.addAttribute("errorMessage", "This role is currently assigned to one or more users and cannot be deleted.");
+            model.addAttribute("errorMessage", "This role is currently assigned to one or more users and cannot be deactivated.");
             model.addAttribute("role", role);
             return "/users/roles/deleteRoleForm";
         }
         else {
             String name = role.getName();
-            redirectAttributes.addFlashAttribute("infoMessage", "User: <strong>" + name + "</strong>  was successfully deleted.");
-            roleRepository.deleteById(role.getId());
+            redirectAttributes.addFlashAttribute("infoMessage", "User: <strong>" + name + "</strong>  was successfully deactivated.");
+            role.setActive(false);
             return "redirect:/users/roles";
         }
     }
