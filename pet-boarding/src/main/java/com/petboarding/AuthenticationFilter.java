@@ -25,12 +25,10 @@ public class AuthenticationFilter extends HandlerInterceptorAdapter {
     private static final List<String> EMPLOYEE_WHITELIST = Arrays.asList("/users", "/employees");
 
     private static boolean isWhitelisted(String path, User user) {
-//        if (user != null) {
-//                return !path.startsWith("/users") && !path.startsWith("/employees");
-//            }
-//        return whitelist.contains(path);
-        return true;
-        //TODO: uncomment and remove 'return true' to enable security
+        if (user != null) {
+                return !path.startsWith("/users") && !path.startsWith("/employees");
+            }
+        return whitelist.contains(path);
     }
 
     private static boolean isWhitelisted(String path) {
