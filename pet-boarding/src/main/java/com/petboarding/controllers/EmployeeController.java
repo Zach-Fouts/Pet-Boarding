@@ -120,10 +120,11 @@ public class EmployeeController extends AppBaseController {
         if(optEmployee.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "The employee ID:" + id + " couldn't be found.");
         } else {
-
             Employee employee = optEmployee.get();
-            if(employee.getUser() != null) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Employee <strong>" + employee.getFullName() + "</strong> is linked to an user account and cannot be deleted.");
+            if(employee.getUser() != null || !employee.getStays().isEmpty()) {
+                redirectAttributes.addFlashAttribute("infoMessage", "Employee <strong>" + employee.getFullName() + "</strong> is linked to an user account or stays and cannot be deleted. It will be deactivated.");
+                employee.setActive(false);
+                employeeRepository.save(employee);
             } else {
                 employeeRepository.deleteById(id);
                 redirectAttributes.addFlashAttribute("infoMessage", "Employee was successfully deleted.");

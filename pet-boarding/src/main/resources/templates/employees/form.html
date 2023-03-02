@@ -17,7 +17,7 @@
         </a>
         <span th:text="${formTitle}" class="fw-semibold px-2">New/Update Employee</span>
         <div th:if="${employee.id}" class="form-toolbar d-flex ms-auto">
-            <a class="btn btn-danger" title="Delete this employee">
+            <a class="btn btn-danger" title="Delete this employee" th:href="|javascript:openDeleteDialog('${employee.getFullName()}','/employees', ${employee.id});|">
                 <i class="bi-trash"></i>
                 <span class="d-none d-sm-inline">Delete</span>
             </a>

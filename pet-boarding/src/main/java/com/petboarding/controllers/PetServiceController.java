@@ -54,17 +54,13 @@ public class PetServiceController extends AppBaseController{
         return "petServices/update";
     }
 
-    @Transactional
+
     @PostMapping("update")
-    public String updateService(@RequestParam Integer id, @RequestParam String name, @RequestParam double pricePerUnit, @ModelAttribute @Valid PetService petService, BindingResult result, Errors errors) {
+    public String updateService(@ModelAttribute @Valid PetService petService, Errors errors, Model model) {
         if (errors.hasErrors()) {
             return "petServices/update";
         }
-        Optional<PetService> existingService = petServiceRepository.findById(id);
-        if (existingService.isPresent()) {
-            existingService.get().setName(name);
-            existingService.get().setPricePerUnit(pricePerUnit);
-        }
+        petServiceRepository.save(petService);
         return "redirect:/invoices/petServices";
     }
 

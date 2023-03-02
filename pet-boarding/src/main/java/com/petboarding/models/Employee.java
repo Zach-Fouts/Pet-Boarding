@@ -50,8 +50,7 @@ public class Employee extends AbstractEntity{
     @Column(nullable = true, length = 64)
     private String photo = null;
 
-    @OneToMany
-    @JoinColumn(name = "employee_id")
+    @OneToMany(mappedBy = "employee")
     private List<Stay> stays;
 
     public Employee() {
