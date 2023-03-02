@@ -17,6 +17,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
@@ -61,6 +62,7 @@ public class OwnerController extends AppBaseController{
         return "owners/add";
     }
 
+    @Transactional
     @PostMapping("add")
     public String processAddOwnerForm(@Valid @ModelAttribute Owner newOwner, Errors errors, Model model, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         this.setActiveModule("owners", model);
@@ -68,15 +70,15 @@ public class OwnerController extends AppBaseController{
             return "owners/add";
         }
         newOwner.setPhoto(null);
-        model.addAttribute("owners", ownerRepository.save(newOwner));
+        Owner owner = ownerRepository.save(newOwner);
 
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        if (!fileName.equals("")){
-            String uploadDir = "uploads/owner-photos/" + newOwner.getId();
+        if (!"".equals(fileName)){
+            String uploadDir = "uploads/owner-photos/" + owner.getId();
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-            newOwner.setPhoto(fileName);
+            owner.setPhoto(fileName);
         }
-        return "redirect:../owners";
+        return "redirect:/owners";
     }
 
 // View an individual Owner
@@ -115,14 +117,14 @@ public class OwnerController extends AppBaseController{
         }
         Owner updatedOwner = ownerRepository.findById(ownerId).get();
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        if (!fileName.equals("")){
+        if (!"".equals(fileName)){
             String uploadDir = "uploads/owner-photos/" + updatedOwner.getId();
-            if (!updatedOwner.getPhoto().equals("") && updatedOwner.getPhoto() != null){
+            if (!"".equals(updatedOwner.getPhoto()) && updatedOwner.getPhoto() != null){
                 FileUploadUtil.deletePhoto(uploadDir, updatedOwner.getPhoto());
             }
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             updatedOwner.setPhoto(fileName);
-        } else if(updatedOwner.getPhoto().equals("")) {
+        } else if("".equals(updatedOwner.getPhoto())) {
             updatedOwner.setPhoto(null);
         }
         updatedOwner.setFirstName(owner.getFirstName());
