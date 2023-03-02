@@ -84,7 +84,7 @@
              <a type="button" class="btn btn-secondary" href="/reservations/grid" title="Cancel reservation">
                 Cancel
              </a>
-             <a class="btn btn-primary" title="check in" th:href="@{'/stays/add?reservationId=' + ${reservation.id}}">Check-In</i></a>
+             <a class="btn btn-primary" th:classappend="${reservation.stay} ? 'disabled' : null" title="check in" th:href="@{'/stays/add?reservationId=' + ${reservation.id}}">Check-In</i></a>
           </div>
        </div>
     </form>
