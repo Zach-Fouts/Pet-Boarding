@@ -30,6 +30,7 @@
     </div>
     <form id="mainForm" class="row g-3" th:Object="${employee}" th:method="${submitMethod}" th:action="@{${submitURL}}" enctype="multipart/form-data">
         <input type="hidden" id="id" th:field="*{id}">
+        <input th:if="${session.user.employee == employee}" type="hidden" id="user" name="user" th:value="${session.user.id}">
         <div class="col-md-6">
             <div class="col-12 mb-3">
                 <label for="photo" class="form-label">Photo</label>
@@ -63,8 +64,8 @@
         </div>
         <div class="col-md-6 d-flex justify-content-center align-content-center">
             <input type="hidden" th:field="*{photo}">
+            <img th:if="*{photo}" th:src="*{getPhotoPath()}" id="photoPreview" alt="Photo preview"  class="preview-photo img-thumbnail" th:style="*{photo} ? '' : 'display: none;'">
             <img th:unless="*{photo}" id="photoPreview" alt="Photo preview"  class="preview-photo img-thumbnail" th:style="*{photo} ? '' : 'display: none;'">
-            <img th:if="*{photo}" th:src="*{getPhotoPath()}" id="existingPhoto" alt="Photo preview"  class="preview-photo img-thumbnail" th:style="*{photo} ? '' : 'display: none;'">
         </div>
         <div class="col-md-6">
             <label for="firstName" class="form-label">First Name</label>

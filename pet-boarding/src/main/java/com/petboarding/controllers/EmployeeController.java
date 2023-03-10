@@ -111,7 +111,7 @@ public class EmployeeController extends AppBaseController {
         }
         employeeRepository.save(employee);
         redirectAttributes.addFlashAttribute("infoMessage", "The Employee information has been updated.");
-        return "redirect:" + id;
+        return "redirect:/employees/update/" + id;
     }
 
     @PostMapping("delete/{id}")
@@ -164,6 +164,7 @@ public class EmployeeController extends AppBaseController {
     }
 
 
+//    TODO: add new attribute to differentiate personal profile updates and other employee profiles
     private void prepareUpdateFormModel(Employee employee, Model model) {
         model.addAttribute("formTitle", FORM_UPDATE_TITLE.replace("${employeeName}", employee.getFullName()));
         model.addAttribute("employee", employee);
