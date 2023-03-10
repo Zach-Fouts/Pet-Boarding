@@ -143,6 +143,8 @@ public class EmployeeController extends AppBaseController {
         Employee employee = optEmployee.get();
         addLocation("profile/" + employee.getFullName(), model);
         model.addAttribute("employee", employee);
+        model.addAttribute("controllerPath", "/employees/update/{id}");
+
         return "employees/profile";
     }
 

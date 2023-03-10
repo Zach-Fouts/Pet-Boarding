@@ -39,10 +39,9 @@ public class EmployeeProfileController extends AppBaseController{
 
     @GetMapping("")
     public String displayEmployeeProfile(Model model, RedirectAttributes redirectAttributes, HttpSession httpSession){
-
         User user = (User) httpSession.getAttribute("user");
-
         model.addAttribute("employee", user.getEmployee());
+        model.addAttribute("controllerPath", "/myprofile/update/{id}");
         addLocation("my profile/" + user.getEmployee().getFullName(), model);
         return "employees/profile";
     }
